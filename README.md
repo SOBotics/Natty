@@ -3,7 +3,7 @@
 
 The [New Answers to Old Questions](http://stackoverflow.com/tools/new-answers-old-questions) tool helps us to find all the answers added to questions which are more than 60 days old. However the issue with the tool is that it is not real time. There are requests on [Stack Overflow Meta](http://meta.stackoverflow.com) to not only make it [real time](http://meta.stackoverflow.com/questions/312246/make-the-new-answers-to-old-questions-real-time) but also to [enhance the tool](http://meta.stackoverflow.com/questions/319952/enhance-the-new-answers-to-old-questions-moderator-tool) to add more features to it. However these requests have yet not been implemented. 
 
-The NATOBot project aims to not only overcome the *"not real time"* issue but also help those users below 10,000 reputation to help moderate the answers. 
+The NATOBot project aims to not only overcome the *"not real time"* issue but also help those users below 10,000 reputation to take a look and moderate the answers.
 
 FAQ
 ---
