@@ -22,6 +22,7 @@ public class NatoPost {
     private String userName;
     private Integer userID;
     private String bodyMarkdown;
+    private String userType;
 
     public String getTitle() {
         return title;
@@ -125,6 +126,14 @@ public class NatoPost {
 
     public void setBodyMarkdown(String bodyMarkdown) {
         this.bodyMarkdown = bodyMarkdown;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     @Override

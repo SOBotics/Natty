@@ -15,6 +15,6 @@ public class AllowOnlyNRepValidator implements Validator {
 
     @Override
     public boolean validate(NatoPost natoPost) {
-        return new AllowAllValidator().validate(natoPost) && natoPost.getReputation().equals(rep);
+        return new AllowAllNatoValidator().validate(natoPost) && natoPost.getReputation().equals(rep);
     }
 }

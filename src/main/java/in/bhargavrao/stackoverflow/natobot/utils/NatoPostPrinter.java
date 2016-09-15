@@ -14,13 +14,23 @@ public class NatoPostPrinter {
         this.natoPost = natoPost;
     }
 
+    public NatoPostPrinter addFirstLine(){
+        this.printStr+=" **Body Starts With:** "+natoPost.getBodyMarkdown().split("\n")[0].trim();
+        return this;
+    }
+
+    public NatoPostPrinter addBodyLength(){
+        this.printStr+=" **BodyLength:** "+natoPost.getBodyMarkdown().length();
+        return this;
+    }
+
     public NatoPostPrinter addBody(){
-        this.printStr+=" Body: "+natoPost.getBodyMarkdown();
+        this.printStr+=" **Body:** "+natoPost.getBodyMarkdown();
         return this;
     }
 
     public NatoPostPrinter addReputation(){
-        this.printStr+=" Rep: "+natoPost.getReputation();
+        this.printStr+=" **Rep:** "+natoPost.getReputation();
         return this;
     }
 
@@ -39,8 +49,18 @@ public class NatoPostPrinter {
         return this;
     }
 
+    public NatoPostPrinter addQuesionLink(){
+        this.printStr+= " [Link to Question](//stackoverflow.com/a/"+natoPost.getAnswerID()+")";
+        return this;
+    }
+
     public NatoPostPrinter addUserDetails(){
-        this.printStr+= " By: ["+natoPost.getUserName()+"](//stackoverflow.com/u/"+natoPost.getUserID()+")";
+        this.printStr+= " **By:** ["+natoPost.getUserName()+"](//stackoverflow.com/u/"+natoPost.getUserID()+")";
+        return this;
+    }
+
+    public NatoPostPrinter addMessage(String message){
+        this.printStr+= message;
         return this;
     }
 
