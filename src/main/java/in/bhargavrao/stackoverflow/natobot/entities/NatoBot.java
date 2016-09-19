@@ -35,7 +35,8 @@ public class NatoBot {
         previousAnswerTimestamp = Instant.now().minusSeconds(60);
     }
 
-    public JsonObject getQuestionDetailsByIds(String questionIds) throws IOException{
+    public JsonObject getQuestionDetailsByIds(List<Integer> questionIdList) throws IOException{
+        String questionIds = questionIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
         String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionIds;
         JsonObject questionJson = JsonUtils.get(questionIdUrl,"site",site,"key",apiKey);
         return questionJson;
@@ -53,46 +54,30 @@ public class NatoBot {
         return answersJson;
     }
 
+
+    private String escapeHtmlEncoding(String message) {
+        return Parser.unescapeEntities(JsonUtils.sanitizeChatMessage(message), false).trim();
+    }
+
     public NatoPost getNatoPost(JsonObject answer, JsonObject question){
 
         NatoPost np = new NatoPost();
 
-        // Answer Data
-
-        Integer questionId = answer.get("question_id").getAsInt();
-        Integer answerId = answer.get("answer_id").getAsInt();
-        Integer answerCreationDate = answer.get("creation_date").getAsInt();
-        String answerBody = answer.get("body").getAsString();
-        String answerBodyMarkdown = Parser.unescapeEntities(JsonUtils.sanitizeChatMessage(answer.get("body_markdown").getAsString()), false).trim();
-
-        // User Data
-
         JsonObject user = answer.get("owner").getAsJsonObject();
-        Integer reputation = user.get("reputation").getAsInt();
-        String username = Parser.unescapeEntities(JsonUtils.sanitizeChatMessage(user.get("display_name").getAsString()), false).trim();
-        String usertype = user.get("user_type").getAsString();
-        Integer userId = user.get("user_id").getAsInt();
 
-        // Question Data
-
-        String mainTag = question.get("tags").getAsJsonArray().get(0).getAsString();
-        String tags[] = StreamSupport.stream(question.get("tags").getAsJsonArray().spliterator(), false).map(JsonElement::getAsString).toArray(String[]::new);
-        Integer questionCreationDate = question.get("creation_date").getAsInt();
-        String questionTitle = Parser.unescapeEntities(JsonUtils.sanitizeChatMessage(question.get("title").getAsString()), false).trim();
-
-        np.setAnswerCreationDate(Instant.ofEpochSecond(answerCreationDate));
-        np.setAnswerID(answerId);
-        np.setQuestionCreationDate(Instant.ofEpochSecond(questionCreationDate));
-        np.setQuestionID(questionId);
-        np.setReputation(reputation);
-        np.setTitle(questionTitle);
-        np.setMainTag(mainTag);
-        np.setTags(tags);
-        np.setBody(answerBody);
-        np.setBodyMarkdown(answerBodyMarkdown);
-        np.setUserName(username);
-        np.setUserType(usertype);
-        np.setUserID(userId);
+        np.setAnswerCreationDate(Instant.ofEpochSecond(answer.get("creation_date").getAsInt()));
+        np.setAnswerID(answer.get("answer_id").getAsInt());
+        np.setQuestionCreationDate(Instant.ofEpochSecond(question.get("creation_date").getAsInt()));
+        np.setQuestionID(answer.get("question_id").getAsInt());
+        np.setReputation(user.get("reputation").getAsInt());
+        np.setTitle(escapeHtmlEncoding(question.get("title").getAsString()));
+        np.setMainTag(question.get("tags").getAsJsonArray().get(0).getAsString());
+        np.setTags(StreamSupport.stream(question.get("tags").getAsJsonArray().spliterator(), false).map(JsonElement::getAsString).toArray(String[]::new));
+        np.setBody(answer.get("body").getAsString());
+        np.setBodyMarkdown(escapeHtmlEncoding(answer.get("body_markdown").getAsString()));
+        np.setUserName(escapeHtmlEncoding(user.get("display_name").getAsString()));
+        np.setUserType(user.get("user_type").getAsString());
+        np.setUserID(user.get("user_id").getAsInt());
 
         return np;
 
@@ -102,12 +87,14 @@ public class NatoBot {
         ArrayList<NatoPost> natoAnswers = new ArrayList<>();
 
         JsonObject answersJson = getFirstPageOfAnswers();
+        JsonUtils.handleBackoff(LOGGER, answersJson);
         if (answersJson.has("items")) {
             JsonArray answers = answersJson.get("items").getAsJsonArray();
 
-            String questionIdList = StreamSupport.stream(answers.spliterator(),false).map(x -> x.getAsJsonObject().get("question_id").getAsString()).collect(Collectors.joining(";"));
+            List<Integer> questionIdList = StreamSupport.stream(answers.spliterator(),false).map(x -> x.getAsJsonObject().get("question_id").getAsInt()).collect(Collectors.toList());
 
             JsonObject questionsJson = getQuestionDetailsByIds(questionIdList);
+            JsonUtils.handleBackoff(LOGGER, questionsJson);
 
             if(questionsJson.has("items")){
                 JsonArray questions = questionsJson.get("items").getAsJsonArray();
