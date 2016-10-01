@@ -34,8 +34,8 @@ public class Check implements SpecialCommand {
     public void execute(Room room) {
         try {
             String filename = ".\\src\\main\\resources\\lib\\CheckUsers.txt";
-            String word = CommandUtils.extractData(message);
-            if(!word.contains(" "))
+            String word = CommandUtils.extractData(message).trim();
+            if(word.contains("/"))
             {
                 String parts[]= word.split("//")[1].split("/");
                 if(parts[1].equals("a") || parts[1].equals("answers")){
