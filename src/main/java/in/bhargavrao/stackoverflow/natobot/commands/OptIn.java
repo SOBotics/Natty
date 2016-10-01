@@ -7,10 +7,6 @@ import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -35,22 +31,46 @@ public class OptIn implements SpecialCommand {
         long userId = event.getUserId();
         String userName = event.getUserName();
         String filename = ".\\src\\main\\resources\\lib\\OptedInUsersList.txt";
-        String tag = StringUtils.substringBetween(message,"[","]");
-        try
-        {
-            String optMessage = userId+","+tag+",\""+userName+"\""+","+room.getRoomId();
-            if(FileUtils.checkIfInFile(filename,optMessage)){
-                room.replyTo(event.getMessage().getId(), "You've already been added.");
+
+        String data = CommandUtils.extractData(message).trim();
+
+        String pieces[] = data.split(" ");
+
+        if(pieces.length>=2){
+            String tag = pieces[0];
+            String postType = pieces[1];
+            boolean whenInRoom = true;
+            if(pieces.length==3 && pieces[2].equals("always")){
+                whenInRoom = false;
+            }
+
+            if(!tag.equals("all")){
+                tag = StringUtils.substringBetween(message,"[","]");
+            }
+            if(postType.equals("all") || postType.equals("naa")){
+                String optMessage = userId+","+tag+",\""+userName+"\""+","+room.getRoomId()+","+postType+","+whenInRoom;
+                try
+                {
+                    if(FileUtils.checkIfInFile(filename,optMessage)){
+                        room.replyTo(event.getMessage().getId(), "You've already been added.");
+                    }
+                    else {
+                        FileUtils.appendToFile(filename, optMessage);
+                        System.out.println("Added user");
+                        room.replyTo(event.getMessage().getId(), "You've been added.");
+                    }
+                }
+                catch(IOException e)
+                {
+                    System.out.println("File not found");
+                }
             }
             else {
-                FileUtils.appendToFile(filename, optMessage);
-                System.out.println("Added user");
-                room.replyTo(event.getMessage().getId(), "You've been added.");
+                room.replyTo(event.getMessage().getId(), "Type of post can be naa or all");
             }
         }
-        catch(IOException e)
-        {
-            System.out.println("File not found");
+        else if(pieces.length==1){
+            room.replyTo(event.getMessage().getId(), "Please specify the type of post.");
         }
     }
 }

@@ -1,0 +1,63 @@
+package in.bhargavrao.stackoverflow.natobot.entities;
+
+/**
+ * Created by bhargav.h on 01-Oct-16.
+ */
+public class OptedInUser {
+    NatoBotUser user;
+    String tagname;
+    String postType;
+    Long roomId;
+    boolean whenInRoom;
+
+    public NatoBotUser getUser() {
+        return user;
+    }
+
+    public void setUser(NatoBotUser user) {
+        this.user = user;
+    }
+
+    public String getTagname() {
+        return tagname;
+    }
+
+    public void setTagname(String tagname) {
+        this.tagname = tagname;
+    }
+
+    public String getPostType() {
+        return postType;
+    }
+
+    public void setPostType(String postType) {
+        this.postType = postType;
+    }
+
+    public boolean isWhenInRoom() {
+        return whenInRoom;
+    }
+
+    public void setWhenInRoom(boolean whenInRoom) {
+        this.whenInRoom = whenInRoom;
+    }
+
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
+    }
+
+    @Override
+    public String toString() {
+        return "OptedInUser{" +
+                "user=" + user +
+                ", tagname='" + tagname + '\'' +
+                ", postType='" + postType + '\'' +
+                ", roomId=" + roomId +
+                ", whenInRoom=" + whenInRoom +
+                '}';
+    }
+}

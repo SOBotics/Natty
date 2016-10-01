@@ -35,23 +35,47 @@ public class OptOut implements SpecialCommand {
         long userId = event.getUserId();
         String userName = event.getUserName();
         String filename = ".\\src\\main\\resources\\lib\\OptedInUsersList.txt";
-        String tag = StringUtils.substringBetween(message,"[","]");
-        try
-        {
-            String optMessage = userId+","+tag+",\""+userName+"\""+","+room.getRoomId();
-            if(FileUtils.checkIfInFile(filename,optMessage)) {
-                FileUtils.removeFromFile(filename, optMessage);
-                System.out.println("Remove user");
-                room.replyTo(event.getMessage().getId(), "You've been removed.");
+
+        String data = CommandUtils.extractData(message).trim();
+
+        String pieces[] = data.split(" ");
+
+        if(pieces.length>=2){
+            String tag = pieces[0];
+            String postType = pieces[1];
+            boolean whenInRoom = true;
+            if(pieces.length==3 && pieces[2].equals("always")){
+                whenInRoom = false;
             }
-            else{
-                room.replyTo(event.getMessage().getId(), "You've already been removed.");
-                room.replyTo(event.getMessage().getId(), "Or did you not opt-in only? o_O");
+
+            if(!tag.equals("all")){
+                tag = StringUtils.substringBetween(message,"[","]");
+            }
+            if(postType.equals("all") || postType.equals("naa")){
+                String optMessage = userId+","+tag+",\""+userName+"\""+","+room.getRoomId()+","+postType+","+whenInRoom;
+                try
+                {
+                    if(FileUtils.checkIfInFile(filename,optMessage)) {
+                        FileUtils.removeFromFile(filename, optMessage);
+                        System.out.println("Remove user");
+                        room.replyTo(event.getMessage().getId(), "You've been removed.");
+                    }
+                    else{
+                        room.replyTo(event.getMessage().getId(), "You've already been removed.");
+                        room.replyTo(event.getMessage().getId(), "Or did you not opt-in only? o_O");
+                    }
+                }
+                catch(IOException e)
+                {
+                    System.out.println("File not found");
+                }
+            }
+            else {
+                room.replyTo(event.getMessage().getId(), "Type of post can be naa or all");
             }
         }
-        catch(IOException e)
-        {
-            System.out.println("File not found");
+        else if(pieces.length==1){
+            room.replyTo(event.getMessage().getId(), "Please specify the type of post.");
         }
     }
 }

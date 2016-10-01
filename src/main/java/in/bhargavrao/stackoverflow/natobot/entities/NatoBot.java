@@ -136,9 +136,11 @@ public class NatoBot {
             List<NatoPost> natoAnswers = cc.getNatoAnswers(new AllowAllNatoValidator());
             System.out.println(natoAnswers);
             for (NatoPost np : natoAnswers) {
+                boolean sent = false;
+
                 NatoPostPrinter pp = new NatoPostPrinter(np).addMainTag().addQuesionLink().addBodyLength().addReputation();
 
-                List<NatoBotUser> pingUsersList = UserUtils.pingUserIfApplicable(np,room.getRoomId());
+                List<OptedInUser> pingUsersList = UserUtils.pingUserIfApplicable(np,room.getRoomId());
 
                 List<Object> returnValues = NatoUtils.getNaaValue(np, pp);
                 Double naaValue = (Double) returnValues.get(0);
@@ -152,18 +154,21 @@ public class NatoBot {
 
                 if (validate){
                     pp.addFirstLine();
-                    if(naaValue>naaValueLimit) {
-                        numOfAnswers++;
-                        pp.addMessage(" **"+naaValue+"**;");
+                    pp.addMessage(" **"+naaValue+"**;");
 
-
-                        for (NatoBotUser user : pingUsersList) {
-                            if (UserUtils.checkIfUserInRoom(room, user.getUserId())) {
-                                pp.addMessage(" @"+user.getUsername().replace(" ",""));
-                            }
+                    for (OptedInUser user : pingUsersList) {
+                        if (!user.isWhenInRoom() || (user.isWhenInRoom() && UserUtils.checkIfUserInRoom(room, user.getUser().getUserId()))) {
+                            pp.addMessage(" @"+user.getUser().getUsername().replace(" ",""));
                         }
-                        room.send(pp.print());
+                        if(user.getPostType().equals("all")){
+                            numOfAnswers++;
+                            room.send(pp.print());
+                            sent = true;
+                        }
                     }
+
+                    if (!sent && naaValue>naaValueLimit)
+                        room.send(pp.print());
                 }
             }
         }
