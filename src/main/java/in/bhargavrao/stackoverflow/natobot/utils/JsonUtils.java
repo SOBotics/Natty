@@ -6,10 +6,13 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+
+import org.jsoup.parser.Parser;
 import org.slf4j.Logger;
 
 /**
  * Created by bhargav.h on 10-Sep-16.
+ * Courtesy Tunaki
  */
 public class JsonUtils {
     public static JsonObject get(String url, String... data) throws IOException {
@@ -31,6 +34,9 @@ public class JsonUtils {
                 LOGGER.error("Couldn't backoff for {} seconds, was interrupted!", backoff, e);
             }
         }
+    }
+    public static String escapeHtmlEncoding(String message) {
+        return Parser.unescapeEntities(JsonUtils.sanitizeChatMessage(message), false).trim();
     }
     public static String sanitizeChatMessage(String message) {
         return message.replaceAll("(\\[|\\]|_|\\*|`)", "\\\\$1");

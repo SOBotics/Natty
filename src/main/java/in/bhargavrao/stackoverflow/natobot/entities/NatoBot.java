@@ -3,11 +3,14 @@ package in.bhargavrao.stackoverflow.natobot.entities;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import in.bhargavrao.stackoverflow.natobot.utils.JsonUtils;
+import fr.tunaki.stackoverflow.chat.Room;
+import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import in.bhargavrao.stackoverflow.natobot.commands.*;
+import in.bhargavrao.stackoverflow.natobot.utils.*;
+import in.bhargavrao.stackoverflow.natobot.validators.AllowAllNatoValidator;
 import in.bhargavrao.stackoverflow.natobot.validators.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jsoup.parser.Parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 
+
 /**
  * Created by bhargav.h on 10-Sep-16.
  */
@@ -26,74 +30,25 @@ public class NatoBot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NatoBot.class);
 
-    private String apiKey = "kmtAuIIqwIrwkXm1*p3qqA((";
-    private String filter = "!40nvjHa_IL(lxIFT9";
-    private String site = "stackoverflow";
     private Instant previousAnswerTimestamp;
 
     public NatoBot() {
         previousAnswerTimestamp = Instant.now().minusSeconds(60);
     }
 
-    public JsonObject getQuestionDetailsByIds(List<Integer> questionIdList) throws IOException{
-        String questionIds = questionIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
-        String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionIds;
-        JsonObject questionJson = JsonUtils.get(questionIdUrl,"site",site,"key",apiKey);
-        return questionJson;
-    }
-
-    public JsonObject getQuestionDetailsById(Integer questionId) throws IOException{
-        String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionId;
-        JsonObject questionJson = JsonUtils.get(questionIdUrl,"site",site,"key",apiKey);
-        return questionJson;
-    }
-
-    public JsonObject getFirstPageOfAnswers() throws IOException{
-        String answersUrl = "https://api.stackexchange.com/2.2/answers";
-        JsonObject answersJson = JsonUtils.get(answersUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","fromdate",String.valueOf(previousAnswerTimestamp.minusSeconds(1).getEpochSecond()),"site",site,"key",apiKey,"sort","creation");
-        return answersJson;
-    }
-
-
-    private String escapeHtmlEncoding(String message) {
-        return Parser.unescapeEntities(JsonUtils.sanitizeChatMessage(message), false).trim();
-    }
-
-    public NatoPost getNatoPost(JsonObject answer, JsonObject question){
-
-        NatoPost np = new NatoPost();
-
-        JsonObject user = answer.get("owner").getAsJsonObject();
-
-        np.setAnswerCreationDate(Instant.ofEpochSecond(answer.get("creation_date").getAsInt()));
-        np.setAnswerID(answer.get("answer_id").getAsInt());
-        np.setQuestionCreationDate(Instant.ofEpochSecond(question.get("creation_date").getAsInt()));
-        np.setQuestionID(answer.get("question_id").getAsInt());
-        np.setReputation(user.get("reputation").getAsInt());
-        np.setTitle(escapeHtmlEncoding(question.get("title").getAsString()));
-        np.setMainTag(question.get("tags").getAsJsonArray().get(0).getAsString());
-        np.setTags(StreamSupport.stream(question.get("tags").getAsJsonArray().spliterator(), false).map(JsonElement::getAsString).toArray(String[]::new));
-        np.setBody(answer.get("body").getAsString());
-        np.setBodyMarkdown(escapeHtmlEncoding(answer.get("body_markdown").getAsString()));
-        np.setUserName(escapeHtmlEncoding(user.get("display_name").getAsString()));
-        np.setUserType(user.get("user_type").getAsString());
-        np.setUserID(user.get("user_id").getAsInt());
-
-        return np;
-
-    }
-
     public List<NatoPost> getNatoAnswers(Validator validator) throws IOException{
         ArrayList<NatoPost> natoAnswers = new ArrayList<>();
 
-        JsonObject answersJson = getFirstPageOfAnswers();
+        JsonObject answersJson = ApiUtils.getFirstPageOfAnswers(previousAnswerTimestamp);
+        System.out.println("Answers  JSON: "+answersJson);
         JsonUtils.handleBackoff(LOGGER, answersJson);
         if (answersJson.has("items")) {
             JsonArray answers = answersJson.get("items").getAsJsonArray();
 
             List<Integer> questionIdList = StreamSupport.stream(answers.spliterator(),false).map(x -> x.getAsJsonObject().get("question_id").getAsInt()).collect(Collectors.toList());
 
-            JsonObject questionsJson = getQuestionDetailsByIds(questionIdList);
+            JsonObject questionsJson = ApiUtils.getQuestionDetailsByIds(questionIdList);
+            System.out.println("Question JSON: "+questionsJson);
             JsonUtils.handleBackoff(LOGGER, questionsJson);
 
             if(questionsJson.has("items")){
@@ -105,19 +60,24 @@ public class NatoBot {
                     questionMap.put(questionId,j.getAsJsonObject());
                 }
 
-                for(JsonElement j: answers){
+                for(JsonElement j: answers) {
                     JsonObject answer = j.getAsJsonObject();
                     Integer questionId = answer.get("question_id").getAsInt();
-                    NatoPost np = getNatoPost(answer, questionMap.get(questionId));
-                    np.setQuota(questionsJson.get("quota_remaining").getAsInt());
-                    Instant answerCreationDate = np.getAnswerCreationDate();
-                    if(previousAnswerTimestamp.isAfter(answerCreationDate) ||
-                            previousAnswerTimestamp.equals(answerCreationDate)){
-                        continue;
+                    if(questionMap.containsKey(questionId))
+                    {
+                        NatoPost np = NatoUtils.getNatoPost(answer, questionMap.get(questionId));
+                        Instant answerCreationDate = np.getAnswerCreationDate();
+                        if (previousAnswerTimestamp.isAfter(answerCreationDate) ||
+                                previousAnswerTimestamp.equals(answerCreationDate)) {
+                            continue;
+                        }
+                        if (validator.validate(np)) {
+                            previousAnswerTimestamp = answerCreationDate;
+                            natoAnswers.add(np);
+                        }
                     }
-                    if(validator.validate(np)){
-                        previousAnswerTimestamp = answerCreationDate;
-                        natoAnswers.add(np);
+                    else{
+                        System.out.println("MISSING KEY "+questionId);
                     }
                 }
             }
@@ -125,4 +85,91 @@ public class NatoBot {
         return natoAnswers;
     }
 
+    public NatoPost checkNatoPost(int answerId) throws IOException{
+        JsonObject answerApiJson = ApiUtils.getAnswerDetailsById(answerId);
+        JsonUtils.handleBackoff(LOGGER,answerApiJson);
+        if(answerApiJson.has("items")) {
+            JsonObject answer = answerApiJson.getAsJsonArray("items").get(0).getAsJsonObject();
+            int questionId = answer.get("question_id").getAsInt();
+            JsonObject questionApiJson = ApiUtils.getQuestionDetailsById(questionId);
+            JsonUtils.handleBackoff(LOGGER,questionApiJson);
+            if(questionApiJson.has("items")){
+                JsonObject question = questionApiJson.getAsJsonArray("items").get(0).getAsJsonObject();
+                return NatoUtils.getNatoPost(answer,question);
+            }
+        }
+        return null;
+    }
+
+    public void mention(Room room, PingMessageEvent event, boolean isReply){
+
+        List<SpecialCommand> commands = new ArrayList<SpecialCommand>(){{
+            add(new AddCheckUser(event));
+            add(new AddSalute(event));
+            add(new Alive(event));
+            add(new Blacklist(event));
+            add(new Check(event));
+            add(new Commands(event));
+            add(new Help(event));
+            add(new Help(event));
+            add(new Hi(event));
+            add(new IsBlacklisted(event));
+            add(new IsWhitelisted(event));
+            add(new OptIn(event));
+            add(new OptOut(event));
+            add(new Quota(event));
+            add(new Say(event));
+            add(new Whitelist(event));
+        }};
+
+        for(SpecialCommand command: commands){
+            if(command.validate()){
+                command.execute(room);
+            }
+        }
+        System.out.println(event.getMessage().getContent());
+    }
+
+    public int runOnce(Room room,  List<Validator> validators, NatoBot cc, int naaValueLimit){
+        int numOfAnswers = 0;
+        try{
+            List<NatoPost> natoAnswers = cc.getNatoAnswers(new AllowAllNatoValidator());
+            System.out.println(natoAnswers);
+            for (NatoPost np : natoAnswers) {
+                NatoPostPrinter pp = new NatoPostPrinter(np).addMainTag().addQuesionLink().addBodyLength().addReputation();
+
+                List<NatoBotUser> pingUsersList = UserUtils.pingUserIfApplicable(np,room.getRoomId());
+
+                List<Object> returnValues = NatoUtils.getNaaValue(np, pp);
+                Double naaValue = (Double) returnValues.get(0);
+                pp = (NatoPostPrinter) returnValues.get(1);
+
+                boolean validate = true;
+
+                for (Validator validator : validators){
+                    validate = validate && validator.validate(np);
+                }
+
+                if (validate){
+                    pp.addFirstLine();
+                    if(naaValue>naaValueLimit) {
+                        numOfAnswers++;
+                        pp.addMessage(" **"+naaValue+"**;");
+
+
+                        for (NatoBotUser user : pingUsersList) {
+                            if (UserUtils.checkIfUserInRoom(room, user.getUserId())) {
+                                pp.addMessage(" @"+user.getUsername().replace(" ",""));
+                            }
+                        }
+                        room.send(pp.print());
+                    }
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return numOfAnswers;
+    }
 }

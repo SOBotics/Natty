@@ -11,4 +11,5 @@ public class AllowAllNatoValidator implements Validator {
     public boolean validate(NatoPost natoPost) {
         return natoPost.getAnswerCreationDate().isAfter(natoPost.getQuestionCreationDate().plusSeconds(2592000));
     }
+
 }

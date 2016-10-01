@@ -25,6 +25,16 @@
             <version>1.3</version>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>Tunaki-mvn-repo</id>
+            <url>https://raw.github.com/Tunaki/chatexchange/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>

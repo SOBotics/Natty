@@ -18,7 +18,6 @@ public class NatoPost {
     private Integer reputation;
     private String body;
     private String[] tags;
-    private Integer quota;
     private String userName;
     private Integer userID;
     private String bodyMarkdown;
@@ -96,14 +95,6 @@ public class NatoPost {
         this.body = body;
     }
 
-    public Integer getQuota() {
-        return quota;
-    }
-
-    public void setQuota(Integer quota) {
-        this.quota = quota;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -147,7 +138,6 @@ public class NatoPost {
                 ", questionID=" + questionID +
                 ", reputation=" + reputation +
                 ", tags=" + Arrays.toString(tags) +
-                ", quota=" + quota +
                 '}';
     }
 }
