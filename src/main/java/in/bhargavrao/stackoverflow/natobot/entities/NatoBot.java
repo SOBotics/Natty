@@ -118,8 +118,14 @@ public class NatoBot {
             add(new OptIn(event));
             add(new OptOut(event));
             add(new Quota(event));
+            add(new Remind(event));
+            add(new RemoveBlackList(event));
+            add(new RemoveRequest(event));
+            add(new RemoveWhitelist(    event));
             add(new Say(event));
+            add(new ShowRequests(event));
             add(new Whitelist(event));
+            add(new WishBirthday(event));
         }};
 
         for(SpecialCommand command: commands){

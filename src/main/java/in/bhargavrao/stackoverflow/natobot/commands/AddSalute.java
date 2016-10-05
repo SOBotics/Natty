@@ -16,7 +16,7 @@ public class AddSalute implements SpecialCommand {
 
     public AddSalute(PingMessageEvent event) {
         this.event = event;
-        this.message = event.getMessage().getContent();
+        this.message = event.getMessage().getPlainContent();
     }
 
     @Override
@@ -27,7 +27,7 @@ public class AddSalute implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
-            String filename = ".\\src\\main\\resources\\lib\\Salutations.txt";
+            String filename = "./lib/Salutations.txt";
             String data = CommandUtils.extractData(message);
             if (FileUtils.checkIfInFile(filename, data))
                 room.replyTo(event.getMessage().getId(), "Already added as Salute");

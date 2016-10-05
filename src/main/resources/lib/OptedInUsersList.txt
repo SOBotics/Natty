@@ -1,4 +1,0 @@
-4099593,python,"Bhargav Rao",111347,all,false
-4099593,java,"Bhargav Rao",111347,all,true
-5735775,all,"Ashish Ahuja ツ",111347,naa,true
-1743880,bhargav,"Tunaki",111347,all,true

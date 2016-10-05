@@ -15,7 +15,7 @@ public class Help implements SpecialCommand {
 
     public Help(PingMessageEvent event) {
         this.event = event;
-        this.message = event.getMessage().getContent();
+        this.message = event.getMessage().getPlainContent();
     }
 
 

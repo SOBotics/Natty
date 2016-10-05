@@ -43,13 +43,16 @@ public class NatoUtils {
 
         List<Filter> filters = new ArrayList<Filter>(){{
             add(new BlacklistedFilter(np));
+            add(new ContainsQMFilter(np));
             add(new EndsWithQmFilter(np));
             add(new LinkOnlyAnswerFilter(np));
             add(new NoCodeBlockFilter(np));
+            add(new NonEnglishFilter(np));
             add(new OneLineFilter(np));
             add(new SalutationsFilter(np));
             add(new StartsWithKeywordFilter(np));
             add(new UnregisteredUserFilter(np));
+            add(new UserMentionedFilter(np));
             add(new WhitelistedFilter(np));
         }};
 

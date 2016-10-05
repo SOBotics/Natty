@@ -10,15 +10,22 @@ import in.bhargavrao.stackoverflow.natobot.utils.CheckUtils;
 public class SalutationsFilter implements Filter {
     private NatoPost post;
     private double value;
+    private String salutation;
 
     public SalutationsFilter(NatoPost post) {
         this.post = post;
         value = 2;
+        salutation = null;
     }
 
     @Override
     public boolean filter() {
-        return CheckUtils.checkForSalutation(post);
+        String salutation = CheckUtils.checkForSalutation(post);
+        if(salutation!=null){
+            this.salutation = salutation;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -28,6 +35,6 @@ public class SalutationsFilter implements Filter {
 
     @Override
     public String description() {
-        return "Contains Salutations";
+        return "Contains Salutation - "+salutation;
     }
 }

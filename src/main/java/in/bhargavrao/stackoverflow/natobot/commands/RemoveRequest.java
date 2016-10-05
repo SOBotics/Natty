@@ -6,41 +6,44 @@ import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Whitelist implements SpecialCommand {
+public class RemoveRequest implements SpecialCommand {
+
 
     private PingMessageEvent event;
     private String message;
 
-    public Whitelist(PingMessageEvent event) {
+    public RemoveRequest(PingMessageEvent event) {
         this.event = event;
         this.message = event.getMessage().getPlainContent();
     }
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"whitelist");
+
+        return CommandUtils.checkForCommand(message,"rmreq");
     }
 
     @Override
     public void execute(Room room) {
-        try {
-            String filename = "./lib/WhiteListedWords.txt";
-            String data = CommandUtils.extractData(message);
-            if (FileUtils.checkIfInFile(filename, data)) {
-                room.replyTo(event.getMessage().getId(), "Already Whitelisted");
-            }
-            else {
-                FileUtils.appendToFile(filename, data);
-                room.replyTo(event.getMessage().getId(), "Added whitelist Successfully");
-            }
+
+        String filename = "./lib/FeatureRequests.txt";
+        String data = CommandUtils.extractData(message).trim();
+        try{
+
+            int linenumbers[] = Arrays.stream(data.split(" ")).mapToInt(Integer::parseInt).toArray();
+            FileUtils.removeFromFileLines(filename,linenumbers);
+            room.replyTo(event.getMessage().getId(), "Done");
         }
         catch (IOException e){
             e.printStackTrace();
-            room.replyTo(event.getMessage().getId(), "Error occured, Try again");
         }
+
+
     }
 }

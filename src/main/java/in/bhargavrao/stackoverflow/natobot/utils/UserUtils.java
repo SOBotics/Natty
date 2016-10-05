@@ -19,7 +19,7 @@ public class UserUtils {
     public static List<OptedInUser> getUsersOptedIn(String tagname, long roomId){
         List <OptedInUser> optedInUsers = new ArrayList<>();
 
-        String filename = ".\\src\\main\\resources\\lib\\OptedInUsersList.txt";
+        String filename = "./lib/OptedInUsersList.txt";
         try {
             List<String> lines = FileUtils.readFile(filename);
             for(String e:lines){

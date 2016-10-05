@@ -16,7 +16,7 @@ public class Quota implements SpecialCommand {
 
     public Quota(PingMessageEvent event) {
         this.event = event;
-        this.message = event.getMessage().getContent();
+        this.message = event.getMessage().getPlainContent();
     }
 
     @Override

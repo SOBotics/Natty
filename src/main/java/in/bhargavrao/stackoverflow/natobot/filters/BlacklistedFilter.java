@@ -10,15 +10,22 @@ import in.bhargavrao.stackoverflow.natobot.utils.CheckUtils;
 public class BlacklistedFilter implements Filter {
     private NatoPost post;
     private double value;
+    private String listedWord;
 
     public BlacklistedFilter(NatoPost post) {
         this.post = post;
         value = 1;
+        listedWord = null;
     }
 
     @Override
     public boolean filter() {
-        return CheckUtils.checkForBlackListedWords(post);
+        String listedWord = CheckUtils.checkForBlackListedWords(post);
+        if(listedWord!=null){
+            this.listedWord = listedWord;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -28,6 +35,6 @@ public class BlacklistedFilter implements Filter {
 
     @Override
     public String description() {
-        return "Contains Blacklisted Word";
+        return "Contains Blacklisted Word - "+listedWord;
     }
 }

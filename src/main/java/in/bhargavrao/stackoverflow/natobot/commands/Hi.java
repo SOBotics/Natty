@@ -13,7 +13,7 @@ public class Hi implements SpecialCommand {
 
     public Hi(PingMessageEvent event) {
         this.event = event;
-        this.message = event.getMessage().getContent();
+        this.message = event.getMessage().getPlainContent();
     }
 
 

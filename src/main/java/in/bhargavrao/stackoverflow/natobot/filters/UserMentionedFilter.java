@@ -1,28 +1,29 @@
 package in.bhargavrao.stackoverflow.natobot.filters;
 
 
+import in.bhargavrao.stackoverflow.natobot.commands.Check;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
 import in.bhargavrao.stackoverflow.natobot.utils.CheckUtils;
 
 /**
- * Created by bhargav.h on 01-Oct-16.
+ * Created by bhargav.h on 04-Oct-16.
  */
-public class WhitelistedFilter implements Filter {
+public class UserMentionedFilter implements Filter {
     private NatoPost post;
     private double value;
-    private String listedWord;
+    private String userName;
 
-    public WhitelistedFilter(NatoPost post) {
+    public UserMentionedFilter(NatoPost post) {
         this.post = post;
-        value = -1;
-        listedWord = null;
+        value = 0.5;
+        userName = null;
     }
 
     @Override
     public boolean filter() {
-        String listedWord = CheckUtils.checkForWhiteListedWords(post);
-        if(listedWord!=null){
-            this.listedWord = listedWord;
+        String userName = CheckUtils.checkIfBodyStartsWithMention(post);
+        if(userName!=null){
+            this.userName = userName;
             return true;
         }
         return false;
@@ -35,6 +36,6 @@ public class WhitelistedFilter implements Filter {
 
     @Override
     public String description() {
-        return "Contains Whitelisted Word - "+listedWord;
+        return "User "+userName+" Mentioned";
     }
 }

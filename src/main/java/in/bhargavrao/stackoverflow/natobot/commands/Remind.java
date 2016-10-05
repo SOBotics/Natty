@@ -10,32 +10,37 @@ import java.io.IOException;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Whitelist implements SpecialCommand {
+public class Remind implements SpecialCommand {
 
     private PingMessageEvent event;
     private String message;
 
-    public Whitelist(PingMessageEvent event) {
+    public Remind(PingMessageEvent event) {
         this.event = event;
         this.message = event.getMessage().getPlainContent();
     }
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"whitelist");
+        return CommandUtils.checkForCommand(message,"remind");
     }
 
     @Override
     public void execute(Room room) {
         try {
-            String filename = "./lib/WhiteListedWords.txt";
+            String filename = "./lib/FeatureRequests.txt";
             String data = CommandUtils.extractData(message);
             if (FileUtils.checkIfInFile(filename, data)) {
-                room.replyTo(event.getMessage().getId(), "Already Whitelisted");
+                room.replyTo(event.getMessage().getId(), "Already present as FR");
             }
-            else {
-                FileUtils.appendToFile(filename, data);
-                room.replyTo(event.getMessage().getId(), "Added whitelist Successfully");
+            else{
+                if(data.trim().equals("")) {
+                    room.replyTo(event.getMessage().getId(), "The code is made Tuna Proof™");
+                }
+                else {
+                    FileUtils.appendToFile(filename, data);
+                    room.replyTo(event.getMessage().getId(), "Added request Successfully");
+                }
             }
         }
         catch (IOException e){

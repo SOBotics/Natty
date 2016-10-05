@@ -39,5 +39,42 @@ public class FileUtils {
         }
         Files.write(Paths.get(filename), newLines, StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE);
     }
+    public static void removeFromFileStartswith(String filename, String message) throws IOException{
+        List<String> lines = readFile(filename);
+        List<String> newLines = new ArrayList<>();
+        for (String line:lines){
+            if(line.trim().toLowerCase().startsWith(message.trim().toLowerCase())){
+                continue;
+            }
+            newLines.add(line);
+        }
+        Files.write(Paths.get(filename), newLines, StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE);
+    }
+    public static void removeFromFileLine(String filename, int lineNumber) throws IOException{
+        List<String> lines = readFile(filename);
+        List<String> newLines = new ArrayList<>();
+        int i = 0;
+        for (i = 0; i<lines.size();i++){
+            if(i+1==lineNumber){
+                continue;
+            }
+            newLines.add(lines.get(i));
+        }
+        Files.write(Paths.get(filename), newLines, StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE);
+    }
+    public static void removeFromFileLines(String filename, int lineNumbers[]) throws IOException{
+        List<String> lines = readFile(filename);
+        List<String> newLines = new ArrayList<>();
+        Integer i;
+
+        for (i = 0; i<lines.size();i++){
+            if(Arrays.asList(Arrays.stream(lineNumbers).boxed().toArray(Integer[]::new)).contains(i+1)){
+                continue;
+
+            }
+            newLines.add(lines.get(i));
+        }
+        Files.write(Paths.get(filename), newLines, StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE);
+    }
 
 }

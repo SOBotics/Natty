@@ -19,7 +19,7 @@ public class AddCheckUser implements SpecialCommand {
 
     public AddCheckUser(PingMessageEvent event) {
         this.event = event;
-        this.message = event.getMessage().getContent();
+        this.message = event.getMessage().getPlainContent();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class AddCheckUser implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
-            String filename = ".\\src\\main\\resources\\lib\\CheckUsers.txt";
+            String filename = "./lib/CheckUsers.txt";
             String data = CommandUtils.extractData(message);
             String parts[] = data.split(" ");
             if (StringUtils.isNumeric(parts[0])){

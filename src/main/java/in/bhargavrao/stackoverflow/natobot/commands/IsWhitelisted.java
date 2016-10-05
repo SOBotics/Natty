@@ -15,7 +15,7 @@ public class IsWhitelisted implements SpecialCommand {
 
     public IsWhitelisted(PingMessageEvent event) {
         this.event = event;
-        this.message = event.getMessage().getContent();
+        this.message = event.getMessage().getPlainContent();
     }
     @Override
     public boolean validate() {

@@ -33,8 +33,17 @@ public class Check implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
-            String filename = ".\\src\\main\\resources\\lib\\CheckUsers.txt";
+            String filename = "./lib/CheckUsers.txt";
             String word = CommandUtils.extractData(message).trim();
+            boolean returnValue = false;
+
+            if(word.contains(" ")){
+                String parts[] = word.split(" ");
+                if(parts[0].equals("value")){
+                    returnValue = true;
+                    word = parts[1];
+                }
+            }
             if(word.contains("/"))
             {
                 String parts[]= word.split("//")[1].split("/");
@@ -65,7 +74,10 @@ public class Check implements SpecialCommand {
             Double found = (Double) returnValues.get(0);
             pp = (NatoPostPrinter) returnValues.get(1);
             pp.addMessage(" **"+found+"**;");
-            room.replyTo(event.getMessage().getId(), pp.print());
+            if(returnValue==true)
+                room.replyTo(event.getMessage().getId(), "The NAA Value is "+found);
+            else
+                room.replyTo(event.getMessage().getId(), pp.print());
         }
         catch (IOException e){
             e.printStackTrace();

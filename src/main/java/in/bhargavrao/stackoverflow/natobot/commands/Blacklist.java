@@ -17,7 +17,7 @@ public class Blacklist implements SpecialCommand {
 
     public Blacklist(PingMessageEvent event) {
         this.event = event;
-        this.message = event.getMessage().getContent();
+        this.message = event.getMessage().getPlainContent();
     }
 
     @Override
@@ -28,12 +28,15 @@ public class Blacklist implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
-            String filename = ".\\src\\main\\resources\\lib\\BlackListedWords.txt";
+            String filename = "./lib/BlackListedWords.txt";
             String data = CommandUtils.extractData(message);
-            if (FileUtils.checkIfInFile(filename, data))
+            if (FileUtils.checkIfInFile(filename, data)) {
                 room.replyTo(event.getMessage().getId(), "Already Blacklisted");
-            FileUtils.appendToFile(filename,data);
-            room.replyTo(event.getMessage().getId(), "Added blacklist Successfully");
+            }
+            else{
+                FileUtils.appendToFile(filename,data);
+                room.replyTo(event.getMessage().getId(), "Added blacklist Successfully");
+            }
         }
         catch (IOException e){
             e.printStackTrace();

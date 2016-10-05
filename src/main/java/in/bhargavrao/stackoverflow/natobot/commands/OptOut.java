@@ -34,7 +34,7 @@ public class OptOut implements SpecialCommand {
     public void execute(Room room) {
         long userId = event.getUserId();
         String userName = event.getUserName();
-        String filename = ".\\src\\main\\resources\\lib\\OptedInUsersList.txt";
+        String filename = "./lib/OptedInUsersList.txt";
 
         String data = CommandUtils.extractData(message).trim();
 

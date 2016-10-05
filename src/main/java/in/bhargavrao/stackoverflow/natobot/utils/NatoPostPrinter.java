@@ -15,7 +15,14 @@ public class NatoPostPrinter {
     }
 
     public NatoPostPrinter addFirstLine(){
-        this.printStr+=" **Body Starts With:** "+natoPost.getBodyMarkdown().split("\n")[0].trim();
+        String firstline = natoPost.getBodyMarkdown().split("\n")[0].trim();
+        if(firstline.length()>200) {
+            firstline = firstline.substring(0, 200);
+            if(firstline.contains(" ")) {
+                firstline = firstline.substring(0, firstline.lastIndexOf(' '));
+            }
+        }
+        this.printStr+=" **Body Starts With:** "+firstline;
         return this;
     }
 

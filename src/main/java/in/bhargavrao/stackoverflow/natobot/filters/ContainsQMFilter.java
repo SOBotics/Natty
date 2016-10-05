@@ -7,25 +7,18 @@ import in.bhargavrao.stackoverflow.natobot.utils.CheckUtils;
 /**
  * Created by bhargav.h on 01-Oct-16.
  */
-public class WhitelistedFilter implements Filter {
+public class ContainsQMFilter implements Filter {
     private NatoPost post;
     private double value;
-    private String listedWord;
 
-    public WhitelistedFilter(NatoPost post) {
+    public ContainsQMFilter(NatoPost post) {
         this.post = post;
-        value = -1;
-        listedWord = null;
+        value = 1;
     }
 
     @Override
     public boolean filter() {
-        String listedWord = CheckUtils.checkForWhiteListedWords(post);
-        if(listedWord!=null){
-            this.listedWord = listedWord;
-            return true;
-        }
-        return false;
+        return CheckUtils.checkIfBodyContainsQm(post);
     }
 
     @Override
@@ -35,6 +28,6 @@ public class WhitelistedFilter implements Filter {
 
     @Override
     public String description() {
-        return "Contains Whitelisted Word - "+listedWord;
+        return "Contains ?";
     }
 }

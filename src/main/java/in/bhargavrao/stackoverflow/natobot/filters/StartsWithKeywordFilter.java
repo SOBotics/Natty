@@ -18,7 +18,9 @@ public class StartsWithKeywordFilter implements Filter {
 
     @Override
     public boolean filter() {
-        return post.getBodyMarkdown().trim().matches("(How|What|Where|Why|Same|Can|Did).*");
+        if(post.getBodyMarkdown().contains(" "))
+            return post.getBodyMarkdown().trim().toLowerCase().substring(0,post.getBodyMarkdown().indexOf(' ')).matches("(how|what|where|why|same|can|did)");
+        return false;
     }
 
     @Override

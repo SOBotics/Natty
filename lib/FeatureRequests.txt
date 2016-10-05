@@ -1,0 +1,3 @@
+Add a self answer check
+Add a language detection algo cc Tuna (inform petter of completion)
+Fix the Link only algo
