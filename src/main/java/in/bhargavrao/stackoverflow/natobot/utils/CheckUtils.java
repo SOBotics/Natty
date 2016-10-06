@@ -56,6 +56,13 @@ public class CheckUtils {
         return doc.outerHtml();
     }
 
+    private static String stripTags(String html) {
+        Document doc = Jsoup.parse(html);
+        return doc.text();
+    }
+
+
+
     private static String stripBodyMarkdown(NatoPost natoPost){
         String strippedBody = stripBody(natoPost);
 
@@ -78,7 +85,9 @@ public class CheckUtils {
             e.printStackTrace();
         }
         return natoPost.getBodyMarkdown();
+
     }
+
 
     private static String checkForListedWords(NatoPost natoPost, String file){
         try {
@@ -106,9 +115,12 @@ public class CheckUtils {
                     .withProfiles(languageProfiles)
                     .build();
             textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
-            TextObject textObject = textObjectFactory.forText(stripBody(natoPost).replace('<',' ').replace('>',' '));
+            TextObject textObject = textObjectFactory.forText(stripTags(stripBody(natoPost)));
             Optional<LdLocale> lang = languageDetector.detect(textObject);
             if (!lang.isPresent()) {
+                if(checkIfCodeBlock(natoPost)){
+                    return "Gibberish";
+                }
                 return null;
             }
             return lang.get().getLanguage();
