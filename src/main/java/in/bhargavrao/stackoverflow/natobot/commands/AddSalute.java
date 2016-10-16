@@ -3,8 +3,10 @@ package in.bhargavrao.stackoverflow.natobot.commands;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natobot.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -27,7 +29,7 @@ public class AddSalute implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
-            String filename = "./lib/Salutations.txt";
+            String filename = FilePathUtils.salutationsFile;
             String data = CommandUtils.extractData(message);
             if (FileUtils.checkIfInFile(filename, data))
                 room.replyTo(event.getMessage().getId(), "Already added as Salute");

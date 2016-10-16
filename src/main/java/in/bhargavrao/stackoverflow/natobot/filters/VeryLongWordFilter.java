@@ -5,21 +5,23 @@ import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
 import in.bhargavrao.stackoverflow.natobot.utils.CheckUtils;
 
 /**
- * Created by bhargav.h on 01-Oct-16.
+ * Created by bhargav.h on 16-Oct-16.
  */
-public class StartsWithKeywordFilter implements Filter {
+public class VeryLongWordFilter implements Filter {
     private NatoPost post;
     private double value;
 
-    public StartsWithKeywordFilter(NatoPost post) {
+    public VeryLongWordFilter(NatoPost post) {
         this.post = post;
-        value = 1;
+        value = 1.5;
     }
 
     @Override
     public boolean filter() {
-        if(post.getBodyMarkdown().contains(" "))
-            return post.getBodyMarkdown().trim().toLowerCase().substring(0,post.getBodyMarkdown().indexOf(' ')).matches("(what|where|why|same|can|did)");
+        String listedWord = CheckUtils.checkForLongWords(post);
+        if(listedWord!=null){
+            return true;
+        }
         return false;
     }
 
@@ -30,6 +32,6 @@ public class StartsWithKeywordFilter implements Filter {
 
     @Override
     public String description() {
-        return "Starts with Keyword";
+        return "Contains Very Long Word";
     }
 }

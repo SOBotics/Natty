@@ -18,7 +18,7 @@ public class ContainsQMFilter implements Filter {
 
     @Override
     public boolean filter() {
-        return CheckUtils.checkIfBodyContainsQm(post);
+        return !CheckUtils.checkIfEndsWithQm(post) && CheckUtils.checkIfBodyContainsQm(post);
     }
 
     @Override

@@ -40,7 +40,6 @@ public class NatoBot {
         ArrayList<NatoPost> natoAnswers = new ArrayList<>();
 
         JsonObject answersJson = ApiUtils.getFirstPageOfAnswers(previousAnswerTimestamp);
-        System.out.println("Answers  JSON: "+answersJson);
         JsonUtils.handleBackoff(LOGGER, answersJson);
         if (answersJson.has("items")) {
             JsonArray answers = answersJson.get("items").getAsJsonArray();
@@ -48,7 +47,6 @@ public class NatoBot {
             List<Integer> questionIdList = StreamSupport.stream(answers.spliterator(),false).map(x -> x.getAsJsonObject().get("question_id").getAsInt()).collect(Collectors.toList());
 
             JsonObject questionsJson = ApiUtils.getQuestionDetailsByIds(questionIdList);
-            System.out.println("Question JSON: "+questionsJson);
             JsonUtils.handleBackoff(LOGGER, questionsJson);
 
             if(questionsJson.has("items")){
@@ -124,6 +122,7 @@ public class NatoBot {
             add(new RemoveWhitelist(    event));
             add(new Say(event));
             add(new ShowRequests(event));
+            add(new Status(event));
             add(new Whitelist(event));
             add(new WishBirthday(event));
         }};

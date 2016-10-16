@@ -4,6 +4,7 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.utils.ApiUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natobot.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class ShowRequests implements SpecialCommand {
     @Override
     public void execute(Room room) {
 
-        String filename = "./lib/FeatureRequests.txt";
+        String filename = FilePathUtils.featureRequests;
         try{
             List<String> lines = FileUtils.readFile(filename);
             String requestString = "";

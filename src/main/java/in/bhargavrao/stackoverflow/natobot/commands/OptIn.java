@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natobot.commands;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natobot.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -30,7 +31,7 @@ public class OptIn implements SpecialCommand {
     public void execute(Room room) {
         long userId = event.getUserId();
         String userName = event.getUserName();
-        String filename = "./lib/OptedInUsersList.txt";
+        String filename = FilePathUtils.optedUsersFile;
 
         String data = CommandUtils.extractData(message).trim();
 

@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natobot.commands;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natobot.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.JsonUtils;
 import org.apache.commons.lang.StringUtils;
@@ -30,16 +31,16 @@ public class AddCheckUser implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
-            String filename = "./lib/CheckUsers.txt";
+            String filename = FilePathUtils.checkUsers;
             String data = CommandUtils.extractData(message);
             String parts[] = data.split(" ");
             if (StringUtils.isNumeric(parts[0])){
                 String snark = String.join(" ", Arrays.copyOfRange(parts,1,parts.length));
                 FileUtils.appendToFile(filename,parts[0]+","+ JsonUtils.escapeHtmlEncoding(snark));
-                room.replyTo(event.getMessage().getId(),"NatoBotUser Added");
+                room.replyTo(event.getMessage().getId(),"SOUser Added");
             }
             else{
-                room.replyTo(event.getMessage().getId(), "Must be NatoBotUser ID");
+                room.replyTo(event.getMessage().getId(), "Must be SOUser ID");
             }
         }
         catch (IOException e){

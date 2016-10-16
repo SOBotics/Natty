@@ -19,7 +19,7 @@ public class Hi implements SpecialCommand {
 
     @Override
     public boolean validate() {
-        return message.toLowerCase().contains(" hi ");
+        return (" "+message+" ").toLowerCase().contains(" hi ");
     }
 
     @Override

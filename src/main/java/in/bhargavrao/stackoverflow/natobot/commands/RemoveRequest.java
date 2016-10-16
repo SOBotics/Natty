@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natobot.commands;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natobot.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class RemoveRequest implements SpecialCommand {
     @Override
     public void execute(Room room) {
 
-        String filename = "./lib/FeatureRequests.txt";
+        String filename = FilePathUtils.featureRequests;
         String data = CommandUtils.extractData(message).trim();
         try{
 

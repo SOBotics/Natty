@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class CommandUtils {
 
     public static boolean checkForCommand(String message, String command){
-        return message.split(" ")[1].toLowerCase().equals(command);
+        return message.split(" ")[0].toLowerCase().startsWith("@nat") && message.split(" ")[1].toLowerCase().equals(command);
     }
     public static String extractData(String message){
         String parts[] = message.split(" ");
@@ -22,7 +22,7 @@ public class CommandUtils {
                 return "Done";
             }
             else {
-                return ( "It's not there in the file");
+                return ("It's not there in the file");
             }
         }
         catch (IOException e){

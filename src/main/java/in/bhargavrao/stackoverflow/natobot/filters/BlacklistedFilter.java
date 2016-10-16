@@ -14,7 +14,7 @@ public class BlacklistedFilter implements Filter {
 
     public BlacklistedFilter(NatoPost post) {
         this.post = post;
-        value = 1;
+        value = 2.0;
         listedWord = null;
     }
 

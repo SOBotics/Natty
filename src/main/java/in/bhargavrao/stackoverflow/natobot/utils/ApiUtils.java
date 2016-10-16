@@ -21,7 +21,6 @@ public class ApiUtils {
     public static JsonObject getQuestionDetailsByIds(List<Integer> questionIdList) throws IOException {
         String questionIds = questionIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
         String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionIds;
-        System.out.println("Questions URL: "+questionIdUrl);
         JsonObject questionJson = JsonUtils.get(questionIdUrl,"site",site,"pagesize",String.valueOf(questionIdList.size()),"key",apiKey);
         quota = questionJson.get("quota_remaining").getAsInt();
         return questionJson;

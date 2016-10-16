@@ -14,7 +14,7 @@ public class SalutationsFilter implements Filter {
 
     public SalutationsFilter(NatoPost post) {
         this.post = post;
-        value = 2;
+        value = 1.5;
         salutation = null;
     }
 

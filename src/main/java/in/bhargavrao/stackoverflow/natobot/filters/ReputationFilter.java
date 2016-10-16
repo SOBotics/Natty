@@ -5,31 +5,38 @@ import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
 import in.bhargavrao.stackoverflow.natobot.utils.CheckUtils;
 
 /**
- * Created by bhargav.h on 01-Oct-16.
+ * Created by bhargav.h on 12-Oct-16.
  */
-public class StartsWithKeywordFilter implements Filter {
+public class ReputationFilter implements Filter {
     private NatoPost post;
     private double value;
 
-    public StartsWithKeywordFilter(NatoPost post) {
+    public ReputationFilter(NatoPost post) {
         this.post = post;
         value = 1;
     }
 
     @Override
     public boolean filter() {
-        if(post.getBodyMarkdown().contains(" "))
-            return post.getBodyMarkdown().trim().toLowerCase().substring(0,post.getBodyMarkdown().indexOf(' ')).matches("(what|where|why|same|can|did)");
-        return false;
+        return post.getAnswerer().getReputation()<1001;
     }
 
     @Override
     public double getValue() {
-        return value;
+        long rep = post.getAnswerer().getReputation();
+        if(rep < 51){
+            return 1.0;
+        }
+        else if(rep < 1001){
+            return 0.5;
+        }
+        else {
+            return 0.0;
+        }
     }
 
     @Override
     public String description() {
-        return "Starts with Keyword";
+        return "Low Rep";
     }
 }

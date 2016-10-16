@@ -2,37 +2,35 @@ package in.bhargavrao.stackoverflow.natobot.commands;
 
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import in.bhargavrao.stackoverflow.natobot.services.StatsService;
 import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
 
 /**
- * Created by bhargav.h on 30-Sep-16.
+ * Created by bhargav.h on 16-Oct-16.
  */
-public class RemoveWhitelist implements SpecialCommand {
+public class Status implements SpecialCommand {
 
 
     private PingMessageEvent event;
     private String message;
 
-    public RemoveWhitelist(PingMessageEvent event) {
+    public Status(PingMessageEvent event) {
         this.event = event;
         this.message = event.getMessage().getPlainContent();
     }
 
     @Override
     public boolean validate() {
-
-        return CommandUtils.checkForCommand(message,"rmwhitelist");
+        return CommandUtils.checkForCommand(message,"status");
     }
 
     @Override
     public void execute(Room room) {
-        String filename = FilePathUtils.whitelistFile;
-        String data = CommandUtils.extractData(message).trim();
-        room.replyTo(event.getMessage().getId(), CommandUtils.checkAndRemoveMessage(filename,data));
+        room.send(StatsService.getStatus());
     }
 }

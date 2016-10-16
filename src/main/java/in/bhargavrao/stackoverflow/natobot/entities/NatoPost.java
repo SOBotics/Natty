@@ -15,13 +15,11 @@ public class NatoPost {
     private Instant questionCreationDate;
     private Integer answerID;
     private Integer questionID;
-    private Integer reputation;
     private String body;
-    private String[] tags;
-    private String userName;
-    private Integer userID;
     private String bodyMarkdown;
-    private String userType;
+    private String[] tags;
+    private SOUser asker;
+    private SOUser answerer;
 
     public String getTitle() {
         return title;
@@ -63,14 +61,6 @@ public class NatoPost {
         this.questionID = questionID;
     }
 
-    public Integer getReputation() {
-        return reputation;
-    }
-
-    public void setReputation(Integer reputation) {
-        this.reputation = reputation;
-    }
-
     public String getMainTag() {
         return mainTag;
     }
@@ -95,22 +85,6 @@ public class NatoPost {
         this.body = body;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Integer getUserID() {
-        return userID;
-    }
-
-    public void setUserID(Integer userID) {
-        this.userID = userID;
-    }
-
     public String getBodyMarkdown() {
         return bodyMarkdown;
     }
@@ -119,25 +93,20 @@ public class NatoPost {
         this.bodyMarkdown = bodyMarkdown;
     }
 
-    public String getUserType() {
-        return userType;
+
+    public SOUser getAsker() {
+        return asker;
     }
 
-    public void setUserType(String userType) {
-        this.userType = userType;
+    public void setAsker(SOUser asker) {
+        this.asker = asker;
     }
 
-    @Override
-    public String toString() {
-        return "NatoPost{" +
-                "title='" + title + '\'' +
-                ", mainTag='" + mainTag + '\'' +
-                ", answerCreationDate=" + answerCreationDate +
-                ", questionCreationDate=" + questionCreationDate +
-                ", answerID= http://stackoverflow.com/a/" + answerID +
-                ", questionID=" + questionID +
-                ", reputation=" + reputation +
-                ", tags=" + Arrays.toString(tags) +
-                '}';
+    public SOUser getAnswerer() {
+        return answerer;
+    }
+
+    public void setAnswerer(SOUser answerer) {
+        this.answerer = answerer;
     }
 }

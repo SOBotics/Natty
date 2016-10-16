@@ -4,10 +4,7 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoBot;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
-import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
-import in.bhargavrao.stackoverflow.natobot.utils.NatoPostPrinter;
-import in.bhargavrao.stackoverflow.natobot.utils.NatoUtils;
+import in.bhargavrao.stackoverflow.natobot.utils.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,7 +30,7 @@ public class Check implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
-            String filename = "./lib/CheckUsers.txt";
+            String filename = FilePathUtils.checkUsers;
             String word = CommandUtils.extractData(message).trim();
             boolean returnValue = false;
 

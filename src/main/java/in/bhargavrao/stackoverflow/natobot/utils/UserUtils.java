@@ -2,7 +2,7 @@ package in.bhargavrao.stackoverflow.natobot.utils;
 
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
-import in.bhargavrao.stackoverflow.natobot.entities.NatoBotUser;
+import in.bhargavrao.stackoverflow.natobot.entities.SOUser;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
 import in.bhargavrao.stackoverflow.natobot.entities.OptedInUser;
 
@@ -19,7 +19,7 @@ public class UserUtils {
     public static List<OptedInUser> getUsersOptedIn(String tagname, long roomId){
         List <OptedInUser> optedInUsers = new ArrayList<>();
 
-        String filename = "./lib/OptedInUsersList.txt";
+        String filename = FilePathUtils.optedUsersFile;
         try {
             List<String> lines = FileUtils.readFile(filename);
             for(String e:lines){
@@ -28,11 +28,11 @@ public class UserUtils {
 
                     OptedInUser optedInUser = new OptedInUser();
 
-                    NatoBotUser natoBotUser = new NatoBotUser();
-                    natoBotUser.setUsername(pieces[2].replace("\"",""));
-                    natoBotUser.setUserId(Integer.parseInt(pieces[0]));
+                    SOUser SOUser = new SOUser();
+                    SOUser.setUsername(pieces[2].replace("\"",""));
+                    SOUser.setUserId(Integer.parseInt(pieces[0]));
 
-                    optedInUser.setUser(natoBotUser);
+                    optedInUser.setUser(SOUser);
                     optedInUser.setTagname(pieces[1]);
                     optedInUser.setPostType(pieces[4]);
                     optedInUser.setRoomId(Long.valueOf(pieces[3]));

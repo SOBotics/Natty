@@ -37,7 +37,7 @@ public class NatoPostPrinter {
     }
 
     public NatoPostPrinter addReputation(){
-        this.printStr+=" **Rep:** "+natoPost.getReputation();
+        this.printStr+=" **Rep:** "+natoPost.getAnswerer().getReputation();
         return this;
     }
 
@@ -57,12 +57,12 @@ public class NatoPostPrinter {
     }
 
     public NatoPostPrinter addQuesionLink(){
-        this.printStr+= " [Link to Question](//stackoverflow.com/a/"+natoPost.getAnswerID()+")";
+        this.printStr+= " [Link to Post](//stackoverflow.com/a/"+natoPost.getAnswerID()+")";
         return this;
     }
 
     public NatoPostPrinter addUserDetails(){
-        this.printStr+= " **By:** ["+natoPost.getUserName()+"](//stackoverflow.com/u/"+natoPost.getUserID()+")";
+        this.printStr+= " **By:** ["+natoPost.getAnswerer().getUsername()+"](//stackoverflow.com/u/"+natoPost.getAnswerer().getUserId()+")";
         return this;
     }
 
@@ -70,7 +70,6 @@ public class NatoPostPrinter {
         this.printStr+= message;
         return this;
     }
-
 
     public String print(){
         return printStr;

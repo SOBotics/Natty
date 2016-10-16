@@ -23,7 +23,7 @@ public class UserMentionedFilter implements Filter {
     public boolean filter() {
         String userName = CheckUtils.checkIfBodyStartsWithMention(post);
         if(userName!=null){
-            this.userName = userName;
+            this.userName = userName.trim().replace("\n","");
             return true;
         }
         return false;

@@ -4,17 +4,17 @@ package in.bhargavrao.stackoverflow.natobot.entities;
  * Created by bhargav.h on 01-Oct-16.
  */
 public class OptedInUser {
-    NatoBotUser user;
+    SOUser user;
     String tagname;
     String postType;
     Long roomId;
     boolean whenInRoom;
 
-    public NatoBotUser getUser() {
+    public SOUser getUser() {
         return user;
     }
 
-    public void setUser(NatoBotUser user) {
+    public void setUser(SOUser user) {
         this.user = user;
     }
 

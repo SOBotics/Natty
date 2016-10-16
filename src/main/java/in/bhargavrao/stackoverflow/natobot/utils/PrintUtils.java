@@ -29,8 +29,13 @@ public class PrintUtils {
                 "     blacklist     - Adds a given statement to the list of blacklisted words\n" +
                 "     iswhitelisted - Checks if the given statement is whitelisted\n" +
                 "     isblacklisted - Checks if the given statement is blacklisted\n" +
-                "     opt-in        - Notifies the user of ALL THE POSTS in NATO\n" +
-                "     opt-out       - Unlists the user from notifications";
-
+                "     rmblacklist   - Removes the given statement from blacklist\n" +
+                "     rmwhitelist   - Removes the given statement from whitelist\n" +
+                "     opt-in        - Notifies the user of the requested posts\n" +
+                "     opt-out       - Unlists the user from notifications\n" +
+                "     remind        - Adds a remainder to the list of requests\n" +
+                "     showreqs      - Shows the list of requests\n" +
+                "     rmreq         - Removes the request from the list of requests\n" +
+                "     quota         - Returns the remaining API Qouta";
     }
 }

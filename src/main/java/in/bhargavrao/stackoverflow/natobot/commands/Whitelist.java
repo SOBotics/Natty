@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natobot.commands;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natobot.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class Whitelist implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
-            String filename = "./lib/WhiteListedWords.txt";
+            String filename = FilePathUtils.whitelistFile;
             String data = CommandUtils.extractData(message);
             if (FileUtils.checkIfInFile(filename, data)) {
                 room.replyTo(event.getMessage().getId(), "Already Whitelisted");

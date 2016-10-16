@@ -5,22 +5,20 @@ import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
 import in.bhargavrao.stackoverflow.natobot.utils.CheckUtils;
 
 /**
- * Created by bhargav.h on 01-Oct-16.
+ * Created by bhargav.h on 16-Oct-16.
  */
-public class StartsWithKeywordFilter implements Filter {
+public class SelfAnswerFilter implements Filter {
     private NatoPost post;
     private double value;
 
-    public StartsWithKeywordFilter(NatoPost post) {
+    public SelfAnswerFilter(NatoPost post) {
         this.post = post;
-        value = 1;
+        value = -2;
     }
 
     @Override
     public boolean filter() {
-        if(post.getBodyMarkdown().contains(" "))
-            return post.getBodyMarkdown().trim().toLowerCase().substring(0,post.getBodyMarkdown().indexOf(' ')).matches("(what|where|why|same|can|did)");
-        return false;
+        return post.getAnswerer().getUserId()==post.getAsker().getUserId();
     }
 
     @Override
@@ -30,6 +28,6 @@ public class StartsWithKeywordFilter implements Filter {
 
     @Override
     public String description() {
-        return "Starts with Keyword";
+        return "Self Answer";
     }
 }

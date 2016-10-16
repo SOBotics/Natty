@@ -1,8 +1,6 @@
 package in.bhargavrao.stackoverflow.natobot.utils;
 
 import com.google.common.base.Optional;
-import com.google.gson.JsonObject;
-import com.optimaize.langdetect.LanguageDetector;
 import com.optimaize.langdetect.LanguageDetectorBuilder;
 import com.optimaize.langdetect.i18n.LdLocale;
 import com.optimaize.langdetect.ngram.NgramExtractors;
@@ -11,11 +9,15 @@ import com.optimaize.langdetect.profiles.LanguageProfileReader;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
 import com.optimaize.langdetect.text.TextObject;
 import com.optimaize.langdetect.text.TextObjectFactory;
+
+import org.apache.tika.langdetect.OptimaizeLangDetector;
+
+import org.apache.tika.language.detect.LanguageResult;
+import org.apache.tika.language.detect.LanguageWriter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
-import org.jsoup.select.Elements;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -42,7 +44,7 @@ public class CheckUtils {
 	public static String checkIfBodyStartsWithMention(NatoPost natoPost){
         String firstLine = natoPost.getBodyMarkdown().split("\n")[0];
         if(firstLine.startsWith("@")){
-            return firstLine.split(" ")[0];
+            return firstLine.split(" ")[0].trim();
         }
         return null;
     }
@@ -52,6 +54,8 @@ public class CheckUtils {
         Document doc = Jsoup.parse("<body>"+body+"</body>");
         doc.getElementsByTag("a").remove();
         doc.getElementsByTag("code").remove();
+        doc.getElementsByTag("img").remove();
+        doc.getElementsByTag("pre").remove();
         doc.getElementsByTag("blockquote").remove();
         return doc.outerHtml();
     }
@@ -64,28 +68,8 @@ public class CheckUtils {
 
 
     private static String stripBodyMarkdown(NatoPost natoPost){
-        String strippedBody = stripBody(natoPost);
-
-        File xsltFile = new File("./lib/markdown.xsl");
-
-        Source xmlSource = new StreamSource(new StringReader(strippedBody));
-        Source xsltSource = new StreamSource(xsltFile);
-
-        TransformerFactory transFact =
-                TransformerFactory.newInstance();
-        try {
-            Transformer trans = transFact.newTransformer(xsltSource);
-
-            StringWriter result = new StringWriter();
-            trans.transform(xmlSource, new StreamResult(result));
-            return result.toString();
-
-        }
-        catch (TransformerException e){
-            e.printStackTrace();
-        }
+        // TO DO
         return natoPost.getBodyMarkdown();
-
     }
 
 
@@ -107,17 +91,40 @@ public class CheckUtils {
 
 
         List<LanguageProfile> languageProfiles;
-        LanguageDetector languageDetector;
+        com.optimaize.langdetect.LanguageDetector optimaizeDetector;
+        org.apache.tika.language.detect.LanguageDetector tikaDetector;
         TextObjectFactory textObjectFactory;
+
+        String dataToCheck = stripTags(stripBody(natoPost)).replaceAll("[^a-zA-Z ]", " ");
+
         try {
+
             languageProfiles = new LanguageProfileReader().readAllBuiltIn();
-            languageDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
+            optimaizeDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
                     .withProfiles(languageProfiles)
                     .build();
             textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
-            TextObject textObject = textObjectFactory.forText(stripTags(stripBody(natoPost)));
-            Optional<LdLocale> lang = languageDetector.detect(textObject);
+            TextObject textObject = textObjectFactory.forText(dataToCheck);
+            Optional<LdLocale> lang = optimaizeDetector.detect(textObject);
             if (!lang.isPresent()) {
+                if(dataToCheck.length()>50) {
+                   tikaDetector = new OptimaizeLangDetector().loadModels();
+                   LanguageWriter writer = new LanguageWriter(tikaDetector);
+                   writer.append(dataToCheck);
+                   LanguageResult result = writer.getLanguage();
+                   String tikaLang = result.getLanguage();
+                   writer.close();
+
+                   if (!tikaLang.toLowerCase().equals("")) {
+                       return tikaLang;
+                   }
+                   else{
+                       return null;
+                   }
+                }
+                else if(dataToCheck.length()<50){
+                    return null;
+                }
                 if(checkIfCodeBlock(natoPost)){
                     return "Gibberish";
                 }
@@ -143,20 +150,20 @@ public class CheckUtils {
 
 
 	public static String checkForBlackListedWords(NatoPost natoPost){
-        return checkForListedWords(natoPost,ListedWordsUtils.blacklistFile);
+        return checkForListedWords(natoPost, FilePathUtils.blacklistFile);
     }
 	public static String checkForWhiteListedWords(NatoPost natoPost){
-        return checkForListedWords(natoPost,ListedWordsUtils.whitelistFile);
+        return checkForListedWords(natoPost, FilePathUtils.whitelistFile);
     }
 	public static boolean checkIfBlackListed(String word){
-        return checkIfWordIsListed(ListedWordsUtils.blacklistFile,word);
+        return checkIfWordIsListed(FilePathUtils.blacklistFile,word);
     }
 	public static boolean checkIfWhiteListed(String word){
-        return checkIfWordIsListed(ListedWordsUtils.whitelistFile,word);
+        return checkIfWordIsListed(FilePathUtils.whitelistFile,word);
     }
 	public static String checkForSalutation(NatoPost natoPost){
         try {
-            List<String> keywords = Files.readAllLines(Paths.get(ListedWordsUtils.salutationsFile));
+            List<String> keywords = Files.readAllLines(Paths.get(FilePathUtils.salutationsFile));
             String [] lines = natoPost.getBodyMarkdown().split("\n");
             int len = lines.length;
             if(len>3){
@@ -175,6 +182,17 @@ public class CheckUtils {
         }
         return null;
     }
+
+    public static String checkForLongWords(NatoPost natoPost){
+        String bodyParts[] = natoPost.getBodyMarkdown().replaceAll("[^a-zA-Z ]", " ").split(" ");
+        for(String part:bodyParts){
+            if (part.length()>100){
+                return part;
+            }
+        }
+        return null;
+    }
+
 	public static boolean checkIfBodyContainsQm(NatoPost natoPost){
 		return checkIfBodyContainsKeyword(natoPost,"?");
 	}
@@ -189,7 +207,7 @@ public class CheckUtils {
         return !natoPost.getBodyMarkdown().trim().contains("\n");
     }
     public static boolean checkIfUnregistered(NatoPost natoPost){
-        return natoPost.getUserType().equals("unregistered");
+        return natoPost.getAnswerer().getUserType().equals("unregistered");
     }
     public static boolean checkIfCodeBlock(NatoPost natoPost){
         return (!natoPost.getBody().contains("<code>"));
