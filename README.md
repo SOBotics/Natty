@@ -1,8 +1,8 @@
 
 [NATOBot](http://stackapps.com/questions/7049/natobot-bringing-10k-moderation-to-all) 
+---
 
-
-#Generaal
+#General
 
 **Background and History**
 
