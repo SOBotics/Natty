@@ -1,2 +1,0 @@
-1743880,bhargav,"Tunaki",111347,all,true
-4099593,python,"Bhargav Rao",111347,naa,true
