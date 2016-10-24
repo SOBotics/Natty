@@ -14,4 +14,6 @@ public class FilePathUtils {
     public static String checkUsers = "./data/CheckUsers.txt";
     public static String outputCSVLogFile = "./logs/output.csv";
     public static String outputErrorLogFile = "./logs/error.txt";
+    public static String outputReportLogFile = "./logs/reports.txt";
+    public static String outputCompleteLogFile = "./logs/fullReports.txt";
 }

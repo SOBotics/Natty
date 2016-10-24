@@ -25,10 +25,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -43,7 +40,7 @@ public class CheckUtils {
 
 	public static String checkIfBodyStartsWithMention(NatoPost natoPost){
         String firstLine = natoPost.getBodyMarkdown().split("\n")[0];
-        if(firstLine.startsWith("@")){
+        if(firstLine.startsWith("@") && firstLine.split(" ")[0].trim().matches("[@A-Za-z0-9]+")){
             return firstLine.split(" ")[0].trim();
         }
         return null;
@@ -133,7 +130,14 @@ public class CheckUtils {
             return lang.get().getLanguage();
         }
         catch (IOException e){
-            e.printStackTrace();
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            try{
+                FileUtils.appendToFile(FilePathUtils.outputErrorLogFile,sw.toString());
+            }
+            catch (IOException e2){
+                System.out.println("File not found");
+            }
         }
         return null;
     }

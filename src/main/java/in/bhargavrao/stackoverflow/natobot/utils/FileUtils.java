@@ -50,6 +50,15 @@ public class FileUtils {
         }
         Files.write(Paths.get(filename), newLines, StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE);
     }
+    public static String readLineFromFileStartswith(String filename, String message) throws IOException{
+        List<String> lines = readFile(filename);
+        for (String line:lines){
+            if(line.trim().toLowerCase().startsWith(message.trim().toLowerCase())){
+                return line.trim();
+            }
+        }
+        return null;
+    }
     public static void removeFromFileLine(String filename, int lineNumber) throws IOException{
         List<String> lines = readFile(filename);
         List<String> newLines = new ArrayList<>();

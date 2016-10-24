@@ -4,6 +4,7 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoBot;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
+import in.bhargavrao.stackoverflow.natobot.entities.NatoReport;
 import in.bhargavrao.stackoverflow.natobot.utils.*;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class Check implements SpecialCommand {
 
     public Check(PingMessageEvent event) {
         this.event = event;
-        this.message = event.getMessage().getContent();
+        this.message = event.getMessage().getPlainContent();
     }
 
     @Override
@@ -32,12 +33,16 @@ public class Check implements SpecialCommand {
         try {
             String filename = FilePathUtils.checkUsers;
             String word = CommandUtils.extractData(message).trim();
-            boolean returnValue = false;
+            Integer returnValue = 0;
 
             if(word.contains(" ")){
                 String parts[] = word.split(" ");
-                if(parts[0].equals("value")){
-                    returnValue = true;
+                if(parts[0].toLowerCase().equals("value")){
+                    returnValue = 1;
+                    word = parts[1];
+                }
+                else if (parts[0].toLowerCase().equals("explain")){
+                    returnValue = 2;
                     word = parts[1];
                 }
             }
@@ -66,15 +71,33 @@ public class Check implements SpecialCommand {
             NatoBot cc = new NatoBot();
             NatoPost np = cc.checkNatoPost(Integer.parseInt(word));
             NatoPostPrinter pp = new NatoPostPrinter(np);
-            pp.addFirstLine();
-            List<Object> returnValues = NatoUtils.getNaaValue(np, pp);
-            Double found = (Double) returnValues.get(0);
-            pp = (NatoPostPrinter) returnValues.get(1);
+            pp.addQuesionLink();
+
+            NatoReport report = NatoUtils.getNaaValue(np);
+
+            Double found = report.getNaaValue();
+            List<String> caughtFilters = report.getCaughtFor();
+            List<Double> caughtFiltersValues = report.getCaughtForValues();
+
+            for(String filter: caughtFilters){
+                pp.addMessage(" **"+filter+"**; ");
+            }
+
             pp.addMessage(" **"+found+"**;");
-            if(returnValue==true)
-                room.replyTo(event.getMessage().getId(), "The NAA Value is "+found);
-            else
+            if(returnValue==1) {
+                room.replyTo(event.getMessage().getId(), "The NAA Value is " + found);
+            }
+            if(returnValue==2) {
+                room.replyTo(event.getMessage().getId(), "The NAA Value is " + found + ". The explanation for the filters is:");
+                String explanation = "";
+                for(int i=0;i<caughtFilters.size();i++){
+                    explanation+="    "+caughtFiltersValues.get(i)+" - "+caughtFilters.get(i)+"\n";
+                }
+                room.send(explanation);
+            }
+            else {
                 room.replyTo(event.getMessage().getId(), pp.print());
+            }
         }
         catch (IOException e){
             e.printStackTrace();

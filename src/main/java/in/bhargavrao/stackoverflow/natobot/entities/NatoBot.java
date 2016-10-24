@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.commands.*;
+import in.bhargavrao.stackoverflow.natobot.printers.PostPrinter;
 import in.bhargavrao.stackoverflow.natobot.utils.*;
 import in.bhargavrao.stackoverflow.natobot.validators.AllowAllNatoValidator;
 import in.bhargavrao.stackoverflow.natobot.validators.Validator;
@@ -108,7 +109,7 @@ public class NatoBot {
             add(new Blacklist(event));
             add(new Check(event));
             add(new Commands(event));
-            add(new Help(event));
+            add(new Fetch(event));
             add(new Help(event));
             add(new Hi(event));
             add(new IsBlacklisted(event));
@@ -121,6 +122,7 @@ public class NatoBot {
             add(new RemoveRequest(event));
             add(new RemoveWhitelist(    event));
             add(new Say(event));
+            add(new Send(event));
             add(new ShowRequests(event));
             add(new Status(event));
             add(new Whitelist(event));
@@ -135,51 +137,4 @@ public class NatoBot {
         System.out.println(event.getMessage().getContent());
     }
 
-    public int runOnce(Room room,  List<Validator> validators, NatoBot cc, int naaValueLimit){
-        int numOfAnswers = 0;
-        try{
-            List<NatoPost> natoAnswers = cc.getNatoAnswers(new AllowAllNatoValidator());
-            System.out.println(natoAnswers);
-            for (NatoPost np : natoAnswers) {
-                boolean sent = false;
-
-                NatoPostPrinter pp = new NatoPostPrinter(np).addMainTag().addQuesionLink().addBodyLength().addReputation();
-
-                List<OptedInUser> pingUsersList = UserUtils.pingUserIfApplicable(np,room.getRoomId());
-
-                List<Object> returnValues = NatoUtils.getNaaValue(np, pp);
-                Double naaValue = (Double) returnValues.get(0);
-                pp = (NatoPostPrinter) returnValues.get(1);
-
-                boolean validate = true;
-
-                for (Validator validator : validators){
-                    validate = validate && validator.validate(np);
-                }
-
-                if (validate){
-                    pp.addFirstLine();
-                    pp.addMessage(" **"+naaValue+"**;");
-
-                    for (OptedInUser user : pingUsersList) {
-                        if (!user.isWhenInRoom() || (user.isWhenInRoom() && UserUtils.checkIfUserInRoom(room, user.getUser().getUserId()))) {
-                            pp.addMessage(" @"+user.getUser().getUsername().replace(" ",""));
-                        }
-                        if(user.getPostType().equals("all")){
-                            numOfAnswers++;
-                            room.send(pp.print());
-                            sent = true;
-                        }
-                    }
-
-                    if (!sent && naaValue>naaValueLimit)
-                        room.send(pp.print());
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return numOfAnswers;
-    }
 }

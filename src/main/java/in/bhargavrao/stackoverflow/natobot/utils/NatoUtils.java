@@ -3,9 +3,11 @@ package in.bhargavrao.stackoverflow.natobot.utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
+import in.bhargavrao.stackoverflow.natobot.entities.NatoReport;
 import in.bhargavrao.stackoverflow.natobot.entities.SOUser;
 import in.bhargavrao.stackoverflow.natobot.filters.*;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,8 @@ public class NatoUtils {
             asker.setUserId(askerJSON.get("user_id").getAsInt());
         }
         catch (Exception e){
+            System.out.println("ASKER"+askerJSON);
+            System.out.println("ANSWERER"+answererJSON);
             e.printStackTrace();
         }
 
@@ -59,7 +63,8 @@ public class NatoUtils {
 
     }
 
-    public static List<Object> getNaaValue(NatoPost np, NatoPostPrinter pp) {
+
+    public static NatoReport getNaaValue(NatoPost np) {
         Double f = 0.0;
 
         List<Filter> filters = new ArrayList<Filter>(){{
@@ -81,20 +86,36 @@ public class NatoUtils {
             add(new WhitelistedFilter(np));
         }};
 
-        String caughtFor = "";
+        List<String> caughtFor = new ArrayList<>();
+        List<Double> caughtNaa = new ArrayList<>();
 
         for(Filter filter: filters){
             if(filter.filter()){
                 f+=filter.getValue();
-                pp.addMessage(" **"+filter.description()+"**; ");
-                caughtFor+=filter.description()+";";
+                caughtFor.add(filter.description());
+                caughtNaa.add(filter.getValue());
             }
         }
 
-        List<Object> returnValues =  new ArrayList<>();
-        returnValues.add(f);
-        returnValues.add(pp);
-        returnValues.add(caughtFor);
-        return returnValues;
+        return new NatoReport(np,f,caughtFor,caughtNaa);
     }
+
+    public static String addFMS(NatoReport report){
+
+        NatoPost np = report.getPost();
+
+        String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+"</title></head><link href='style.css' rel='stylesheet' ><body><pre style='border:1px solid black;border-radius:5px'><code>"+np.getBody()+"</code></pre><p>Caught for</p>";
+        for(String i:report.getCaughtFor()){
+            htmlString+=i+"<br/>";
+        }
+        htmlString+="<p><a href='//stackoverflow.com/a/"+np.getAnswerID()+"'>Link to post</a></p></body></html>";
+        try {
+            FileUtils.createNewFile("./../tomcat/webapps/ROOT/NATO/" + np.getAnswerID() + ".html", htmlString);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        return "http://51.254.218.90:8000/NATO/"+np.getAnswerID()+".html";
+    }
+
 }

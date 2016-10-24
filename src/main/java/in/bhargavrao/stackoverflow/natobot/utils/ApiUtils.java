@@ -40,6 +40,14 @@ public class ApiUtils {
         return answerJson;
     }
 
+    public static JsonObject getAnswerDetailsByIds(List<Integer> answerIdList) throws IOException{
+        String answerIds = answerIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
+        String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerIds;
+        JsonObject answerJson = JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"pagesize",String.valueOf(answerIdList.size()),"key",apiKey,"sort","creation");
+        quota = answerJson.get("quota_remaining").getAsInt();
+        return answerJson;
+    }
+
     public static JsonObject getFirstPageOfAnswers(Instant fromTimestamp) throws IOException{
         String answersUrl = "https://api.stackexchange.com/2.2/answers";
         JsonObject answersJson = JsonUtils.get(answersUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","fromdate",String.valueOf(fromTimestamp.minusSeconds(1).getEpochSecond()),"site",site,"key",apiKey,"sort","creation");
