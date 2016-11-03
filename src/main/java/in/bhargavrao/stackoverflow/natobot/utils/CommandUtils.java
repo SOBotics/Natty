@@ -31,5 +31,18 @@ public class CommandUtils {
         }
 
     }
+    public static String getAnswerId(String word){
+        String parts[]= word.split("//")[1].split("/");
+        if(parts[1].equals("a") || parts[1].equals("answers")){
+            word = parts[2];
+        }
+        else if (parts[1].equals("q") || parts[1].equals("questions")){
+            if (parts[4].contains("#"))
+            {
+                word = parts[4].split("#")[1];
+            }
+        }
+        return word;
+    }
 
 }

@@ -22,7 +22,7 @@ public class NatoPostPrinter {
                 firstline = firstline.substring(0, firstline.lastIndexOf(' '));
             }
         }
-        this.printStr+=" **Body Starts With:** "+firstline;
+        this.printStr+=" **Body Starts With:** "+firstline.replace("[","\\[");
         return this;
     }
 

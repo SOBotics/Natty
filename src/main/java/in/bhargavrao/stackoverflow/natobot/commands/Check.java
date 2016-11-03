@@ -49,22 +49,16 @@ public class Check implements SpecialCommand {
             if(word.contains("/"))
             {
                 String parts[]= word.split("//")[1].split("/");
-                if(parts[1].equals("a") || parts[1].equals("answers")){
-                    word = parts[2];
-                }
-                else if (parts[1].equals("q") || parts[1].equals("questions")){
-                    if (parts[4].contains("#"))
-                    {
-                        word = parts[4].split("#")[1];
-                    }
-                }
-                else if(parts[1].equals("users")){
+                if(parts[1].equals("users")){
                     for(String line: FileUtils.readFile(filename)){
                         String users[] = line.split(",");
                         if(parts[2].equals(users[0])){
                             room.replyTo(event.getMessage().getId(), users[1]);
                         }
                     }
+                }
+                else {
+                    word = CommandUtils.getAnswerId(word);
                 }
             }
 

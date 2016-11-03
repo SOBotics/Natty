@@ -12,6 +12,7 @@ public class FilePathUtils {
     public static String optedUsersFile = "./data/OptedInUsersList.txt";
     public static String featureRequests = "./data/FeatureRequests.txt";
     public static String checkUsers = "./data/CheckUsers.txt";
+    public static String blacklistedUsers = "./data/BlackListedUsers.txt";
     public static String outputCSVLogFile = "./logs/output.csv";
     public static String outputErrorLogFile = "./logs/error.txt";
     public static String outputReportLogFile = "./logs/reports.txt";

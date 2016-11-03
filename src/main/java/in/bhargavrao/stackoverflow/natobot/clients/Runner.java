@@ -39,10 +39,11 @@ public class Runner {
                     if (report.getNaaValue()>naaValueLimit) {
                         if(logging){
                             FileUtils.appendToFile(FilePathUtils.outputReportLogFile,Integer.toString(np.getAnswerID()));
-                            String completeLog = np.getAnswerID()+","+np.getBodyMarkdown().length()+","+np.getAnswerer().getReputation()+","+report.getCaughtFor().stream().collect(Collectors.joining(";"))+";";
+                            String completeLog = np.getAnswerID()+","+np.getAnswerCreationDate()+","+report.getNaaValue()+","+np.getBodyMarkdown().length()+","+np.getAnswerer().getReputation()+","+report.getCaughtFor().stream().collect(Collectors.joining(";"))+";";
                             FileUtils.appendToFile(FilePathUtils.outputCompleteLogFile,completeLog);
                         }
                         room.send(returnString);
+                        numOfAnswers++;
                     }
                 }
             }

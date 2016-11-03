@@ -45,10 +45,17 @@ public class NatoUtils {
             answerer.setUserType(answererJSON.get("user_type").getAsString());
             answerer.setUserId(answererJSON.get("user_id").getAsInt());
 
-            asker.setReputation(askerJSON.get("reputation").getAsLong());
             asker.setUsername(JsonUtils.escapeHtmlEncoding(askerJSON.get("display_name").getAsString()));
             asker.setUserType(askerJSON.get("user_type").getAsString());
-            asker.setUserId(askerJSON.get("user_id").getAsInt());
+
+            if(askerJSON.get("user_type").getAsString().equals("does_not_exist")){
+                asker.setReputation(0);
+                asker.setUserId(-1);
+            }
+            else {
+                asker.setReputation(askerJSON.get("reputation").getAsLong());
+                asker.setUserId(askerJSON.get("user_id").getAsInt());
+            }
         }
         catch (Exception e){
             System.out.println("ASKER"+askerJSON);
@@ -80,6 +87,7 @@ public class NatoUtils {
             add(new SalutationsFilter(np));
             add(new SelfAnswerFilter(np));
             add(new StartsWithKeywordFilter(np));
+            add(new UnformattedCodeFilter(np));
             add(new UnregisteredUserFilter(np));
             add(new UserMentionedFilter(np));
             add(new VeryLongWordFilter(np));

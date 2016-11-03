@@ -2,6 +2,7 @@ package in.bhargavrao.stackoverflow.natobot.commands;
 
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import in.bhargavrao.stackoverflow.natobot.clients.RunNatoBot;
 import in.bhargavrao.stackoverflow.natobot.services.StatsService;
 import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FilePathUtils;
@@ -31,6 +32,6 @@ public class Status implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        room.send(StatsService.getStatus());
+        room.send(RunNatoBot.getStats().getStatus());
     }
 }

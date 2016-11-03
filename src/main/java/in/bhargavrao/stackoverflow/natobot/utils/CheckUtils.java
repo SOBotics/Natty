@@ -10,6 +10,7 @@ import com.optimaize.langdetect.text.CommonTextObjectFactories;
 import com.optimaize.langdetect.text.TextObject;
 import com.optimaize.langdetect.text.TextObjectFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.tika.langdetect.OptimaizeLangDetector;
 
 import org.apache.tika.language.detect.LanguageResult;
@@ -218,5 +219,25 @@ public class CheckUtils {
     }
     public static boolean checkIfEndsWithQm(NatoPost natoPost){
         return natoPost.getBodyMarkdown().trim().endsWith("?");
+    }
+    public static boolean checkIfUserIsBlacklisted(long userId){
+        try {
+            return FileUtils.checkIfInFile(FilePathUtils.blacklistedUsers, Long.toString(userId));
+        }
+        catch (IOException e){
+            System.out.println("File not found");
+            return false;
+        }
+    }
+    public static boolean checkIfUnformatted(NatoPost natoPost){
+        String strippedBody = stripTags(stripBody(natoPost));
+        strippedBody = strippedBody.replace("\n","");
+        long totLength = strippedBody.length();
+        long whitespaceCount = strippedBody.chars().filter(c -> c == ' ').count();
+        long alphaCount = strippedBody.chars().filter(c -> c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9').count();
+        long puncCount = totLength-whitespaceCount-alphaCount;
+        if (totLength!=0 && alphaCount!=0)
+            return whitespaceCount/totLength<0.08 && puncCount/alphaCount>0.125;
+        return false;
     }
 }

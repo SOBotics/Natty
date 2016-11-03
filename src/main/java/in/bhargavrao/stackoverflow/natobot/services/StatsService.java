@@ -1,27 +1,34 @@
 package in.bhargavrao.stackoverflow.natobot.services;
 
+import java.time.Instant;
+
 /**
  * Created by bhargav.h on 16-Oct-16.
  */
 public class StatsService {
-    private static long totalReports=0;
-    private static long trueReplies=0;
-    private static long falseReplies=0;
-    private static long editReplies=0;
+    private long totalReports=0;
+    private long trueReplies=0;
+    private long falseReplies=0;
+    private long editReplies=0;
+    private Instant startTime;
 
-    public static void addReport(){
-        totalReports++;
+    public StatsService(Instant startTime){
+        this.startTime = startTime;
     }
-    public static void addtp(){
+
+    public void addReports(int number){
+        totalReports+=number;
+    }
+    public void addtp(){
         trueReplies++;
     }
-    public static void addfp(){
+    public void addfp(){
         falseReplies++;
     }
-    public static void addne(){
+    public void addne(){
         editReplies++;
     }
-    public static String getStatus(){
-        return "tps: "+trueReplies+" nes: "+editReplies+" fps: "+falseReplies + " total: "+totalReports;
+    public String getStatus(){
+        return "running since: "+startTime+" tps: "+trueReplies+" nes: "+editReplies+" fps: "+falseReplies + " total: "+totalReports;
     }
 }

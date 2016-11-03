@@ -100,6 +100,17 @@ public class Fetch implements SpecialCommand {
                     room.replyTo(event.getMessage().getId(), links);
                 }
             }
+            else if(data.split(" ")[0].equals("FMS") && lines.size()!=0) {
+
+                String links = "";
+                for(String line: lines) {
+                    links += "["+line.trim()+"](http://51.254.218.90:8000/NATO/"+line.trim()+".html); ";
+                }
+                room.replyTo(event.getMessage().getId(), links);
+            }
+            else if(data.split(" ")[0].equals("amount") && lines.size()!=0) {
+                room.replyTo(event.getMessage().getId(), Integer.toString(lines.size()));
+            }
             else {
 
                 if (lines.size() == 0)

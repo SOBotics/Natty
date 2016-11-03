@@ -29,7 +29,7 @@ public class Send implements SpecialCommand {
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"send");
+        return CommandUtils.checkForCommand(message,"send") || CommandUtils.checkForCommand(message,"rsend") ;
     }
 
     @Override
@@ -43,9 +43,8 @@ public class Send implements SpecialCommand {
                 room.replyTo(event.getMessage().getId(), "InputMismatchError, The code has been made Tuna Proof™");
                 return;
             }
-            if(feedbacks[0].equals("reverse")){
+            if(message.split(" ")[1].toLowerCase().equals("rsend")){
                 Collections.reverse(lines);
-                feedbacks =  Arrays.copyOfRange(feedbacks, 1, feedbacks.length);
             }
             if(feedbacks.length>lines.size()){
                 room.replyTo(event.getMessage().getId(), "Too many feedbacks, Too less reports");
@@ -54,9 +53,11 @@ public class Send implements SpecialCommand {
             for(int i  =0 ;i<=feedbacks.length;i++){
                 String feedback = feedbacks[i];
                 String line = lines.get(i);
-                FileUtils.appendToFile(FilePathUtils.outputCSVLogFile,feedback+","+line);
-                FileUtils.removeFromFile(FilePathUtils.outputCompleteLogFile,line);
-                FileUtils.removeFromFile(FilePathUtils.outputReportLogFile,line.split(",")[0]);
+                if(feedback.equals("ne")||feedback.equals("tp")||feedback.equals("fp")) {
+                    FileUtils.appendToFile(FilePathUtils.outputCSVLogFile, feedback + "," + line);
+                    FileUtils.removeFromFile(FilePathUtils.outputCompleteLogFile, line);
+                    FileUtils.removeFromFile(FilePathUtils.outputReportLogFile, line.split(",")[0]);
+                }
             }
         }
         catch (IOException e){
