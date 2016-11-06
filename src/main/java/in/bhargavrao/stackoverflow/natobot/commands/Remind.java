@@ -50,4 +50,14 @@ public class Remind implements SpecialCommand {
             room.replyTo(event.getMessage().getId(), "Error occured, Try again");
         }
     }
+
+    @Override
+    public String description() {
+        return "Adds a reminder to the list of requests";
+    }
+
+    @Override
+    public String name() {
+        return "remind";
+    }
 }

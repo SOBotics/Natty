@@ -55,4 +55,14 @@ public class ShowRequests implements SpecialCommand {
 
 
     }
+
+    @Override
+    public String description() {
+        return "Shows the list of requests";
+    }
+
+    @Override
+    public String name() {
+        return "showreqs";
+    }
 }

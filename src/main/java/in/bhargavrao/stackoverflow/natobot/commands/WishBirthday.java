@@ -19,12 +19,21 @@ public class WishBirthday implements SpecialCommand {
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"wishBD");
+        return CommandUtils.checkForCommand(message,"wishbd");
     }
 
     @Override
     public void execute(Room room) {
-        System.out.println("Comes here");
         room.send("http://images.all-free-download.com/images/graphicthumb/best_happy_birthday_design_elements_vector_set_524006.jpg");
+    }
+
+    @Override
+    public String description() {
+        return "Wishes the user a very happy birthday";
+    }
+
+    @Override
+    public String name() {
+        return "wishBD";
     }
 }

@@ -98,4 +98,14 @@ public class Check implements SpecialCommand {
             room.replyTo(event.getMessage().getId(), "Error occured, Try again");
         }
     }
+
+    @Override
+    public String description() {
+        return "Checks the sanity of a given post";
+    }
+
+    @Override
+    public String name() {
+        return "check";
+    }
 }

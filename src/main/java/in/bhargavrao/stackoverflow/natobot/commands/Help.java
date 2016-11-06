@@ -28,4 +28,14 @@ public class Help implements SpecialCommand {
     public void execute(Room room) {
         room.replyTo(event.getMessage().getId(),PrintUtils.printHelp());
     }
+
+    @Override
+    public String description() {
+        return "Returns information regarding the chatbot";
+    }
+
+    @Override
+    public String name() {
+        return "help";
+    }
 }

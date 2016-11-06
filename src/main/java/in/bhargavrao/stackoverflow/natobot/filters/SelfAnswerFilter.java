@@ -13,7 +13,7 @@ public class SelfAnswerFilter implements Filter {
 
     public SelfAnswerFilter(NatoPost post) {
         this.post = post;
-        value = -2;
+        value = -3;
     }
 
     @Override

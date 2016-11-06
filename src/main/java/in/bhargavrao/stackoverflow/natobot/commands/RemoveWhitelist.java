@@ -35,4 +35,14 @@ public class RemoveWhitelist implements SpecialCommand {
         String data = CommandUtils.extractData(message).trim();
         room.replyTo(event.getMessage().getId(), CommandUtils.checkAndRemoveMessage(filename,data));
     }
+
+    @Override
+    public String description() {
+        return "Removes the given statement from whitelist  ";
+    }
+
+    @Override
+    public String name() {
+        return "rmwhitelist";
+    }
 }

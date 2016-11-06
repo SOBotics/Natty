@@ -44,7 +44,15 @@ public class RemoveRequest implements SpecialCommand {
         catch (IOException e){
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public String description() {
+        return "Removes the request from the list of requests";
+    }
 
+    @Override
+    public String name() {
+        return "rmreq";
     }
 }

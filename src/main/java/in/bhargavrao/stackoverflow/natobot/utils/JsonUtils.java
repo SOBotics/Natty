@@ -6,13 +6,19 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.jsoup.parser.Parser;
 import org.slf4j.Logger;
 
 /**
  * Created by bhargav.h on 10-Sep-16.
- * Courtesy Tunaki
+ * AKA, TunaLib - All code is courtesy of Lord Tunaki
  */
 public class JsonUtils {
     public static JsonObject get(String url, String... data) throws IOException {
@@ -41,4 +47,5 @@ public class JsonUtils {
     public static String sanitizeChatMessage(String message) {
         return message.replaceAll("(\\[|\\]|_|\\*|`)", "\\\\$1");
     }
+
 }

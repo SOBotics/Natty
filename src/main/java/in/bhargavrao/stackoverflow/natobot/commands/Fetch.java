@@ -39,6 +39,11 @@ public class Fetch implements SpecialCommand {
     }
 
     @Override
+    public String description() {
+        return "Returns a list of posts that need feedback, See the wiki for more details";
+    }
+
+    @Override
     public void execute(Room room) {
 
         String data = CommandUtils.extractData(message).trim();
@@ -124,5 +129,10 @@ public class Fetch implements SpecialCommand {
         }
 
 
+    }
+
+    @Override
+    public String name() {
+        return "fetch";
     }
 }

@@ -13,7 +13,7 @@ public class StartsWithKeywordFilter implements Filter {
 
     public StartsWithKeywordFilter(NatoPost post) {
         this.post = post;
-        value = 1;
+        value = 1.5;
     }
 
     @Override

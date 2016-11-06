@@ -191,7 +191,7 @@ public class CheckUtils {
     public static String checkForLongWords(NatoPost natoPost){
         String bodyParts[] = natoPost.getBodyMarkdown().replaceAll("[^a-zA-Z ]", " ").split(" ");
         for(String part:bodyParts){
-            if (part.length()>100){
+            if (part.length()>50){
                 return part;
             }
         }

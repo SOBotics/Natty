@@ -41,4 +41,14 @@ public class AddSalute implements SpecialCommand {
             room.replyTo(event.getMessage().getId(), "Error occured, Try again");
         }
     }
+
+    @Override
+    public String description() {
+        return "Adds a given statement to the list of salutations";
+    }
+
+    @Override
+    public String name() {
+        return "addsalute";
+    }
 }

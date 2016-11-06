@@ -36,4 +36,14 @@ public class RemoveBlackList implements SpecialCommand {
         room.replyTo(event.getMessage().getId(), CommandUtils.checkAndRemoveMessage(filename,data));
 
     }
+
+    @Override
+    public String description() {
+        return "Removes the given statement from blacklist";
+    }
+
+    @Override
+    public String name() {
+        return "rmblacklist";
+    }
 }

@@ -26,4 +26,14 @@ public class Say implements SpecialCommand {
     public void execute(Room room) {
         room.send(CommandUtils.extractData(message));
     }
+
+    @Override
+    public String description() {
+        return "Echoes the user input";
+    }
+
+    @Override
+    public String name() {
+        return "say";
+    }
 }

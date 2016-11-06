@@ -32,6 +32,8 @@ public class Report implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
+
+
             String word = CommandUtils.extractData(message).trim();
 
             if(word.contains("/"))
@@ -39,31 +41,63 @@ public class Report implements SpecialCommand {
                 word = CommandUtils.getAnswerId(word);
             }
 
-            NatoBot cc = new NatoBot();
-            NatoPost np = cc.checkNatoPost(Integer.parseInt(word));
-            NatoPostPrinter pp = new NatoPostPrinter(np);
-            pp.addQuesionLink();
-
-            NatoReport report = NatoUtils.getNaaValue(np);
-
-            Double found = report.getNaaValue();
-            List<String> caughtFilters = report.getCaughtFor();
-
-            for(String filter: caughtFilters){
-                pp.addMessage(" **"+filter+"**; ");
+            if(FileUtils.checkIfInFile(FilePathUtils.outputReportLogFile,word)){
+                room.replyTo(event.getMessage().getId(), "Post already reported");
             }
+            else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tp,"+word)!=null) {
+                room.replyTo(event.getMessage().getId(), "Post already registered as True Positive");
+            }
+            else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"fp,"+word)!=null) {
+                room.replyTo(event.getMessage().getId(), "Post already registered as False Positive");
+            }
+            else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"ne,"+word)!=null) {
+                room.replyTo(event.getMessage().getId(), "Post already registered as Needs Edit");
+            }
+            else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tn,"+word)!=null) {
+                room.replyTo(event.getMessage().getId(), "Post already registered as True Negative");
+            }
+            else {
+                NatoBot cc = new NatoBot();
+                NatoPost np = cc.checkNatoPost(Integer.parseInt(word));
+                NatoPostPrinter pp = new NatoPostPrinter(np);
+                pp.addQuesionLink();
 
-            pp.addMessage(" **"+found+"**;");
+                NatoReport report = NatoUtils.getNaaValue(np);
 
-            room.replyTo(event.getMessage().getId(), pp.print());
+                Double found = report.getNaaValue();
+                List<String> caughtFilters = report.getCaughtFor();
 
-            String completeLog = "tn,"+np.getAnswerID()+","+np.getAnswerCreationDate()+","+report.getNaaValue()+","+np.getBodyMarkdown().length()+","+np.getAnswerer().getReputation()+","+report.getCaughtFor().stream().collect(Collectors.joining(";"))+";";
-            FileUtils.appendToFile(FilePathUtils.outputCSVLogFile,completeLog);
+                for (String filter : caughtFilters) {
+                    pp.addMessage(" **" + filter + "**; ");
+                }
 
+                pp.addMessage(" **" + found + "**;");
+
+
+                String completeLog = "tn," + np.getAnswerID() + "," + np.getAnswerCreationDate() + "," + report.getNaaValue() + "," + np.getBodyMarkdown().length() + "," + np.getAnswerer().getReputation() + "," + report.getCaughtFor().stream().collect(Collectors.joining(";")) + ";";
+                FileUtils.appendToFile(FilePathUtils.outputCSVLogFile, completeLog);
+                long postId = NatoUtils.addSentinel(report);
+                NatoUtils.addFeedback(postId,event.getUserId(),event.getUserName(),"tn");
+                FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+postId);
+                pp.addMessage("[Sentinel]("+ SentinelUtils.sentinelMainUrl+"/posts/"+postId+")");
+
+                room.replyTo(event.getMessage().getId(), pp.print());
+
+            }
         }
         catch (IOException e){
             e.printStackTrace();
             room.replyTo(event.getMessage().getId(), "Error occured, Try again");
         }
+    }
+
+    @Override
+    public String description() {
+        return "Reports the mentioned post as a true negative NAA/VLQ";
+    }
+
+    @Override
+    public String name() {
+        return "report";
     }
 }

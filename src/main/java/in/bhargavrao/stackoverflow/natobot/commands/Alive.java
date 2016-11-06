@@ -27,4 +27,14 @@ public class Alive implements SpecialCommand {
     public void execute(Room room) {
         room.replyTo(event.getMessage().getId(), "Nope");
     }
+
+    @Override
+    public String description() {
+        return "Returns a test reply to inform that the bot is alive";
+    }
+
+    @Override
+    public String name() {
+        return "alive";
+    }
 }

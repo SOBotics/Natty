@@ -27,4 +27,14 @@ public class IsBlacklisted implements SpecialCommand {
         String word = CommandUtils.extractData(message);
         room.replyTo(event.getMessage().getId(), CheckUtils.checkIfBlackListed(word)?"The word is blacklisted":"The word is not blacklisted");
     }
+
+    @Override
+    public String description() {
+        return "Checks if the given statement is blacklisted";
+    }
+
+    @Override
+    public String name() {
+        return "isblacklisted";
+    }
 }

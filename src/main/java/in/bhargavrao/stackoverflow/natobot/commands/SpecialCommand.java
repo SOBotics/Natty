@@ -8,4 +8,6 @@ import fr.tunaki.stackoverflow.chat.Room;
 public interface SpecialCommand {
     public boolean validate();
     public void execute(Room room);
+    public String description();
+    public String name();
 }

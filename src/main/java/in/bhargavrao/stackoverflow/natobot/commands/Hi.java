@@ -24,6 +24,22 @@ public class Hi implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        room.replyTo(event.getMessage().getId(), "Hi");
+        if(event.getUserId()==1252759)
+            room.replyTo(event.getMessage().getId(), "Hi Jon, Here are some scooby snacks.");
+        if(event.getUserId()==4174897)
+            room.replyTo(event.getMessage().getId(), "Plop.");
+        else
+            room.replyTo(event.getMessage().getId(), "Hi");
+
+    }
+
+    @Override
+    public String description() {
+        return "Hi, Test it out";
+    }
+
+    @Override
+    public String name() {
+        return "hi";
     }
 }

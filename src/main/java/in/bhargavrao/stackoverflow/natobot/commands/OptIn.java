@@ -74,4 +74,14 @@ public class OptIn implements SpecialCommand {
             room.replyTo(event.getMessage().getId(), "Please specify the type of post.");
         }
     }
+
+    @Override
+    public String description() {
+        return "Notifies the user of the requested posts, see the wiki for more details";
+    }
+
+    @Override
+    public String name() {
+        return "opt-in";
+    }
 }

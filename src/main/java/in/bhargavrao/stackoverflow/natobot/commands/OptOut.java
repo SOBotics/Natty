@@ -80,4 +80,14 @@ public class OptOut implements SpecialCommand {
             room.replyTo(event.getMessage().getId(), "Please specify the type of post.");
         }
     }
+
+    @Override
+    public String description() {
+        return "Unnotifies the user. ";
+    }
+
+    @Override
+    public String name() {
+        return "opt-out";
+    }
 }

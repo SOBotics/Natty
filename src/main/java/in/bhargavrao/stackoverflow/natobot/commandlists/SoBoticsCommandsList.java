@@ -1,7 +1,8 @@
-package in.bhargavrao.stackoverflow.natobot.commands;
+package in.bhargavrao.stackoverflow.natobot.commandlists;
 
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import in.bhargavrao.stackoverflow.natobot.commands.*;
 import in.bhargavrao.stackoverflow.natobot.utils.CheckUtils;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ public class SoBoticsCommandsList {
             add(new Alive(event));
             add(new Blacklist(event));
             add(new Check(event));
-            add(new Commands(event));
             add(new Fetch(event));
             add(new Halp(event));
             add(new Help(event));
@@ -44,6 +44,9 @@ public class SoBoticsCommandsList {
             add(new Whitelist(event));
             add(new WishBirthday(event));
         }};
+
+        commands.add(new Commands(event,commands));
+
         for(SpecialCommand command: commands){
             if(command.validate()){
                 command.execute(room);

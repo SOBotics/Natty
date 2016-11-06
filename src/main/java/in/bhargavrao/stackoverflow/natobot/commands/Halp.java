@@ -28,4 +28,14 @@ public class Halp implements SpecialCommand {
     public void execute(Room room) {
         room.replyTo(event.getMessage().getId(),"Plop! You need to use help");
     }
+
+    @Override
+    public String description() {
+        return "Plop, check it out";
+    }
+
+    @Override
+    public String name() {
+        return "halp";
+    }
 }

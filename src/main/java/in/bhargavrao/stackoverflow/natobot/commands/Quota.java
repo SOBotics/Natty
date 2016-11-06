@@ -28,4 +28,14 @@ public class Quota implements SpecialCommand {
     public void execute(Room room) {
         room.replyTo(event.getMessage().getId(), "The remaining quota is " + ApiUtils.getQuota());
     }
+
+    @Override
+    public String description() {
+        return "Returns the remaining API Quota";
+    }
+
+    @Override
+    public String name() {
+        return "quota";
+    }
 }

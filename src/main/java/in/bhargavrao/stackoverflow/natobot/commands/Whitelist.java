@@ -44,4 +44,14 @@ public class Whitelist implements SpecialCommand {
             room.replyTo(event.getMessage().getId(), "Error occured, Try again");
         }
     }
+
+    @Override
+    public String description() {
+        return "Adds a given statement to the list of whitelisted words";
+    }
+
+    @Override
+    public String name() {
+        return "whitelist";
+    }
 }

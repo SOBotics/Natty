@@ -6,6 +6,7 @@ import in.bhargavrao.stackoverflow.natobot.services.StatsService;
 import in.bhargavrao.stackoverflow.natobot.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natobot.utils.FileUtils;
+import in.bhargavrao.stackoverflow.natobot.utils.NatoUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,12 +52,15 @@ public class Send implements SpecialCommand {
                 return;
             }
             for(int i  =0 ;i<=feedbacks.length;i++){
-                String feedback = feedbacks[i];
+                String feedback = feedbacks[i].toLowerCase();
                 String line = lines.get(i);
                 if(feedback.equals("ne")||feedback.equals("tp")||feedback.equals("fp")) {
                     FileUtils.appendToFile(FilePathUtils.outputCSVLogFile, feedback + "," + line);
                     FileUtils.removeFromFile(FilePathUtils.outputCompleteLogFile, line);
                     FileUtils.removeFromFile(FilePathUtils.outputReportLogFile, line.split(",")[0]);
+                    String sentinel = FileUtils.readLineFromFileStartswith(FilePathUtils.outputSentinelIdLogFile,line.split(",")[0]);
+                    long postId = Long.parseLong(sentinel.split(",")[1]);
+                    long feedbackId = NatoUtils.addFeedback(postId,event.getUserId(),event.getUserName(),feedback);
                 }
             }
         }
@@ -64,5 +68,15 @@ public class Send implements SpecialCommand {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public String description() {
+        return "Sends a mass feedback, see the wiki for more details";
+    }
+
+    @Override
+    public String name() {
+        return "send";
     }
 }

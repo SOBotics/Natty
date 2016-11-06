@@ -15,7 +15,7 @@ public class UserMentionedFilter implements Filter {
 
     public UserMentionedFilter(NatoPost post) {
         this.post = post;
-        value = 0.5;
+        value = 1;
         userName = null;
     }
 

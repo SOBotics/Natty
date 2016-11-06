@@ -48,4 +48,14 @@ public class AddCheckUser implements SpecialCommand {
             room.replyTo(event.getMessage().getId(), "Error occured, Try again");
         }
     }
+
+    @Override
+    public String description() {
+        return "Adds a new user to the special users list";
+    }
+
+    @Override
+    public String name() {
+        return "addcheckuser";
+    }
 }

@@ -30,7 +30,8 @@ public class SoBoticsPostPrinter implements PostPrinter {
 
         postPrinter.addMessage(" **"+naaValue+"**;");
 
-        postPrinter.addMessage("[FMS]("+NatoUtils.addFMS(report)+")");
+        //postPrinter.addMessage("[FMS]("+NatoUtils.addFMS(report)+")");
+        postPrinter.addMessage("[Sentinel]("+ SentinelUtils.sentinelMainUrl+"/posts/"+NatoUtils.addSentinel(report)+")");
 
         return postPrinter.print();
     }

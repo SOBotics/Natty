@@ -17,4 +17,5 @@ public class FilePathUtils {
     public static String outputErrorLogFile = "./logs/error.txt";
     public static String outputReportLogFile = "./logs/reports.txt";
     public static String outputCompleteLogFile = "./logs/fullReports.txt";
+    public static String outputSentinelIdLogFile = "./logs/sentinelReports.txt";
 }

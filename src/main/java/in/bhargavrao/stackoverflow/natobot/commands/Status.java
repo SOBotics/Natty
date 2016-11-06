@@ -34,4 +34,14 @@ public class Status implements SpecialCommand {
     public void execute(Room room) {
         room.send(RunNatoBot.getStats().getStatus());
     }
+
+    @Override
+    public String description() {
+        return "Returns the status of the bot";
+    }
+
+    @Override
+    public String name() {
+        return "status";
+    }
 }

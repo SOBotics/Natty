@@ -1,5 +1,6 @@
 package in.bhargavrao.stackoverflow.natobot.utils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
@@ -125,5 +126,67 @@ public class NatoUtils {
         }
         return "http://51.254.218.90:8000/NATO/"+np.getAnswerID()+".html";
     }
+
+    public static long addSentinel(NatoReport report){
+
+        JsonObject post = new JsonObject();
+
+        post.addProperty("title",report.getPost().getTitle());
+        post.addProperty("body",report.getPost().getBody());
+        post.addProperty("link","http://www.stackoverflow.com/a/"+report.getPost().getAnswerID());
+        post.addProperty("post_creation_date",report.getPost().getAnswerCreationDate().toString());
+        post.addProperty("user_link","http://stackoverflow.com/users/"+report.getPost().getAnswerer().getUserId());
+        post.addProperty("username",report.getPost().getAnswerer().getUsername());
+        post.addProperty("user_reputation",report.getPost().getAnswerer().getReputation());
+        post.addProperty("nato_score",report.getNaaValue());
+
+        JsonArray reasons = new JsonArray();
+        for(String reason: report.getCaughtFor()){
+            reasons.add(reason);
+        }
+
+        String authorization = "8d1524cdd677bc9ef489e347bc53f02031cb3724c6e23eac28a27d66a3b60973";
+
+        JsonObject json = new JsonObject();
+
+        json.add("post",post);
+        json.add("reasons",reasons);
+        json.addProperty("authorization",authorization);
+
+        long sentinelPostId = SentinelUtils.post(json);
+
+        try{
+           FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+sentinelPostId);
+        }
+        catch (IOException e){
+           e.printStackTrace();
+        }
+
+        return sentinelPostId;
+    }
+
+    public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type){
+
+        JsonObject feedback = new JsonObject();
+
+        feedback.addProperty("post_id",post_id);
+        feedback.addProperty("chat_id",chat_id);
+        feedback.addProperty("chat_username",chat_username);
+
+
+        String authorization = "8d1524cdd677bc9ef489e347bc53f02031cb3724c6e23eac28a27d66a3b60973";
+
+        JsonObject json = new JsonObject();
+
+        json.add("feedback",feedback);
+        json.addProperty("feedback_type",feedback_type);
+        json.addProperty("authorization",authorization);
+
+        long feedbackPostId = SentinelUtils.feedback(json);
+
+        return feedbackPostId;
+    }
+
+
 
 }
