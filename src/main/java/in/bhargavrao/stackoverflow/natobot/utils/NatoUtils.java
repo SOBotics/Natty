@@ -139,6 +139,7 @@ public class NatoUtils {
         post.addProperty("username",report.getPost().getAnswerer().getUsername());
         post.addProperty("user_reputation",report.getPost().getAnswerer().getReputation());
         post.addProperty("nato_score",report.getNaaValue());
+        post.addProperty("answer_id", report.getPost().getAnswerID());
 
         JsonArray reasons = new JsonArray();
         for(String reason: report.getCaughtFor()){
