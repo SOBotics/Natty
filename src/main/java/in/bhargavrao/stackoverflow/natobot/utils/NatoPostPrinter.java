@@ -13,6 +13,10 @@ public class NatoPostPrinter {
         this.printStr = PrintUtils.printDescription();
         this.natoPost = natoPost;
     }
+    public NatoPostPrinter(NatoPost natoPost, String description){
+        this.printStr = description;
+        this.natoPost = natoPost;
+    }
 
     public NatoPostPrinter addFirstLine(){
         String firstline = natoPost.getBodyMarkdown().split("\n")[0].trim();

@@ -41,7 +41,7 @@ public class Remind implements SpecialCommand {
                 }
                 else {
                     FileUtils.appendToFile(filename, data);
-                    room.replyTo(event.getMessage().getId(), "Added request Successfully");
+                    room.replyTo(event.getMessage().getId(), "Added request successfully");
                 }
             }
         }

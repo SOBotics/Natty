@@ -36,7 +36,7 @@ public class Blacklist implements SpecialCommand {
             }
             else{
                 FileUtils.appendToFile(filename,data);
-                room.replyTo(event.getMessage().getId(), "Added blacklist Successfully");
+                room.replyTo(event.getMessage().getId(), "Added blacklist successfully");
             }
         }
         catch (IOException e){

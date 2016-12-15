@@ -18,4 +18,5 @@ public class FilePathUtils {
     public static String outputReportLogFile = "./logs/reports.txt";
     public static String outputCompleteLogFile = "./logs/fullReports.txt";
     public static String outputSentinelIdLogFile = "./logs/sentinelReports.txt";
+    public static String vowpalDataLogFile = "./logs/vowpalData.txt";
 }

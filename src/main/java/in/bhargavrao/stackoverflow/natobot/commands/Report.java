@@ -6,6 +6,7 @@ import in.bhargavrao.stackoverflow.natobot.entities.NatoBot;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoReport;
 import in.bhargavrao.stackoverflow.natobot.utils.*;
+import in.bhargavrao.stackoverflow.natobot.validators.Validator;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,10 +19,12 @@ public class Report implements SpecialCommand {
 
     private PingMessageEvent event;
     private String message;
+    private Validator validator;
 
-    public Report(PingMessageEvent event) {
+    public Report(PingMessageEvent event, Validator validator) {
         this.event = event;
         this.message = event.getMessage().getPlainContent();
+        this.validator = validator;
     }
 
     @Override
@@ -59,35 +62,48 @@ public class Report implements SpecialCommand {
             else {
                 NatoBot cc = new NatoBot();
                 NatoPost np = cc.checkNatoPost(Integer.parseInt(word));
-                NatoPostPrinter pp = new NatoPostPrinter(np);
-                pp.addQuesionLink();
 
-                NatoReport report = NatoUtils.getNaaValue(np);
 
-                Double found = report.getNaaValue();
-                List<String> caughtFilters = report.getCaughtFor();
+                if(validator.validate(np)) {
 
-                for (String filter : caughtFilters) {
-                    pp.addMessage(" **" + filter + "**; ");
+                    NatoReport report = NatoUtils.getNaaValue(np);
+
+                    String completeLog = "tn," + np.getAnswerID() + "," + np.getAnswerCreationDate() + "," + report.getNaaValue() + "," + np.getBodyMarkdown().length() + "," + np.getAnswerer().getReputation() + "," + report.getCaughtFor().stream().collect(Collectors.joining(";")) + ";";
+                    FileUtils.appendToFile(FilePathUtils.outputCSVLogFile, completeLog);
+
+                    long postId = NatoUtils.addSentinel(report);
+                    String description;
+
+                    if (postId == -1) {
+                        description = ("[ [NATOBot](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + NatoUtils.addFMS(report) + ") ]");
+                    } else {
+                        description = ("[ [NATOBot](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.sentinelMainUrl + "/posts/" + postId + ") ]");
+                    }
+                    NatoPostPrinter pp = new NatoPostPrinter(np, description);
+                    pp.addQuesionLink();
+
+                    Double found = report.getNaaValue();
+                    List<String> caughtFilters = report.getCaughtFor();
+
+                    for (String filter : caughtFilters) {
+                        pp.addMessage(" **" + filter + "**; ");
+                    }
+
+                    pp.addMessage(" **" + found + "**;");
+
+                    NatoUtils.addFeedback(postId, event.getUserId(), event.getUserName(), "tn");
+                    //FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+postId);
+
+                    room.send(pp.print());
                 }
-
-                pp.addMessage(" **" + found + "**;");
-
-
-                String completeLog = "tn," + np.getAnswerID() + "," + np.getAnswerCreationDate() + "," + report.getNaaValue() + "," + np.getBodyMarkdown().length() + "," + np.getAnswerer().getReputation() + "," + report.getCaughtFor().stream().collect(Collectors.joining(";")) + ";";
-                FileUtils.appendToFile(FilePathUtils.outputCSVLogFile, completeLog);
-                long postId = NatoUtils.addSentinel(report);
-                NatoUtils.addFeedback(postId,event.getUserId(),event.getUserName(),"tn");
-                FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+postId);
-                pp.addMessage("[Sentinel]("+ SentinelUtils.sentinelMainUrl+"/posts/"+postId+")");
-
-                room.replyTo(event.getMessage().getId(), pp.print());
-
+                else {
+                    room.send("Post is not allowed to be reported in this room.");
+                }
             }
         }
         catch (IOException e){
             e.printStackTrace();
-            room.replyTo(event.getMessage().getId(), "Error occured, Try again");
+            room.replyTo(event.getMessage().getId(), "Error occurred, Try again");
         }
     }
 

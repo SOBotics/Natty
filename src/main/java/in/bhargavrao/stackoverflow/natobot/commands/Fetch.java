@@ -54,44 +54,7 @@ public class Fetch implements SpecialCommand {
             String returnString = String.join("; ", lines);
 
             if(data.split(" ")[0].equals("posts") && lines.size()<10 && lines.size()!=0){
-                ArrayList<NatoPost> natoAnswers = new ArrayList<>();
-
-                JsonObject answersJson = ApiUtils.getAnswerDetailsByIds(lines.stream().map(Integer::parseInt).collect(Collectors.toList()));
-                JsonUtils.handleBackoff(LOGGER, answersJson);
-                if (answersJson.has("items")) {
-                    JsonArray answers = answersJson.get("items").getAsJsonArray();
-                    List<Integer> questionIdList = StreamSupport.stream(answers.spliterator(),false).map(x -> x.getAsJsonObject().get("question_id").getAsInt()).collect(Collectors.toList());
-                    JsonObject questionsJson = ApiUtils.getQuestionDetailsByIds(questionIdList);
-                    JsonUtils.handleBackoff(LOGGER, questionsJson);
-
-                    if(questionsJson.has("items")){
-                        JsonArray questions = questionsJson.get("items").getAsJsonArray();
-
-                        Map<Integer,JsonObject> questionMap = new HashMap<>();
-                        for(JsonElement j: questions){
-                            Integer questionId = j.getAsJsonObject().get("question_id").getAsInt();
-                            questionMap.put(questionId,j.getAsJsonObject());
-                        }
-
-                        for(JsonElement j: answers) {
-                            JsonObject answer = j.getAsJsonObject();
-                            Integer questionId = answer.get("question_id").getAsInt();
-                            if(questionMap.containsKey(questionId))
-                            {
-                                NatoPost np = NatoUtils.getNatoPost(answer, questionMap.get(questionId));
-                                natoAnswers.add(np);
-                            }
-                            else{
-                                System.out.println("MISSING KEY "+questionId);
-                            }
-                        }
-                    }
-                }
-
-                for(NatoPost post: natoAnswers){
-                    NatoReport report = NatoUtils.getNaaValue(post);
-                    room.send(new SoBoticsPostPrinter().print(report));
-                }
+                room.replyTo(event.getMessage().getId(), "Deprecated, Please use `fetch links` instead.");
             }
             else if(data.split(" ")[0].equals("links") && lines.size()!=0) {
 
@@ -110,6 +73,20 @@ public class Fetch implements SpecialCommand {
                 String links = "";
                 for(String line: lines) {
                     links += "["+line.trim()+"](http://51.254.218.90:8000/NATO/"+line.trim()+".html); ";
+                }
+                room.replyTo(event.getMessage().getId(), links);
+            }
+            else if(data.split(" ")[0].toLowerCase().equals("sentinel") && lines.size()!=0) {
+
+                String links = "";
+                for(String line: lines) {
+                    String postId = line.trim();
+                    String sentinelId = FileUtils.readLineFromFileStartswith(FilePathUtils.outputSentinelIdLogFile,postId);
+                    sentinelId = sentinelId.replace(postId+",","");
+                    if(sentinelId.equals("-1"))
+                        links+= postId+"; ";
+                    else
+                        links+= "["+postId+"]("+SentinelUtils.sentinelMainUrl+"/posts/"+sentinelId+"); ";
                 }
                 room.replyTo(event.getMessage().getId(), links);
             }

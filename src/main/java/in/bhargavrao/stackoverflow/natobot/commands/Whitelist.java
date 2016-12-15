@@ -36,7 +36,7 @@ public class Whitelist implements SpecialCommand {
             }
             else {
                 FileUtils.appendToFile(filename, data);
-                room.replyTo(event.getMessage().getId(), "Added whitelist Successfully");
+                room.replyTo(event.getMessage().getId(), "Added whitelist successfully");
             }
         }
         catch (IOException e){

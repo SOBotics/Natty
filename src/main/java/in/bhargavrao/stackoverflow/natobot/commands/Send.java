@@ -54,13 +54,19 @@ public class Send implements SpecialCommand {
             for(int i  =0 ;i<=feedbacks.length;i++){
                 String feedback = feedbacks[i].toLowerCase();
                 String line = lines.get(i);
+                if(feedback.equals("t")) feedback = "tp";
+                if(feedback.equals("f")) feedback = "fp";
+                if(feedback.equals("n")) feedback = "ne";
+
                 if(feedback.equals("ne")||feedback.equals("tp")||feedback.equals("fp")) {
                     FileUtils.appendToFile(FilePathUtils.outputCSVLogFile, feedback + "," + line);
                     FileUtils.removeFromFile(FilePathUtils.outputCompleteLogFile, line);
                     FileUtils.removeFromFile(FilePathUtils.outputReportLogFile, line.split(",")[0]);
                     String sentinel = FileUtils.readLineFromFileStartswith(FilePathUtils.outputSentinelIdLogFile,line.split(",")[0]);
                     long postId = Long.parseLong(sentinel.split(",")[1]);
-                    long feedbackId = NatoUtils.addFeedback(postId,event.getUserId(),event.getUserName(),feedback);
+                    if(postId!=-1) {
+                        long feedbackId = NatoUtils.addFeedback(postId, event.getUserId(), event.getUserName(), feedback);
+                    }
                 }
             }
         }

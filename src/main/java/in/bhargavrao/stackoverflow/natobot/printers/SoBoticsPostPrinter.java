@@ -4,6 +4,7 @@ import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoReport;
 import in.bhargavrao.stackoverflow.natobot.utils.*;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -17,7 +18,17 @@ public class SoBoticsPostPrinter implements PostPrinter {
     public String print(NatoReport report) {
 
         NatoPost np =report.getPost();
-        NatoPostPrinter postPrinter = new NatoPostPrinter(np).addMainTag().addQuesionLink().addBodyLength().addReputation();
+
+
+        long SentinelId = NatoUtils.addSentinel(report);
+        String description;
+        if(SentinelId==-1){
+            description = ("[ [NATOBot](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + NatoUtils.addFMS(report) + ") ]");
+        }
+        else {
+            description = ("[ [NATOBot](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.sentinelMainUrl + "/posts/" + SentinelId + ") ]");
+        }
+        NatoPostPrinter postPrinter = new NatoPostPrinter(np,description).addMainTag().addQuesionLink().addBodyLength().addReputation();
 
         Double naaValue = report.getNaaValue();
         List<String> caughtFilters = report.getCaughtFor();
@@ -29,9 +40,6 @@ public class SoBoticsPostPrinter implements PostPrinter {
         postPrinter.addFirstLine();
 
         postPrinter.addMessage(" **"+naaValue+"**;");
-
-        //postPrinter.addMessage("[FMS]("+NatoUtils.addFMS(report)+")");
-        postPrinter.addMessage("[Sentinel]("+ SentinelUtils.sentinelMainUrl+"/posts/"+NatoUtils.addSentinel(report)+")");
 
         return postPrinter.print();
     }

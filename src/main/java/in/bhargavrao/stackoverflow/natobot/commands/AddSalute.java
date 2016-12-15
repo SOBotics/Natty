@@ -34,7 +34,7 @@ public class AddSalute implements SpecialCommand {
             if (FileUtils.checkIfInFile(filename, data))
                 room.replyTo(event.getMessage().getId(), "Already added as Salute");
             FileUtils.appendToFile(filename,data);
-            room.replyTo(event.getMessage().getId(),"Added Salute Successfully");
+            room.replyTo(event.getMessage().getId(),"Added Salute successfully");
         }
         catch (IOException e){
             e.printStackTrace();

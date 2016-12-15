@@ -1,5 +1,9 @@
 package in.bhargavrao.stackoverflow.natobot.entities;
 
+import com.google.gson.JsonObject;
+
+import javax.json.Json;
+
 /**
  * Created by bhargav.h on 01-Oct-16.
  */
@@ -43,10 +47,15 @@ public class SOUser {
 
     @Override
     public String toString() {
-        return "SOUser{" +
-                "username='" + username + '\'' +
-                ", userId=" + userId +
-                ", reputation=" + reputation +
-                '}';
+        return getJson().toString();
+    }
+
+    public JsonObject getJson(){
+        JsonObject json = new JsonObject();
+        json.addProperty("username" , username);
+        json.addProperty("userId" , userId);
+        json.addProperty("reputation" , reputation);
+        json.addProperty("userType" , userType);
+        return json;
     }
 }

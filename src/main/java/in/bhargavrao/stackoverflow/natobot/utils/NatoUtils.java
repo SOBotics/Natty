@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natobot.utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
 import in.bhargavrao.stackoverflow.natobot.entities.NatoReport;
 import in.bhargavrao.stackoverflow.natobot.entities.SOUser;
@@ -69,6 +70,45 @@ public class NatoUtils {
 
         return np;
 
+    }
+
+    public static void handleFeedback(PingMessageEvent event, String type, String linkToPost) {
+        String filename = FilePathUtils.outputCSVLogFile;
+        try {
+
+            String sentinel = FileUtils.readLineFromFileStartswith(FilePathUtils.outputSentinelIdLogFile,linkToPost);
+
+            long postId = Long.parseLong(sentinel.split(",")[1]);
+            if(postId!=-1) {
+                long feedbackId = NatoUtils.addFeedback(postId, event.getUserId(), event.getUserName(), type);
+            }
+            String loggedLine = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCompleteLogFile,linkToPost);
+            String loggedAsTp = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tp,"+linkToPost);
+            String loggedAsTn = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tn,"+linkToPost);
+            String loggedAsFp = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"fp,"+linkToPost);
+            String loggedAsNe = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"ne,"+linkToPost);
+
+            if((loggedAsTp==null||loggedAsTn==null||loggedAsFp==null||loggedAsNe==null)&&loggedLine!=null) {
+                FileUtils.appendToFile(filename, type + "," +loggedLine);
+                FileUtils.removeFromFile(FilePathUtils.outputReportLogFile,linkToPost);
+                FileUtils.removeFromFileStartswith(FilePathUtils.outputCompleteLogFile,linkToPost);
+            }
+            else if(loggedAsTp!=null){
+                FileUtils.removeFromFile(filename,loggedAsTp);
+                FileUtils.appendToFile(filename,loggedAsTp.replace("tp,",type+","));
+            }
+            else if(loggedAsFp!=null){
+                FileUtils.removeFromFile(filename,loggedAsFp);
+                FileUtils.appendToFile(filename,loggedAsFp.replace("fp,",type+","));
+            }
+            else if(loggedAsNe!=null){
+                FileUtils.removeFromFile(filename,loggedAsNe);
+                FileUtils.appendToFile(filename,loggedAsNe.replace("ne,",type+","));
+            }
+        }
+        catch (IOException e){
+            System.out.println("Error");
+        }
     }
 
 
@@ -139,13 +179,19 @@ public class NatoUtils {
         post.addProperty("username",report.getPost().getAnswerer().getUsername());
         post.addProperty("user_reputation",report.getPost().getAnswerer().getReputation());
         post.addProperty("nato_score",report.getNaaValue());
+        post.addProperty("answer_id", report.getPost().getAnswerID());
+
 
         JsonArray reasons = new JsonArray();
         for(String reason: report.getCaughtFor()){
+            if(reason.startsWith("Non English"))
+                reason = "Non English Post";
+            if(reason.startsWith("User @"))
+                reason = "User Mentioned";
             reasons.add(reason);
         }
 
-        String authorization = "8d1524cdd677bc9ef489e347bc53f02031cb3724c6e23eac28a27d66a3b60973";
+        String authorization = "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
 
         JsonObject json = new JsonObject();
 
@@ -174,7 +220,7 @@ public class NatoUtils {
         feedback.addProperty("chat_username",chat_username);
 
 
-        String authorization = "8d1524cdd677bc9ef489e347bc53f02031cb3724c6e23eac28a27d66a3b60973";
+        String authorization = "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
 
         JsonObject json = new JsonObject();
 

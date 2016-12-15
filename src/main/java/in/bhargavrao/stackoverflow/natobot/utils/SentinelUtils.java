@@ -14,7 +14,7 @@ import java.net.URL;
  * Partly taken from Tunaki, with changes made.
  */
 public class SentinelUtils {
-    public static final String sentinelMainUrl = "http://artofcode.co.uk:8800";
+    public static final String sentinelMainUrl = "http://sentinel.erwaysoftware.com";
     private static final String sentinelPostUrl = sentinelMainUrl+"/posts/new";
     private static final String sentinelFeedbackUrl = sentinelMainUrl+"/feedbacks/new";
 
@@ -49,6 +49,7 @@ public class SentinelUtils {
             int responseCode = connection.getResponseCode();
             if (responseCode != 200) {
                 System.out.println(responseCode);
+                System.out.println(connection.getResponseMessage());
                 return null;
             }
 
@@ -65,11 +66,13 @@ public class SentinelUtils {
 
     public static long post(JsonObject json) {
         JsonObject rootResponse = postCall(json,sentinelPostUrl);
+        if(rootResponse == null) return -1;
         return rootResponse.get("data").getAsJsonObject().get("post_id").getAsLong();
     }
 
     public static long feedback(JsonObject json){
         JsonObject rootResponse = postCall(json,sentinelFeedbackUrl);
+        if(rootResponse == null) return -1;
         return rootResponse.get("data").getAsJsonObject().get("feedback_id").getAsLong();
     }
 }

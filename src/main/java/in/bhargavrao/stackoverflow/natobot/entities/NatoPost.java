@@ -1,6 +1,7 @@
 package in.bhargavrao.stackoverflow.natobot.entities;
 
 import com.google.gson.JsonObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -93,7 +94,6 @@ public class NatoPost {
         this.bodyMarkdown = bodyMarkdown;
     }
 
-
     public SOUser getAsker() {
         return asker;
     }
@@ -108,5 +108,31 @@ public class NatoPost {
 
     public void setAnswerer(SOUser answerer) {
         this.answerer = answerer;
+    }
+
+    @Override
+    public String toString() {
+
+        JsonObject json = getJson();
+        return json.toString();
+    }
+
+    @NotNull
+    private JsonObject getJson() {
+        JsonObject json = new JsonObject();
+
+        json.addProperty("title" , title );
+        json.addProperty("mainTag" , mainTag );
+        json.addProperty("answerCreationDate" , answerCreationDate.toString());
+        json.addProperty("questionCreationDate" , questionCreationDate.toString());
+        json.addProperty("answerID" , answerID);
+        json.addProperty("questionID" , questionID);
+        json.addProperty("body" , body );
+        json.addProperty("bodyMarkdown" , bodyMarkdown);
+        json.addProperty("tags" , Arrays.toString(tags));
+        json.add("asker" , asker.getJson());
+        json.add("answerer" , answerer.getJson());
+        return json;
+
     }
 }

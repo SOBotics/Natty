@@ -76,6 +76,14 @@ public class OptOut implements SpecialCommand {
                 room.replyTo(event.getMessage().getId(), "Type of post can be naa or all");
             }
         }
+        else if(pieces[0].equals("everything")){
+            try {
+                FileUtils.removeFromFileStartswith(filename,userId+",");
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
         else if(pieces.length==1){
             room.replyTo(event.getMessage().getId(), "Please specify the type of post.");
         }

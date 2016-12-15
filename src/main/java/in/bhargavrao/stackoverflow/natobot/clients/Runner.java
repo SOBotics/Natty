@@ -23,7 +23,6 @@ public class Runner {
                 List<OptedInUser> pingUsersList = UserUtils.pingUserIfApplicable(np,room.getRoomId());
                 NatoReport report = NatoUtils.getNaaValue(np);
 
-
                 if (validator.validate(np)){
                     if (report.getNaaValue()>naaValueLimit) {
                         String returnString = postPrinter.print(report);

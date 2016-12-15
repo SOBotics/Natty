@@ -93,7 +93,11 @@ public class CheckUtils {
         org.apache.tika.language.detect.LanguageDetector tikaDetector;
         TextObjectFactory textObjectFactory;
 
-        String dataToCheck = stripTags(stripBody(natoPost)).replaceAll("[^a-zA-Z ]", " ");
+
+
+        String dataToCheck = stripTags(stripBody(natoPost)).replaceAll("\\p{Punct}+", "");
+
+
 
         try {
 
@@ -237,7 +241,7 @@ public class CheckUtils {
         long alphaCount = strippedBody.chars().filter(c -> c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9').count();
         long puncCount = totLength-whitespaceCount-alphaCount;
         if (totLength!=0 && alphaCount!=0)
-            return whitespaceCount/totLength<0.08 && puncCount/alphaCount>0.125;
+            return 100 * whitespaceCount/ totLength< 80 && 100 * puncCount/ alphaCount>125;
         return false;
     }
 }
