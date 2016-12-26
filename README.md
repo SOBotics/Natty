@@ -1,5 +1,5 @@
 
-[NATOBot](http://stackapps.com/questions/7049/natobot-bringing-10k-moderation-to-all) 
+[Natty](http://stackapps.com/questions/7049/natty-bringing-10k-moderation-to-all) 
 ---
 
 #General
