@@ -57,5 +57,5 @@ The future works about this include
 
   The Project is running in the [SOBotics](http://chat.stackoverflow.com/rooms/111347/sobotics) room. A sample image of a report is 
   
-  ![Sample Image](http://i.stack.imgur.com/5uqcK.png)
+  ![Sample Image](http://i.stack.imgur.com/gyfzD.png)
   
