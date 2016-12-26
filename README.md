@@ -10,7 +10,7 @@ The [New Answers to Old Questions](http://stackoverflow.com/tools/new-answers-ol
 
 **Why do we need the bot?**
 
-The NATOBot project aims to not only overcome the *"not real time"* issue but also help those users below 10,000 reputation to take a look and moderate the answers.
+This project aims to not only overcome the *"not real time"* issue but also help those users below 10,000 reputation to take a look and moderate the answers.
 
 #Implementation
 
@@ -55,7 +55,7 @@ The future works about this include
 
 # Accounts 
 
-  The Project is running under the user [NATOBot](http://stackoverflow.com/users/6817005/natobot) in the [SOBotics](http://chat.stackoverflow.com/rooms/111347/sobotics) room. A sample image of a report is 
+  The Project is running in the [SOBotics](http://chat.stackoverflow.com/rooms/111347/sobotics) room. A sample image of a report is 
   
   ![Sample Image](http://i.stack.imgur.com/5uqcK.png)
   
