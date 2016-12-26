@@ -1,12 +1,12 @@
-package in.bhargavrao.stackoverflow.natobot.clients;
+package in.bhargavrao.stackoverflow.natty.clients;
 
 import fr.tunaki.stackoverflow.chat.Room;
-import in.bhargavrao.stackoverflow.natobot.entities.NatoPost;
-import in.bhargavrao.stackoverflow.natobot.entities.NatoReport;
-import in.bhargavrao.stackoverflow.natobot.entities.OptedInUser;
-import in.bhargavrao.stackoverflow.natobot.printers.PostPrinter;
-import in.bhargavrao.stackoverflow.natobot.utils.*;
-import in.bhargavrao.stackoverflow.natobot.validators.Validator;
+import in.bhargavrao.stackoverflow.natty.entities.Post;
+import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.entities.OptedInUser;
+import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.utils.*;
+import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
  * Created by bhargav.h on 20-Oct-16.
  */
 public class Runner {
-    public int runOnce(Room room, Validator validator, List<NatoPost> natoAnswers, double naaValueLimit, PostPrinter postPrinter, boolean logging){
+    public int runOnce(Room room, Validator validator, List<Post> posts, double naaValueLimit, PostPrinter postPrinter, boolean logging){
         int numOfAnswers = 0;
         try{
-            for (NatoPost np : natoAnswers) {
+            for (Post np : posts) {
 
                 List<OptedInUser> pingUsersList = UserUtils.pingUserIfApplicable(np,room.getRoomId());
-                NatoReport report = NatoUtils.getNaaValue(np);
+                PostReport report = PostUtils.getNaaValue(np);
 
                 if (validator.validate(np)){
                     if (report.getNaaValue()>naaValueLimit) {
