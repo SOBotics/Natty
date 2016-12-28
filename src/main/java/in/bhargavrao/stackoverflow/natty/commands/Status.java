@@ -26,7 +26,7 @@ public class Status implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        room.send(RunNatty.getStats().getStatus());
+        room.send("Some issue with that, Will be fixed soon");
     }
 
     @Override

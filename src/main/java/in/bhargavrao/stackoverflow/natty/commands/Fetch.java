@@ -52,9 +52,19 @@ public class Fetch implements SpecialCommand {
                 if (lines.size() == 0)
                     room.replyTo(event.getMessage().getId(), "All reports have been tended to");
                 else {
+
+                    int stopValue = lines.size();
+                    if(CheckUtils.checkIfInteger(data.split(" ")[1])){
+                        stopValue = Integer.parseInt(data.split(" ")[1]);
+                    }
+
                     String links = "";
+                    int i = 0;
                     for(String line: lines) {
                         links += "["+line.trim()+"](//stackoverflow.com/a/"+line.trim()+"); ";
+                        i++;
+                        if(i==stopValue)
+                            break;
                     }
                     room.replyTo(event.getMessage().getId(), links);
                 }

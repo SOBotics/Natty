@@ -237,4 +237,15 @@ public class CheckUtils {
             return 100 * whitespaceCount/ totLength< 80 && 100 * puncCount/ alphaCount>125;
         return false;
     }
+
+    public static boolean checkIfInteger(String str)
+    {
+        try{
+            double d = Integer.parseInt(str);
+        }
+        catch(NumberFormatException e){
+            return false;
+        }
+        return true;
+    }
 }

@@ -3,6 +3,8 @@ package in.bhargavrao.stackoverflow.natty.utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import fr.tunaki.stackoverflow.chat.Message;
+import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
@@ -21,7 +23,6 @@ import java.util.stream.StreamSupport;
 public class PostUtils {
 
     public static Post getPost(JsonObject answer, JsonObject question){
-
 
         Post np = new Post();
 
@@ -228,11 +229,37 @@ public class PostUtils {
         json.addProperty("feedback_type",feedback_type);
         json.addProperty("authorization",authorization);
 
-        long feedbackPostId = SentinelUtils.feedback(json);
+        return SentinelUtils.feedback(json);
+    }
 
-        return feedbackPostId;
+    public static void store(Room room, PingMessageEvent event, String type){
+        long repliedTo = event.getParentMessageId();
+        Message repliedToMessage = room.getMessage(repliedTo);
+        String message = repliedToMessage.getPlainContent().trim();
+        message = message.split("Link to Post")[1];
+        String linkToPost = message.substring(message.indexOf("(")+1,message.indexOf(")")).replace("//stackoverflow.com/a/","");
+        handleFeedback(event, type, linkToPost);
     }
 
 
+    public static void reply(Room room, PingMessageEvent event, boolean isReply){
+        System.out.println(event.getMessage().getContent());
+        if (CheckUtils.checkIfUserIsBlacklisted(event.getUserId())){
+            System.out.println("Blacklisted user");
+            return;
+        }
+        if (CommandUtils.checkForCommand(event.getMessage().getContent(),"tp") ||
+                CommandUtils.checkForCommand(event.getMessage().getContent(),"t")){
+            store(room, event, "tp");
+        }
+        if (CommandUtils.checkForCommand(event.getMessage().getContent(),"ne") ||
+                CommandUtils.checkForCommand(event.getMessage().getContent(),"n")){
+            store(room, event, "ne");
+        }
+        if (CommandUtils.checkForCommand(event.getMessage().getContent(),"fp") ||
+                CommandUtils.checkForCommand(event.getMessage().getContent(),"f")){
+            store(room, event, "fp");
+        }
+    }
 
 }
