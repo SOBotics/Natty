@@ -23,6 +23,7 @@ public class Runner {
                 List<OptedInUser> pingUsersList = UserUtils.pingUserIfApplicable(np,room.getRoomId());
                 PostReport report = PostUtils.getNaaValue(np);
 
+
                 if (validator.validate(np)){
                     if (report.getNaaValue()>naaValueLimit) {
                         String returnString = postPrinter.print(report);
@@ -40,6 +41,10 @@ public class Runner {
                         room.send(returnString);
                         numOfAnswers++;
                     }
+                }
+
+                if(report.getNaaValue()>=7.0 && logging){
+                    room.send(PostUtils.autoFlag(np));
                 }
             }
         }

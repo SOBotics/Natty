@@ -4,13 +4,10 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.MessageReplyEvent;
 import fr.tunaki.stackoverflow.chat.event.UserMentionedEvent;
 import in.bhargavrao.stackoverflow.natty.commandlists.GMTsCommandsList;
-import in.bhargavrao.stackoverflow.natty.commandlists.RPublicCommandsList;
 import in.bhargavrao.stackoverflow.natty.printers.GmtsPostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
-import in.bhargavrao.stackoverflow.natty.printers.RPublicPostPrinter;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowOnlyTagValidator;
-import in.bhargavrao.stackoverflow.natty.validators.RPublicValidator;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
 import java.util.function.Consumer;
@@ -20,7 +17,7 @@ import java.util.function.Consumer;
  */
 public class GMTsChatRoom implements BotRoom{
     @Override
-    public long getRoomId() {
+    public int getRoomId() {
         return 75819;
     }
 

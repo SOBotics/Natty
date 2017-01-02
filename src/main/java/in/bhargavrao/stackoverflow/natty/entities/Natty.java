@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natty.entities;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import in.bhargavrao.stackoverflow.natty.utils.*;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 import org.slf4j.Logger;
@@ -27,22 +28,24 @@ public class Natty {
     private static final Logger LOGGER = LoggerFactory.getLogger(Natty.class);
 
     private Instant previousAnswerTimestamp;
+    private ApiService apiService;
 
     public Natty() {
         previousAnswerTimestamp = Instant.now().minusSeconds(60);
+        apiService = new ApiService("stackoverflow");
     }
 
     public List<Post> getPosts(Validator validator) throws IOException{
         ArrayList<Post> posts = new ArrayList<>();
 
-        JsonObject answersJson = ApiUtils.getFirstPageOfAnswers(previousAnswerTimestamp);
+        JsonObject answersJson = apiService.getFirstPageOfAnswers(previousAnswerTimestamp);
         JsonUtils.handleBackoff(LOGGER, answersJson);
         if (answersJson.has("items")) {
             JsonArray answers = answersJson.get("items").getAsJsonArray();
 
             List<Integer> questionIdList = StreamSupport.stream(answers.spliterator(),false).map(x -> x.getAsJsonObject().get("question_id").getAsInt()).collect(Collectors.toList());
 
-            JsonObject questionsJson = ApiUtils.getQuestionDetailsByIds(questionIdList);
+            JsonObject questionsJson = apiService.getQuestionDetailsByIds(questionIdList);
             JsonUtils.handleBackoff(LOGGER, questionsJson);
 
             if(questionsJson.has("items")){
@@ -80,12 +83,12 @@ public class Natty {
     }
 
     public Post checkPost(int answerId) throws IOException{
-        JsonObject answerApiJson = ApiUtils.getAnswerDetailsById(answerId);
+        JsonObject answerApiJson = apiService.getAnswerDetailsById(answerId);
         JsonUtils.handleBackoff(LOGGER,answerApiJson);
         if(answerApiJson.has("items")) {
             JsonObject answer = answerApiJson.getAsJsonArray("items").get(0).getAsJsonObject();
             int questionId = answer.get("question_id").getAsInt();
-            JsonObject questionApiJson = ApiUtils.getQuestionDetailsById(questionId);
+            JsonObject questionApiJson = apiService.getQuestionDetailsById(questionId);
             JsonUtils.handleBackoff(LOGGER,questionApiJson);
             if(questionApiJson.has("items")){
                 JsonObject question = questionApiJson.getAsJsonArray("items").get(0).getAsJsonObject();

@@ -10,6 +10,7 @@ import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
 import in.bhargavrao.stackoverflow.natty.entities.SOUser;
 import in.bhargavrao.stackoverflow.natty.filters.*;
+import in.bhargavrao.stackoverflow.natty.services.ApiService;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -262,4 +263,22 @@ public class PostUtils {
         }
     }
 
+    public static String autoFlag(Post post){
+        ApiService apiService = new ApiService("stackoverflow");
+        try{
+            JsonObject flagOptions = apiService.getAnswerFlagOptions(post.getAnswerID());
+            JsonArray options = flagOptions.getAsJsonArray("items");
+            for(JsonElement e: options){
+                if(e.getAsJsonObject().get("title").getAsString().equals("not an answer")){
+                    JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(),e.getAsJsonObject().get("option_id").getAsInt());
+                    return "Post Flagged Automatically";
+                }
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return "Some Error Occured";
+        }
+        return "Some Error Occured";
+    }
 }

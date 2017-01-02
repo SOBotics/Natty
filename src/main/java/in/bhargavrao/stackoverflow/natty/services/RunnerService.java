@@ -1,25 +1,18 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
+import fr.tunaki.stackoverflow.chat.ChatHost;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.StackExchangeClient;
 import fr.tunaki.stackoverflow.chat.event.EventType;
 import in.bhargavrao.stackoverflow.natty.clients.Runner;
 import in.bhargavrao.stackoverflow.natty.entities.Natty;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.printers.GmtsPostPrinter;
-import in.bhargavrao.stackoverflow.natty.printers.HeadquartersPostPrinter;
-import in.bhargavrao.stackoverflow.natty.printers.RPublicPostPrinter;
-import in.bhargavrao.stackoverflow.natty.printers.SoBoticsPostPrinter;
 import in.bhargavrao.stackoverflow.natty.roomdata.BotRoom;
-import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
-import in.bhargavrao.stackoverflow.natty.validators.AllowOnlyTagValidator;
-import in.bhargavrao.stackoverflow.natty.validators.RPublicValidator;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -43,13 +36,14 @@ public class RunnerService {
 
     public void start(){
         for(BotRoom room:rooms){
-            Room chatroom = client.joinRoom("stackoverflow.com" ,room.getRoomId());
+            Room chatroom = client.joinRoom(ChatHost.STACK_OVERFLOW ,room.getRoomId());
 
             if(room.getRoomId()==111347){
                 chatroom.send("Hiya o/ (DEVELOPMENT VERSION NEW)" );
                 FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
                 feederService.start();
             }
+
             chatRooms.add(chatroom);
             if(room.getMention(chatroom)!=null)
                 chatroom.addEventListener(EventType.USER_MENTIONED, room.getMention(chatroom));

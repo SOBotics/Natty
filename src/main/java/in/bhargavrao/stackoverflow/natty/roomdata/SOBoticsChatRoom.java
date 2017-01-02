@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  */
 public class SOBoticsChatRoom implements BotRoom{
     @Override
-    public long getRoomId() {
+    public int getRoomId() {
         return 111347;
     }
 

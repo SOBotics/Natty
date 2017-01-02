@@ -12,50 +12,43 @@ import java.util.stream.Collectors;
  */
 public class ApiUtils {
 
-    private static final String apiKey = "kmtAuIIqwIrwkXm1*p3qqA((";
     private static final String filter = "!40nvjHa_IL(lxIFT9";
-    private static final String site = "stackoverflow";
 
-    private static int quota=0;
 
-    public static JsonObject getQuestionDetailsByIds(List<Integer> questionIdList) throws IOException {
+    public static JsonObject getQuestionDetailsByIds(List<Integer> questionIdList, String site, String apiKey) throws IOException {
         String questionIds = questionIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
         String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionIds;
-        JsonObject questionJson = JsonUtils.get(questionIdUrl,"site",site,"pagesize",String.valueOf(questionIdList.size()),"key",apiKey);
-        quota = questionJson.get("quota_remaining").getAsInt();
-        return questionJson;
+        return JsonUtils.get(questionIdUrl,"site",site,"pagesize",String.valueOf(questionIdList.size()),"key",apiKey);
     }
 
-    public static JsonObject getQuestionDetailsById(Integer questionId) throws IOException{
+    public static JsonObject getQuestionDetailsById(Integer questionId, String site, String apiKey) throws IOException{
         String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionId;
-        JsonObject questionJson = JsonUtils.get(questionIdUrl,"site",site,"key",apiKey);
-        quota = questionJson.get("quota_remaining").getAsInt();
-        return questionJson;
+        return JsonUtils.get(questionIdUrl,"site",site,"key",apiKey);
     }
 
-    public static JsonObject getAnswerDetailsById(Integer answerId) throws IOException{
+    public static JsonObject getAnswerDetailsById(Integer answerId, String site, String apiKey) throws IOException{
         String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerId;
-        JsonObject answerJson = JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"key",apiKey,"sort","creation");
-        quota = answerJson.get("quota_remaining").getAsInt();
-        return answerJson;
+        return JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"key",apiKey,"sort","creation");
     }
 
-    public static JsonObject getAnswerDetailsByIds(List<Integer> answerIdList) throws IOException{
+    public static JsonObject getAnswerDetailsByIds(List<Integer> answerIdList, String site, String apiKey) throws IOException{
         String answerIds = answerIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
         String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerIds;
-        JsonObject answerJson = JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"pagesize",String.valueOf(answerIdList.size()),"key",apiKey,"sort","creation");
-        quota = answerJson.get("quota_remaining").getAsInt();
-        return answerJson;
+        return JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"pagesize",String.valueOf(answerIdList.size()),"key",apiKey,"sort","creation");
     }
 
-    public static JsonObject getFirstPageOfAnswers(Instant fromTimestamp) throws IOException{
+    public static JsonObject getFirstPageOfAnswers(Instant fromTimestamp, String site, String apiKey) throws IOException{
         String answersUrl = "https://api.stackexchange.com/2.2/answers";
-        JsonObject answersJson = JsonUtils.get(answersUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","fromdate",String.valueOf(fromTimestamp.minusSeconds(1).getEpochSecond()),"site",site,"key",apiKey,"sort","creation");
-        quota = answersJson.get("quota_remaining").getAsInt();
-        return answersJson;
+        return JsonUtils.get(answersUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","fromdate",String.valueOf(fromTimestamp.minusSeconds(1).getEpochSecond()),"site",site,"key",apiKey,"sort","creation");
     }
 
-    public static int getQuota(){
-        return quota;
+    public static JsonObject getAnswerFlagOptions(Integer answerId, String site, String apiKey, String token) throws IOException{
+        String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerId+"/flags/options";
+        return JsonUtils.get(answerIdUrl,"site",site,"key",apiKey,"access_token",token);
+    }
+
+    public static JsonObject FlagAnswer(Integer answerId, Integer flagType, String site, String apiKey, String token) throws IOException{
+        String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerId+"/flags/add";
+        return JsonUtils.post(answerIdUrl,"option_id",Integer.toString(flagType),"site",site,"key",apiKey,"access_token",token);
     }
 }

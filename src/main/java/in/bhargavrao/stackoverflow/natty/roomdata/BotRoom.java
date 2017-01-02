@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  */
 public interface BotRoom {
 
-    public long getRoomId();
+    public int getRoomId();
     public Consumer<UserMentionedEvent> getMention(Room room);
     public Consumer<MessageReplyEvent> getReply(Room room);
     public Validator getValidator();

@@ -4,11 +4,8 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.MessageReplyEvent;
 import fr.tunaki.stackoverflow.chat.event.UserMentionedEvent;
 import in.bhargavrao.stackoverflow.natty.commandlists.HeadquartersCommandsList;
-import in.bhargavrao.stackoverflow.natty.commandlists.SoBoticsCommandsList;
 import in.bhargavrao.stackoverflow.natty.printers.HeadquartersPostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
-import in.bhargavrao.stackoverflow.natty.printers.SoBoticsPostPrinter;
-import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
@@ -19,7 +16,7 @@ import java.util.function.Consumer;
  */
 public class HeadquartersChatRoom implements BotRoom{
     @Override
-    public long getRoomId() {
+    public int getRoomId() {
         return 126814;
     }
 

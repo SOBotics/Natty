@@ -24,6 +24,15 @@ public class JsonUtils {
         JsonObject root = new JsonParser().parse(json).getAsJsonObject();
         return root;
     }
+    public static JsonObject post(String url, String... data) throws IOException {
+        Connection.Response response = Jsoup.connect(url).data(data).method(Connection.Method.POST).ignoreContentType(true).ignoreHttpErrors(true).execute();
+        String json = response.body();
+        if (response.statusCode() != 200) {
+            throw new IOException("HTTP " + response.statusCode() + " fetching URL " + (url) + ". Body is: " + response.body());
+        }
+        JsonObject root = new JsonParser().parse(json).getAsJsonObject();
+        return root;
+    }
     public static void handleBackoff(Logger LOGGER, JsonObject root) {
         if (root.has("backoff")) {
             int backoff = root.get("backoff").getAsInt();

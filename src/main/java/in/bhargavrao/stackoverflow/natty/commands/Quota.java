@@ -2,8 +2,10 @@ package in.bhargavrao.stackoverflow.natty.commands;
 
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
-import in.bhargavrao.stackoverflow.natty.utils.ApiUtils;
+import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
+
+import java.io.IOException;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -26,7 +28,14 @@ public class Quota implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        room.replyTo(event.getMessage().getId(), "The remaining quota is " + ApiUtils.getQuota());
+        ApiService apiService = new ApiService("stackoverflow");
+        try {
+            apiService.getAnswerDetailsById(1);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        room.replyTo(event.getMessage().getId(), "The remaining quota is "+apiService.getQuota());
     }
 
     @Override
