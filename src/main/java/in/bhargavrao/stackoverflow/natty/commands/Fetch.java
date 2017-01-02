@@ -1,32 +1,31 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
-import in.bhargavrao.stackoverflow.natty.utils.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+
+import fr.tunaki.stackoverflow.chat.Message;
+import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
+import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
+import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
+import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
 
 /**
  * Created by bhargav.h on 20-Oct-16.
  */
 public class Fetch implements SpecialCommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Fetch.class);
-    private PingMessageEvent event;
-    private String message;
+    private Message message;
 
-    public Fetch(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public Fetch(Message message) {
+        this.message = message;
     }
 
     @Override
     public boolean validate() {
 
-        return CommandUtils.checkForCommand(message,"fetch");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"fetch");
     }
 
     @Override
@@ -37,7 +36,7 @@ public class Fetch implements SpecialCommand {
     @Override
     public void execute(Room room) {
 
-        String data = CommandUtils.extractData(message).trim();
+        String data = CommandUtils.extractData(message.getPlainContent()).trim();
         String filename = FilePathUtils.outputReportLogFile;
 
         try{
@@ -45,12 +44,12 @@ public class Fetch implements SpecialCommand {
             String returnString = String.join("; ", lines);
 
             if(data.split(" ")[0].equals("posts") && lines.size()<10 && lines.size()!=0){
-                room.replyTo(event.getMessage().getId(), "Deprecated, Please use `fetch links` instead.");
+                room.replyTo(message.getId(), "Deprecated, Please use `fetch links` instead.");
             }
             else if(data.split(" ")[0].equals("links") && lines.size()!=0) {
 
                 if (lines.size() == 0)
-                    room.replyTo(event.getMessage().getId(), "All reports have been tended to");
+                    room.replyTo(message.getId(), "All reports have been tended to");
                 else {
 
                     int stopValue = lines.size();
@@ -66,7 +65,7 @@ public class Fetch implements SpecialCommand {
                         if(i==stopValue)
                             break;
                     }
-                    room.replyTo(event.getMessage().getId(), links);
+                    room.replyTo(message.getId(), links);
                 }
             }
             else if(data.split(" ")[0].equals("FMS") && lines.size()!=0) {
@@ -75,7 +74,7 @@ public class Fetch implements SpecialCommand {
                 for(String line: lines) {
                     links += "["+line.trim()+"](http://51.254.218.90:8000/Natty/"+line.trim()+".html); ";
                 }
-                room.replyTo(event.getMessage().getId(), links);
+                room.replyTo(message.getId(), links);
             }
             else if(data.split(" ")[0].toLowerCase().equals("sentinel") && lines.size()!=0) {
 
@@ -89,17 +88,17 @@ public class Fetch implements SpecialCommand {
                     else
                         links+= "["+postId+"]("+SentinelUtils.sentinelMainUrl+"/posts/"+sentinelId+"); ";
                 }
-                room.replyTo(event.getMessage().getId(), links);
+                room.replyTo(message.getId(), links);
             }
             else if(data.split(" ")[0].equals("amount") && lines.size()!=0) {
-                room.replyTo(event.getMessage().getId(), Integer.toString(lines.size()));
+                room.replyTo(message.getId(), Integer.toString(lines.size()));
             }
             else {
 
                 if (lines.size() == 0)
-                    room.replyTo(event.getMessage().getId(), "All reports have been tended to");
+                    room.replyTo(message.getId(), "All reports have been tended to");
                 else
-                    room.replyTo(event.getMessage().getId(), returnString);
+                    room.replyTo(message.getId(), returnString);
             }
         }
         catch (IOException e){

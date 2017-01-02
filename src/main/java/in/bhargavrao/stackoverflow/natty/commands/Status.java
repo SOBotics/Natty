@@ -1,7 +1,7 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 
 /**
@@ -9,18 +9,15 @@ import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
  */
 public class Status implements SpecialCommand {
 
+    private Message message;
 
-    private PingMessageEvent event;
-    private String message;
-
-    public Status(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public Status(Message message) {
+        this.message = message;
     }
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"status");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"status");
     }
 
     @Override

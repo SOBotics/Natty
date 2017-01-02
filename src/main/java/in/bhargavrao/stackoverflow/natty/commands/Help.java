@@ -1,7 +1,7 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
 
@@ -10,23 +10,21 @@ import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
  */
 public class Help implements SpecialCommand {
 
-    private PingMessageEvent event;
-    private String message;
+    private Message message;
 
-    public Help(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public Help(Message message) {
+        this.message = message;
     }
 
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"help");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"help");
     }
 
     @Override
     public void execute(Room room) {
-        room.replyTo(event.getMessage().getId(),PrintUtils.printHelp());
+        room.replyTo(message.getId(),PrintUtils.printHelp());
     }
 
     @Override

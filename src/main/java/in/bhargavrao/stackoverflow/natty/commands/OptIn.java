@@ -1,39 +1,40 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
+
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
-import org.apache.commons.lang.StringUtils;
-
-import java.io.IOException;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
 public class OptIn implements SpecialCommand {
 
-    private PingMessageEvent event;
-    private String message;
+    private Message message;
 
-    public OptIn(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getContent();
+    public OptIn(Message message) {
+        this.message = message;
     }
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"opt-in");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"opt-in");
     }
 
     @Override
     public void execute(Room room) {
-        long userId = event.getUserId();
-        String userName = event.getUserName();
+    	User user = message.getUser();
+        long userId = user.getId();
+        String userName = user.getName();
         String filename = FilePathUtils.optedUsersFile;
 
-        String data = CommandUtils.extractData(message).trim();
+        String data = CommandUtils.extractData(message.getPlainContent()).trim();
 
         String pieces[] = data.split(" ");
 
@@ -46,19 +47,19 @@ public class OptIn implements SpecialCommand {
             }
 
             if(!tag.equals("all")){
-                tag = StringUtils.substringBetween(message,"[","]");
+                tag = StringUtils.substringBetween(message.getPlainContent(),"[","]");
             }
             if(postType.equals("all") || postType.equals("naa")){
                 String optMessage = userId+","+tag+",\""+userName+"\""+","+room.getRoomId()+","+postType+","+whenInRoom;
                 try
                 {
                     if(FileUtils.checkIfInFile(filename,optMessage)){
-                        room.replyTo(event.getMessage().getId(), "You've already been added.");
+                        room.replyTo(message.getId(), "You've already been added.");
                     }
                     else {
                         FileUtils.appendToFile(filename, optMessage);
                         System.out.println("Added user");
-                        room.replyTo(event.getMessage().getId(), "You've been added.");
+                        room.replyTo(message.getId(), "You've been added.");
                     }
                 }
                 catch(IOException e)
@@ -67,11 +68,11 @@ public class OptIn implements SpecialCommand {
                 }
             }
             else {
-                room.replyTo(event.getMessage().getId(), "Type of post can be naa or all");
+                room.replyTo(message.getId(), "Type of post can be naa or all");
             }
         }
         else if(pieces.length==1){
-            room.replyTo(event.getMessage().getId(), "Please specify the type of post.");
+            room.replyTo(message.getId(), "Please specify the type of post.");
         }
     }
 
