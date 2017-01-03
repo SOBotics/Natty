@@ -51,9 +51,12 @@ public class SoBoticsCommandsList {
 
         for(SpecialCommand command: commands){
             if(command.validate()){
+            	System.out.println("valid command: " + command.name());
                 command.execute(room);
+            } else {
+            	System.out.println("invalid command: " + command.name());
             }
         }
-        System.out.println(event.getMessage().getContent());
+        System.out.println("mentioned: " + event.getMessage().getContent());
     }
 }

@@ -30,24 +30,31 @@ public class Check implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
+    	System.out.println("Executing...");
         try {
             String filename = FilePathUtils.checkUsers;
             String word = CommandUtils.extractData(message).trim();
             Integer returnValue = 0;
 
+            System.out.println("point1");
+            
             if(word.contains(" ")){
                 String parts[] = word.split(" ");
                 if(parts[0].toLowerCase().equals("value")){
                     returnValue = 1;
                     word = parts[1];
+                    System.out.println("point2.1");
                 }
                 else if (parts[0].toLowerCase().equals("explain")){
                     returnValue = 2;
                     word = parts[1];
+                    System.out.println("point2.2");
                 }
             }
             if(word.contains("/"))
             {
+            	System.out.println("point3.0");
+            	
                 String parts[]= word.split("//")[1].split("/");
                 if(parts[1].equals("users")){
                     for(String line: FileUtils.readFile(filename)){
@@ -56,12 +63,17 @@ public class Check implements SpecialCommand {
                             room.replyTo(event.getMessage().getId(), users[1]);
                         }
                     }
+                    System.out.println("point3.1");
                 }
                 else {
                     word = CommandUtils.getAnswerId(word);
+                    System.out.println("point3.2");
                 }
             }
 
+            
+            System.out.println("point4");
+            
             Natty cc = new Natty();
             Post np = cc.checkPost(Integer.parseInt(word));
             PostPrinter pp = new PostPrinter(np);
@@ -76,12 +88,16 @@ public class Check implements SpecialCommand {
             for(String filter: caughtFilters){
                 pp.addMessage(" **"+filter+"**; ");
             }
+            
+            System.out.println("point5");
 
             pp.addMessage(" **"+found+"**;");
             if(returnValue==1) {
+            	System.out.println("point6");
                 room.replyTo(event.getMessage().getId(), "The NAA Value is " + found);
             }
             if(returnValue==2) {
+            	System.out.println("point7");
                 room.replyTo(event.getMessage().getId(), "The NAA Value is " + found + ". The explanation for the filters is:");
                 String explanation = "";
                 for(int i=0;i<caughtFilters.size();i++){
@@ -90,10 +106,12 @@ public class Check implements SpecialCommand {
                 room.send(explanation);
             }
             else {
+            	System.out.println("point8");
                 room.replyTo(event.getMessage().getId(), pp.print());
             }
         }
         catch (IOException e){
+        	System.out.println("ERROR");
             e.printStackTrace();
             room.replyTo(event.getMessage().getId(), "Error occured, Try again");
         }

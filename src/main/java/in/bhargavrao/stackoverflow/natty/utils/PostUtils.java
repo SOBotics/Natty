@@ -170,7 +170,7 @@ public class PostUtils {
     }
 
     public static long addSentinel(PostReport report){
-
+/*
         JsonObject post = new JsonObject();
 
         post.addProperty("title",report.getPost().getTitle());
@@ -210,7 +210,8 @@ public class PostUtils {
            e.printStackTrace();
         }
 
-        return sentinelPostId;
+        return sentinelPostId;*/
+    	return -1;
     }
 
     public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type){

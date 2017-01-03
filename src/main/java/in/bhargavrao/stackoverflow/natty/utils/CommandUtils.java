@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class CommandUtils {
 
     public static boolean checkForCommand(String message, String command){
-        return message.split(" ")[0].toLowerCase().startsWith("@nat") && message.split(" ")[1].toLowerCase().equals(command);
+        return message.split(" ")[0].toLowerCase().startsWith("@fel") && message.split(" ")[1].toLowerCase().equals(command);
     }
     public static String extractData(String message){
         String parts[] = message.split(" ");
