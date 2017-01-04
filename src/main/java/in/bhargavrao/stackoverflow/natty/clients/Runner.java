@@ -44,7 +44,33 @@ public class Runner {
                 }
 
                 if(report.getNaaValue()>=7.0 && logging){
-                    room.send(PostUtils.autoFlag(np));
+                	
+                	Boolean isPossibleLinkOnly = false;
+                    Boolean hasNoCodeblock = false;
+                    Boolean containsBlacklistedWord = false;
+                    
+                    for(String filter: report.getCaughtFor()){                        
+                        //filters to decide which auto-comment to use
+                        if (filter == "No Code Block") hasNoCodeblock = true;
+                        if (filter == "Possible Link Only") isPossibleLinkOnly = true;
+                        if (filter == "Contains Blacklisted Word") containsBlacklistedWord = true;
+                    }
+                    
+                    
+                    String comment = "";
+                    
+                  //decide, which comment to use
+                    if (hasNoCodeblock && isPossibleLinkOnly && !containsBlacklistedWord) {
+                    	//link-only
+                    	System.out.println("link-only");
+                    	comment = "link-only";
+                    } else {
+                    	System.out.println("naa");
+                    	comment = "naa";
+                    }
+                	
+                	
+                    room.send(PostUtils.autoFlag(np, comment));
                 }
             }
         }

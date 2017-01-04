@@ -30,31 +30,26 @@ public class Check implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-    	System.out.println("Executing...");
         try {
+        	System.out.println("Checking post...");
+        	
             String filename = FilePathUtils.checkUsers;
             String word = CommandUtils.extractData(message).trim();
             Integer returnValue = 0;
-
-            System.out.println("point1");
             
             if(word.contains(" ")){
                 String parts[] = word.split(" ");
                 if(parts[0].toLowerCase().equals("value")){
                     returnValue = 1;
                     word = parts[1];
-                    System.out.println("point2.1");
                 }
                 else if (parts[0].toLowerCase().equals("explain")){
                     returnValue = 2;
                     word = parts[1];
-                    System.out.println("point2.2");
                 }
             }
             if(word.contains("/"))
-            {
-            	System.out.println("point3.0");
-            	
+            {            	
                 String parts[]= word.split("//")[1].split("/");
                 if(parts[1].equals("users")){
                     for(String line: FileUtils.readFile(filename)){
@@ -63,17 +58,14 @@ public class Check implements SpecialCommand {
                             room.replyTo(event.getMessage().getId(), users[1]);
                         }
                     }
-                    System.out.println("point3.1");
                 }
                 else {
                     word = CommandUtils.getAnswerId(word);
-                    System.out.println("point3.2");
                 }
             }
 
-            
-            System.out.println("point4");
-            
+            System.out.println("point1");
+                        
             Natty cc = new Natty();
             Post np = cc.checkPost(Integer.parseInt(word));
             PostPrinter pp = new PostPrinter(np);
@@ -85,19 +77,37 @@ public class Check implements SpecialCommand {
             List<String> caughtFilters = report.getCaughtFor();
             List<Double> caughtFiltersValues = report.getCaughtForValues();
 
+            
+            Boolean isPossibleLinkOnly = false;
+            Boolean hasNoCodeblock = false;
+            Boolean containsBlacklistedWord = false;
+            
             for(String filter: caughtFilters){
                 pp.addMessage(" **"+filter+"**; ");
+                
+                //filters to decide which auto-comment to use
+                if (filter == "No Code Block") hasNoCodeblock = true;
+                if (filter == "Possible Link Only") isPossibleLinkOnly = true;
+                if (filter == "Contains Blacklisted Word") containsBlacklistedWord = true;
             }
             
-            System.out.println("point5");
-
             pp.addMessage(" **"+found+"**;");
+            
+            
+            //decide, which comment to use
+            if (hasNoCodeblock && isPossibleLinkOnly && !containsBlacklistedWord) {
+            	//link-only
+            	System.out.println("link-only");
+            	pp.addMessage(" **Proposed comment: link-only**;");
+            } else {
+            	System.out.println("naa");
+            	pp.addMessage(" **Proposed comment: NAA**;");
+            }
+            
             if(returnValue==1) {
-            	System.out.println("point6");
                 room.replyTo(event.getMessage().getId(), "The NAA Value is " + found);
             }
             if(returnValue==2) {
-            	System.out.println("point7");
                 room.replyTo(event.getMessage().getId(), "The NAA Value is " + found + ". The explanation for the filters is:");
                 String explanation = "";
                 for(int i=0;i<caughtFilters.size();i++){
@@ -106,7 +116,6 @@ public class Check implements SpecialCommand {
                 room.send(explanation);
             }
             else {
-            	System.out.println("point8");
                 room.replyTo(event.getMessage().getId(), pp.print());
             }
         }

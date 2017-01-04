@@ -264,7 +264,13 @@ public class PostUtils {
         }
     }
 
-    public static String autoFlag(Post post){
+    
+    public static String autoFlag(Post post) {
+    	return autoFlag(post, "");
+    }
+    
+    
+    public static String autoFlag(Post post, String comment){
         ApiService apiService = new ApiService("stackoverflow");
         try{
             JsonObject flagOptions = apiService.getAnswerFlagOptions(post.getAnswerID());
@@ -272,6 +278,10 @@ public class PostUtils {
             for(JsonElement e: options){
                 if(e.getAsJsonObject().get("title").getAsString().equals("not an answer")){
                     JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(),e.getAsJsonObject().get("option_id").getAsInt());
+                    
+                    //If a comment was passed, post it
+                    if (comment.length() > 0) return "Post Flagged Automatically\nWould add comment: "+comment;
+                    
                     return "Post Flagged Automatically";
                 }
             }
