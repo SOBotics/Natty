@@ -86,9 +86,9 @@ public class Check implements SpecialCommand {
                 pp.addMessage(" **"+filter+"**; ");
                 
                 //filters to decide which auto-comment to use
-                if (filter == "No Code Block") hasNoCodeblock = true;
-                if (filter == "Possible Link Only") isPossibleLinkOnly = true;
-                if (filter == "Contains Blacklisted Word") containsBlacklistedWord = true;
+                if (filter.equalsIgnoreCase("No Code Block")) hasNoCodeblock = true;
+                if (filter.equalsIgnoreCase("Possible Link Only")) isPossibleLinkOnly = true;
+                if (filter.equalsIgnoreCase("Contains Blacklisted Word")) containsBlacklistedWord = true;
             }
             
             pp.addMessage(" **"+found+"**;");
