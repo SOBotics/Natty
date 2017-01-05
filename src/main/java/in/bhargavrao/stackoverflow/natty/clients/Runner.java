@@ -45,7 +45,7 @@ public class Runner {
 
                 if(report.getNaaValue()>=7.0 && logging){
                 	
-                	Boolean isPossibleLinkOnly = false;
+                	/*Boolean isPossibleLinkOnly = false;
                     Boolean hasNoCodeblock = false;
                     Boolean containsBlacklistedWord = false;
                     
@@ -67,7 +67,9 @@ public class Runner {
                     } else {
                     	System.out.println("naa");
                     	comment = "naa";
-                    }
+                    }*/
+                	
+                	String comment = AutoCommentUtils.commentForPostReport(report);
                 	
                 	
                     room.send(PostUtils.autoFlag(np, comment));

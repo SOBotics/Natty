@@ -63,8 +63,6 @@ public class Check implements SpecialCommand {
                     word = CommandUtils.getAnswerId(word);
                 }
             }
-
-            System.out.println("point1");
                         
             Natty cc = new Natty();
             Post np = cc.checkPost(Integer.parseInt(word));
@@ -78,7 +76,7 @@ public class Check implements SpecialCommand {
             List<Double> caughtFiltersValues = report.getCaughtForValues();
 
             
-            Boolean isPossibleLinkOnly = false;
+            /*Boolean isPossibleLinkOnly = false;
             Boolean hasNoCodeblock = false;
             Boolean containsBlacklistedWord = false;
             
@@ -89,20 +87,24 @@ public class Check implements SpecialCommand {
                 if (filter.equalsIgnoreCase("No Code Block")) hasNoCodeblock = true;
                 if (filter.equalsIgnoreCase("Possible Link Only")) isPossibleLinkOnly = true;
                 if (filter.equalsIgnoreCase("Contains Blacklisted Word")) containsBlacklistedWord = true;
-            }
+            }*/
             
             pp.addMessage(" **"+found+"**;");
             
             
             //decide, which comment to use
-            if (hasNoCodeblock && isPossibleLinkOnly && !containsBlacklistedWord) {
+            /*if (hasNoCodeblock && isPossibleLinkOnly && !containsBlacklistedWord) {
             	//link-only
             	System.out.println("link-only");
             	pp.addMessage(" **Proposed comment: link-only**;");
             } else {
             	System.out.println("naa");
             	pp.addMessage(" **Proposed comment: NAA**;");
-            }
+            }*/
+            
+            String comment = AutoCommentUtils.commentForPostReport(report);
+            if (comment.length() > 0) pp.addMessage(" **Proposed comment: "+comment+"**;");
+            
             
             if(returnValue==1) {
                 room.replyTo(event.getMessage().getId(), "The NAA Value is " + found);
