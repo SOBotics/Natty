@@ -8,6 +8,7 @@ import fr.tunaki.stackoverflow.chat.Room;
 import in.bhargavrao.stackoverflow.natty.entities.Natty;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.utils.AutoCommentUtils;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
