@@ -1,22 +1,41 @@
 package in.bhargavrao.stackoverflow.natty.utils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import fr.tunaki.stackoverflow.chat.Message;
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
-import in.bhargavrao.stackoverflow.natty.entities.SOUser;
-import in.bhargavrao.stackoverflow.natty.filters.*;
-import in.bhargavrao.stackoverflow.natty.services.ApiService;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import fr.tunaki.stackoverflow.chat.Message;
+import fr.tunaki.stackoverflow.chat.Room;
+import fr.tunaki.stackoverflow.chat.User;
+import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import in.bhargavrao.stackoverflow.natty.entities.Post;
+import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.entities.SOUser;
+import in.bhargavrao.stackoverflow.natty.filters.BlacklistedFilter;
+import in.bhargavrao.stackoverflow.natty.filters.ContainsQMFilter;
+import in.bhargavrao.stackoverflow.natty.filters.EndsWithQmFilter;
+import in.bhargavrao.stackoverflow.natty.filters.Filter;
+import in.bhargavrao.stackoverflow.natty.filters.LengthFilter;
+import in.bhargavrao.stackoverflow.natty.filters.LinkOnlyAnswerFilter;
+import in.bhargavrao.stackoverflow.natty.filters.NoCodeBlockFilter;
+import in.bhargavrao.stackoverflow.natty.filters.NonEnglishFilter;
+import in.bhargavrao.stackoverflow.natty.filters.OneLineFilter;
+import in.bhargavrao.stackoverflow.natty.filters.ReputationFilter;
+import in.bhargavrao.stackoverflow.natty.filters.SalutationsFilter;
+import in.bhargavrao.stackoverflow.natty.filters.SelfAnswerFilter;
+import in.bhargavrao.stackoverflow.natty.filters.StartsWithKeywordFilter;
+import in.bhargavrao.stackoverflow.natty.filters.UnformattedCodeFilter;
+import in.bhargavrao.stackoverflow.natty.filters.UnregisteredUserFilter;
+import in.bhargavrao.stackoverflow.natty.filters.UserMentionedFilter;
+import in.bhargavrao.stackoverflow.natty.filters.VeryLongWordFilter;
+import in.bhargavrao.stackoverflow.natty.filters.WhitelistedFilter;
+import in.bhargavrao.stackoverflow.natty.services.ApiService;
 
 /**
  * Created by bhargav.h on 29-Sep-16.
@@ -74,7 +93,7 @@ public class PostUtils {
 
     }
 
-    public static void handleFeedback(PingMessageEvent event, String type, String linkToPost) {
+    public static void handleFeedback(User user, String type, String linkToPost) {
         String filename = FilePathUtils.outputCSVLogFile;
         try {
 
@@ -82,7 +101,7 @@ public class PostUtils {
 
             long postId = Long.parseLong(sentinel.split(",")[1]);
             if(postId!=-1) {
-                long feedbackId = PostUtils.addFeedback(postId, event.getUserId(), event.getUserName(), type);
+                long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), type);
             }
             String loggedLine = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCompleteLogFile,linkToPost);
             String loggedAsTp = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tp,"+linkToPost);
@@ -240,26 +259,27 @@ public class PostUtils {
         String message = repliedToMessage.getPlainContent().trim();
         message = message.split("Link to Post")[1];
         String linkToPost = message.substring(message.indexOf("(")+1,message.indexOf(")")).replace("//stackoverflow.com/a/","");
-        handleFeedback(event, type, linkToPost);
+        handleFeedback(event.getMessage().getUser(), type, linkToPost);
     }
 
 
     public static void reply(Room room, PingMessageEvent event, boolean isReply){
-        System.out.println(event.getMessage().getContent());
+        Message message = event.getMessage();
+		System.out.println(message.getContent());
         if (CheckUtils.checkIfUserIsBlacklisted(event.getUserId())){
             System.out.println("Blacklisted user");
             return;
         }
-        if (CommandUtils.checkForCommand(event.getMessage().getContent(),"tp") ||
-                CommandUtils.checkForCommand(event.getMessage().getContent(),"t")){
+        if (CommandUtils.checkForCommand(message.getContent(),"tp") ||
+                CommandUtils.checkForCommand(message.getContent(),"t")){
             store(room, event, "tp");
         }
-        if (CommandUtils.checkForCommand(event.getMessage().getContent(),"ne") ||
-                CommandUtils.checkForCommand(event.getMessage().getContent(),"n")){
+        if (CommandUtils.checkForCommand(message.getContent(),"ne") ||
+                CommandUtils.checkForCommand(message.getContent(),"n")){
             store(room, event, "ne");
         }
-        if (CommandUtils.checkForCommand(event.getMessage().getContent(),"fp") ||
-                CommandUtils.checkForCommand(event.getMessage().getContent(),"f")){
+        if (CommandUtils.checkForCommand(message.getContent(),"fp") ||
+                CommandUtils.checkForCommand(message.getContent(),"f")){
             store(room, event, "fp");
         }
     }

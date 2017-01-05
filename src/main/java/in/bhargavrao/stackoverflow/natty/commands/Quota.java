@@ -1,29 +1,26 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import java.io.IOException;
+
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-
-import java.io.IOException;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
 public class Quota implements SpecialCommand {
 
+    private Message message;
 
-    private PingMessageEvent event;
-    private String message;
-
-    public Quota(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public Quota(Message message) {
+        this.message = message;
     }
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"quota");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"quota");
     }
 
     @Override
@@ -35,7 +32,7 @@ public class Quota implements SpecialCommand {
         catch (IOException e){
             e.printStackTrace();
         }
-        room.replyTo(event.getMessage().getId(), "The remaining quota is "+apiService.getQuota());
+        room.replyTo(message.getId(), "The remaining quota is "+apiService.getQuota());
     }
 
     @Override

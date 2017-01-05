@@ -1,32 +1,29 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import java.io.IOException;
+import java.util.List;
+
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
 public class ShowRequests implements SpecialCommand {
 
+    private Message message;
 
-    private PingMessageEvent event;
-    private String message;
-
-    public ShowRequests(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public ShowRequests(Message message) {
+        this.message = message;
     }
 
     @Override
     public boolean validate() {
 
-        return CommandUtils.checkForCommand(message,"showreqs");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"showreqs");
     }
 
     @Override
@@ -42,9 +39,9 @@ public class ShowRequests implements SpecialCommand {
                 i++;
             }
             if(lines.size()==0)
-                room.replyTo(event.getMessage().getId(), "There are no requirements currently ");
+                room.replyTo(message.getId(), "There are no requirements currently ");
             else {
-                room.replyTo(event.getMessage().getId(), "The list of requests stored  ");
+                room.replyTo(message.getId(), "The list of requests stored  ");
                 room.send(requestString);
             }
         }

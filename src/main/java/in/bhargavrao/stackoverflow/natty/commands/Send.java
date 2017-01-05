@@ -1,51 +1,49 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by bhargav.h on 23-Oct-16.
  */
 public class Send implements SpecialCommand {
 
+    private Message message;
 
-    private PingMessageEvent event;
-    private String message;
-
-    public Send(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public Send(Message message) {
+        this.message = message;
     }
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"send") || CommandUtils.checkForCommand(message,"rsend") ;
+        return CommandUtils.checkForCommand(message.getPlainContent(),"send") || CommandUtils.checkForCommand(message.getPlainContent(),"rsend") ;
     }
 
     @Override
     public void execute(Room room) {
-        String data = CommandUtils.extractData(message).trim();
+        String data = CommandUtils.extractData(message.getPlainContent()).trim();
         String feedbacks[] = data.split(" ");
 
         try{
             List<String> lines = FileUtils.readFile(FilePathUtils.outputCompleteLogFile);
             if(feedbacks.length==0 || (feedbacks.length==1 && feedbacks[0].equals("reverse"))){
-                room.replyTo(event.getMessage().getId(), "InputMismatchError, The code has been made Tuna Proof™");
+                room.replyTo(message.getId(), "InputMismatchError, The code has been made Tuna Proof™");
                 return;
             }
-            if(message.split(" ")[1].toLowerCase().equals("rsend")){
+            if(message.getPlainContent().split(" ")[1].toLowerCase().equals("rsend")){
                 Collections.reverse(lines);
             }
             if(feedbacks.length>lines.size()){
-                room.replyTo(event.getMessage().getId(), "Too many feedbacks, Too less reports");
+                room.replyTo(message.getId(), "Too many feedbacks, Too less reports");
                 return;
             }
             for(int i  =0 ;i<=feedbacks.length;i++){
@@ -62,7 +60,8 @@ public class Send implements SpecialCommand {
                     String sentinel = FileUtils.readLineFromFileStartswith(FilePathUtils.outputSentinelIdLogFile,line.split(",")[0]);
                     long postId = Long.parseLong(sentinel.split(",")[1]);
                     if(postId!=-1) {
-                        long feedbackId = PostUtils.addFeedback(postId, event.getUserId(), event.getUserName(), feedback);
+                    	User user = message.getUser();
+                        long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), feedback);
                     }
                 }
             }

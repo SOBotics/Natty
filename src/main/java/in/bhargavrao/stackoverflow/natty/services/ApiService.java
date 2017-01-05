@@ -1,16 +1,15 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
-import com.google.gson.JsonObject;
-import in.bhargavrao.stackoverflow.natty.utils.ApiUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.JsonUtils;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
+
+import com.google.gson.JsonObject;
+
+import in.bhargavrao.stackoverflow.natty.utils.ApiUtils;
+import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 
 /**
  * Created by bhargav.h on 29-Sep-16.
