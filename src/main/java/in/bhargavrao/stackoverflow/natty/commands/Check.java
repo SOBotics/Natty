@@ -1,31 +1,33 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import java.io.IOException;
+import java.util.List;
+
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.entities.Natty;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
-import in.bhargavrao.stackoverflow.natty.utils.*;
-
-import java.io.IOException;
-import java.util.List;
+import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
+import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
+import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
 public class Check implements SpecialCommand {
 
-    private PingMessageEvent event;
-    private String message;
+    private Message message;
 
-    public Check(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public Check(Message message) {
+        this.message = message;
     }
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"check");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"check");
     }
 
     @Override
@@ -34,7 +36,7 @@ public class Check implements SpecialCommand {
         	System.out.println("Checking post...");
         	
             String filename = FilePathUtils.checkUsers;
-            String word = CommandUtils.extractData(message).trim();
+            String word = CommandUtils.extractData(message.getPlainContent()).trim();
             Integer returnValue = 0;
             
             if(word.contains(" ")){
@@ -55,7 +57,7 @@ public class Check implements SpecialCommand {
                     for(String line: FileUtils.readFile(filename)){
                         String users[] = line.split(",");
                         if(parts[2].equals(users[0])){
-                            room.replyTo(event.getMessage().getId(), users[1]);
+                            room.replyTo(message.getId(), users[1]);
                         }
                     }
                 }
@@ -107,10 +109,10 @@ public class Check implements SpecialCommand {
             
             
             if(returnValue==1) {
-                room.replyTo(event.getMessage().getId(), "The NAA Value is " + found);
+                room.replyTo(message.getId(), "The NAA Value is " + found);
             }
             if(returnValue==2) {
-                room.replyTo(event.getMessage().getId(), "The NAA Value is " + found + ". The explanation for the filters is:");
+                room.replyTo(message.getId(), "The NAA Value is " + found + ". The explanation for the filters is:");
                 String explanation = "";
                 for(int i=0;i<caughtFilters.size();i++){
                     explanation+="    "+caughtFiltersValues.get(i)+" - "+caughtFilters.get(i)+"\n";
@@ -118,13 +120,13 @@ public class Check implements SpecialCommand {
                 room.send(explanation);
             }
             else {
-                room.replyTo(event.getMessage().getId(), pp.print());
+                room.replyTo(message.getId(), pp.print());
             }
         }
         catch (IOException e){
         	System.out.println("ERROR");
             e.printStackTrace();
-            room.replyTo(event.getMessage().getId(), "Error occured, Try again");
+            room.replyTo(message.getId(), "Error occured, Try again");
         }
     }
 

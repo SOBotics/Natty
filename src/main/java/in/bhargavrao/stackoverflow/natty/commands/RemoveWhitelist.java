@@ -1,7 +1,7 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 
@@ -10,26 +10,23 @@ import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
  */
 public class RemoveWhitelist implements SpecialCommand {
 
+    private Message message;
 
-    private PingMessageEvent event;
-    private String message;
-
-    public RemoveWhitelist(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public RemoveWhitelist(Message message) {
+        this.message = message;
     }
 
     @Override
     public boolean validate() {
 
-        return CommandUtils.checkForCommand(message,"rmwhitelist");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"rmwhitelist");
     }
 
     @Override
     public void execute(Room room) {
         String filename = FilePathUtils.whitelistFile;
-        String data = CommandUtils.extractData(message).trim();
-        room.replyTo(event.getMessage().getId(), CommandUtils.checkAndRemoveMessage(filename,data));
+        String data = CommandUtils.extractData(message.getPlainContent()).trim();
+        room.replyTo(message.getId(), CommandUtils.checkAndRemoveMessage(filename,data));
     }
 
     @Override

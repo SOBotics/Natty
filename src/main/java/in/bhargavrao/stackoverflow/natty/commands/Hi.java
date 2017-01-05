@@ -1,19 +1,19 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
 public class Hi implements SpecialCommand {
 
-    private PingMessageEvent event;
-    private String message;
+    private Message message;
+    private long userId;
 
-    public Hi(PingMessageEvent event) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public Hi(Message message, long userId) {
+        this.message = message;
+        this.userId = userId;
     }
 
 
@@ -24,12 +24,12 @@ public class Hi implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        if(event.getUserId()==1252759)
-            room.replyTo(event.getMessage().getId(), "Hi Jon, Here are some scooby snacks.");
-        if(event.getUserId()==4174897)
-            room.replyTo(event.getMessage().getId(), "Plop.");
+        if(userId == 1252759)
+            room.replyTo(message.getId(), "Hi Jon, Here are some scooby snacks.");
+        if(userId == 4174897)
+            room.replyTo(message.getId(), "Plop.");
         else
-            room.replyTo(event.getMessage().getId(), "Hi");
+            room.replyTo(message.getId(), "Hi");
 
     }
 

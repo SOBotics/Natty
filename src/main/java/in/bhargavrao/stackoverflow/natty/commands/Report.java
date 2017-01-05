@@ -1,35 +1,40 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
-import in.bhargavrao.stackoverflow.natty.entities.Natty;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
-import in.bhargavrao.stackoverflow.natty.utils.*;
-import in.bhargavrao.stackoverflow.natty.validators.Validator;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import fr.tunaki.stackoverflow.chat.Message;
+import fr.tunaki.stackoverflow.chat.Room;
+import fr.tunaki.stackoverflow.chat.User;
+import in.bhargavrao.stackoverflow.natty.entities.Natty;
+import in.bhargavrao.stackoverflow.natty.entities.Post;
+import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
+import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
+import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
+import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
+import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
+import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
 /**
  * Created by bhargav.h on 28-Oct-16.
  */
 public class Report implements SpecialCommand {
 
-    private PingMessageEvent event;
-    private String message;
+    private Message message;
     private Validator validator;
 
-    public Report(PingMessageEvent event, Validator validator) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public Report(Message message, Validator validator) {
+        this.message = message;
         this.validator = validator;
     }
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"report");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"report");
     }
 
     @Override
@@ -37,7 +42,7 @@ public class Report implements SpecialCommand {
         try {
 
 
-            String word = CommandUtils.extractData(message).trim();
+            String word = CommandUtils.extractData(message.getPlainContent()).trim();
 
             if(word.contains("/"))
             {
@@ -45,19 +50,19 @@ public class Report implements SpecialCommand {
             }
 
             if(FileUtils.checkIfInFile(FilePathUtils.outputReportLogFile,word)){
-                room.replyTo(event.getMessage().getId(), "Post already reported");
+                room.replyTo(message.getId(), "Post already reported");
             }
             else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tp,"+word)!=null) {
-                room.replyTo(event.getMessage().getId(), "Post already registered as True Positive");
+                room.replyTo(message.getId(), "Post already registered as True Positive");
             }
             else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"fp,"+word)!=null) {
-                room.replyTo(event.getMessage().getId(), "Post already registered as False Positive");
+                room.replyTo(message.getId(), "Post already registered as False Positive");
             }
             else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"ne,"+word)!=null) {
-                room.replyTo(event.getMessage().getId(), "Post already registered as Needs Edit");
+                room.replyTo(message.getId(), "Post already registered as Needs Edit");
             }
             else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tn,"+word)!=null) {
-                room.replyTo(event.getMessage().getId(), "Post already registered as True Negative");
+                room.replyTo(message.getId(), "Post already registered as True Negative");
             }
             else {
                 Natty cc = new Natty();
@@ -91,7 +96,8 @@ public class Report implements SpecialCommand {
 
                     pp.addMessage(" **" + found + "**;");
 
-                    PostUtils.addFeedback(postId, event.getUserId(), event.getUserName(), "tn");
+                    User user = message.getUser();
+                    PostUtils.addFeedback(postId, user.getId(), user.getName(), "tn");
                     //FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+postId);
 
                     room.send(pp.print());
@@ -103,7 +109,7 @@ public class Report implements SpecialCommand {
         }
         catch (IOException e){
             e.printStackTrace();
-            room.replyTo(event.getMessage().getId(), "Error occurred, Try again");
+            room.replyTo(message.getId(), "Error occurred, Try again");
         }
     }
 

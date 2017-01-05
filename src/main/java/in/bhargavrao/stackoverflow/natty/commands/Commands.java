@@ -1,35 +1,33 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
+import java.util.List;
+
+import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
-
-import java.util.List;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
 public class Commands implements SpecialCommand {
 
-    private PingMessageEvent event;
-    private String message;
+    private Message message;
     private List<SpecialCommand> commands;
 
-    public Commands(PingMessageEvent event, List<SpecialCommand> commands) {
-        this.event = event;
-        this.message = event.getMessage().getPlainContent();
+    public Commands(Message message, List<SpecialCommand> commands) {
+        this.message = message;
         this.commands = commands;
     }
 
     @Override
     public boolean validate() {
-        return CommandUtils.checkForCommand(message,"commands");
+        return CommandUtils.checkForCommand(message.getPlainContent(),"commands");
     }
 
     @Override
     public void execute(Room room) {
-        room.replyTo(event.getMessage().getId(),PrintUtils.printCommandHeader());
+        room.replyTo(message.getId(),PrintUtils.printCommandHeader());
         String printstr = "";
         for (SpecialCommand command: commands){
             printstr+="    "+padRight(command.name(),15)+" - "+command.description()+"\n";
