@@ -1,7 +1,9 @@
 package in.bhargavrao.stackoverflow.natty.utils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Properties;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -9,7 +11,20 @@ import java.util.Arrays;
 public class CommandUtils {
 
     public static boolean checkForCommand(String message, String command){
-        return message.split(" ")[0].toLowerCase().startsWith("@nat") && message.split(" ")[1].toLowerCase().equals(command);
+    	String username = "";
+    	
+    	Properties prop = new Properties();
+
+        try{
+            prop.load(new FileInputStream(FilePathUtils.loginPropertiesFile));
+            username = prop.getProperty("username").substring(0,3).toLowerCase();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            username = "nat";
+        }
+    	
+        return message.split(" ")[0].toLowerCase().startsWith("@"+username) && message.split(" ")[1].toLowerCase().equals(command);
     }
     public static String extractData(String message){
         String parts[] = message.split(" ");

@@ -8,11 +8,14 @@ import in.bhargavrao.stackoverflow.natty.clients.Runner;
 import in.bhargavrao.stackoverflow.natty.entities.Natty;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.roomdata.BotRoom;
+import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -39,9 +42,23 @@ public class RunnerService {
             Room chatroom = client.joinRoom(ChatHost.STACK_OVERFLOW ,room.getRoomId());
 
             if(room.getRoomId()==111347){
-                chatroom.send("Hiya o/ (DEVELOPMENT VERSION with Auto-comment)" );
-                FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
-                feederService.start();
+            	//check if Natty is running on the server
+            	Properties prop = new Properties();
+
+                try{
+                    prop.load(new FileInputStream(FilePathUtils.loginPropertiesFile));
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+            	
+                if (prop.getProperty("location").equals("server")) {
+                	chatroom.send("Hiya o/ (SERVER VERSION)" );
+                    FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
+                    feederService.start();
+                } else {
+                	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
+                }
             }
 
             chatRooms.add(chatroom);
