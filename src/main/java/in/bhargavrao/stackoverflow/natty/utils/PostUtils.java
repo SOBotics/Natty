@@ -1,9 +1,11 @@
 package in.bhargavrao.stackoverflow.natty.utils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.StreamSupport;
 
 import com.google.gson.JsonArray;
@@ -191,6 +193,21 @@ public class PostUtils {
     }
 
     public static long addSentinel(PostReport report){
+    	//check if Natty is running on the server
+    	Properties prop = new Properties();
+
+        try{
+            prop.load(new FileInputStream(FilePathUtils.loginPropertiesFile));
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return -1;
+        }
+        
+        if (!prop.getProperty("onserver").equals("yes")) return -1; //return -1 if it's not running on server
+        
+        //continue...
+        
         JsonObject post = new JsonObject();
 
         post.addProperty("title",report.getPost().getTitle());
