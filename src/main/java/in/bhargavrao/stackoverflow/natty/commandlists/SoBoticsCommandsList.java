@@ -91,6 +91,7 @@ public class SoBoticsCommandsList {
                 command.execute(room);
             }
         }
+        
         LOGGER.info(event.getMessage().getContent());
     }
 }

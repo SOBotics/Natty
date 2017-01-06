@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natty.clients;
 import fr.tunaki.stackoverflow.chat.Room;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.entities.AutoComment;
 import in.bhargavrao.stackoverflow.natty.entities.OptedInUser;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.utils.*;
@@ -44,7 +45,11 @@ public class Runner {
                 }
 
                 if(report.getNaaValue()>=7.0 && logging){
-                    room.send(PostUtils.autoFlag(np));
+                	
+                	AutoComment comment = AutoCommentUtils.commentForPostReport(report);
+                	
+                	
+                    room.send(PostUtils.autoFlag(np, comment));
                 }
             }
         }

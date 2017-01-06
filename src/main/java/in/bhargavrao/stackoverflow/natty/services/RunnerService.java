@@ -39,7 +39,7 @@ public class RunnerService {
             Room chatroom = client.joinRoom(ChatHost.STACK_OVERFLOW ,room.getRoomId());
 
             if(room.getRoomId()==111347){
-                chatroom.send("Hiya o/ (DEVELOPMENT VERSION NEW)" );
+                chatroom.send("Hiya o/ (DEVELOPMENT VERSION with Auto-comment)" );
                 FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
                 feederService.start();
             }

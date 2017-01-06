@@ -5,9 +5,11 @@ import java.util.List;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.entities.AutoComment;
 import in.bhargavrao.stackoverflow.natty.entities.Natty;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.utils.AutoCommentUtils;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
@@ -33,10 +35,12 @@ public class Check implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
+        	System.out.println("Checking post...");
+        	
             String filename = FilePathUtils.checkUsers;
             String word = CommandUtils.extractData(message.getPlainContent()).trim();
             Integer returnValue = 0;
-
+            
             if(word.contains(" ")){
                 String parts[] = word.split(" ");
                 if(parts[0].toLowerCase().equals("value")){
@@ -49,7 +53,7 @@ public class Check implements SpecialCommand {
                 }
             }
             if(word.contains("/"))
-            {
+            {            	
                 String parts[]= word.split("//")[1].split("/");
                 if(parts[1].equals("users")){
                     for(String line: FileUtils.readFile(filename)){
@@ -63,7 +67,7 @@ public class Check implements SpecialCommand {
                     word = CommandUtils.getAnswerId(word);
                 }
             }
-
+                        
             Natty cc = new Natty();
             Post np = cc.checkPost(Integer.parseInt(word));
             PostPrinter pp = new PostPrinter(np);
@@ -74,12 +78,13 @@ public class Check implements SpecialCommand {
             Double found = report.getNaaValue();
             List<String> caughtFilters = report.getCaughtFor();
             List<Double> caughtFiltersValues = report.getCaughtForValues();
-
-            for(String filter: caughtFilters){
-                pp.addMessage(" **"+filter+"**; ");
-            }
-
+            
             pp.addMessage(" **"+found+"**;");
+            
+            AutoComment comment = AutoCommentUtils.commentForPostReport(report);
+            if (comment.length() > 0) pp.addMessage(" **Proposed comment: "+comment.identifier+"**;");
+            
+            
             if(returnValue==1) {
                 room.replyTo(message.getId(), "The NAA Value is " + found);
             }
