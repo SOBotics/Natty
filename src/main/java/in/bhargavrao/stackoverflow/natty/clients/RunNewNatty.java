@@ -34,7 +34,7 @@ public class RunNewNatty {
 
         
         Boolean isOnServer = false;
-        if (prop.getProperty("onserver").equals("yes")) isOnServer = true;
+        if (prop.getProperty("onserver") != null && prop.getProperty("onserver").equals("yes")) isOnServer = true;
         
         List<BotRoom> rooms = new ArrayList<>();
         rooms.add(new SOBoticsChatRoom());
