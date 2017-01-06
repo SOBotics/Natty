@@ -32,11 +32,17 @@ public class RunNewNatty {
 
         client = new StackExchangeClient(prop.getProperty("email"), prop.getProperty("password"));
 
+        
+        Boolean isOnServer = false;
+        if (prop.getProperty("onserver").equals("yes")) isOnServer = true;
+        
         List<BotRoom> rooms = new ArrayList<>();
         rooms.add(new SOBoticsChatRoom());
-        rooms.add(new HeadquartersChatRoom());
-        rooms.add(new RPublicChatRoom());
-        rooms.add(new GMTsChatRoom());
+        if (isOnServer) {
+        	rooms.add(new HeadquartersChatRoom());
+        	rooms.add(new RPublicChatRoom());
+        	rooms.add(new GMTsChatRoom());
+        }
 
         RunnerService runner = new RunnerService(client,rooms);
         runner.start();
