@@ -204,7 +204,7 @@ public class PostUtils {
             return -1;
         }
         
-        if (!prop.getProperty("onserver").equals("yes")) return -1; //return -1 if it's not running on server
+        if (!prop.getProperty("location").equals("server")) return -1; //return -1 if it's not running on server
         
         //continue...
         
