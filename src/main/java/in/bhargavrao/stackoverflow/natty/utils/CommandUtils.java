@@ -21,7 +21,7 @@ public class CommandUtils {
         }
         catch (IOException e){
             e.printStackTrace();
-            username = "Natty";
+            username = "nat";
         }
     	
         return message.split(" ")[0].toLowerCase().startsWith("@"+username) && message.split(" ")[1].toLowerCase().equals(command);

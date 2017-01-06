@@ -52,12 +52,12 @@ public class RunnerService {
                     e.printStackTrace();
                 }
             	
-                if (prop.getProperty("onserver").equals("yes")) {
-                	chatroom.send("Hiya o/ (DEVELOPMENT VERSION)" );
+                if (prop.getProperty("location").equals("server")) {
+                	chatroom.send("Hiya o/ (SERVER VERSION)" );
                     FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
                     feederService.start();
                 } else {
-                	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; running locally)" );
+                	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
                 }
             }
 

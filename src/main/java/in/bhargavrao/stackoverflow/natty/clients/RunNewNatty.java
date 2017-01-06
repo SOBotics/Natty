@@ -32,10 +32,8 @@ public class RunNewNatty {
 
         client = new StackExchangeClient(prop.getProperty("email"), prop.getProperty("password"));
 
-        
-        Boolean isOnServer = false;
-        if (prop.getProperty("onserver") != null && prop.getProperty("onserver").equals("yes")) isOnServer = true;
-        
+        boolean isOnServer = prop.getProperty("location") != null && prop.getProperty("location").equals("server");
+
         List<BotRoom> rooms = new ArrayList<>();
         rooms.add(new SOBoticsChatRoom());
         if (isOnServer) {
