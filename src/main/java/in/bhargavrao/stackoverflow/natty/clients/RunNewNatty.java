@@ -34,9 +34,9 @@ public class RunNewNatty {
 
         List<BotRoom> rooms = new ArrayList<>();
         rooms.add(new SOBoticsChatRoom());
-        //rooms.add(new HeadquartersChatRoom());
-        //rooms.add(new RPublicChatRoom());
-        //rooms.add(new GMTsChatRoom());
+        rooms.add(new HeadquartersChatRoom());
+        rooms.add(new RPublicChatRoom());
+        rooms.add(new GMTsChatRoom());
 
         RunnerService runner = new RunnerService(client,rooms);
         runner.start();

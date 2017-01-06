@@ -78,33 +78,8 @@ public class Check implements SpecialCommand {
             Double found = report.getNaaValue();
             List<String> caughtFilters = report.getCaughtFor();
             List<Double> caughtFiltersValues = report.getCaughtForValues();
-
-            
-            /*Boolean isPossibleLinkOnly = false;
-            Boolean hasNoCodeblock = false;
-            Boolean containsBlacklistedWord = false;
-            
-            for(String filter: caughtFilters){
-                pp.addMessage(" **"+filter+"**; ");
-                
-                //filters to decide which auto-comment to use
-                if (filter.equalsIgnoreCase("No Code Block")) hasNoCodeblock = true;
-                if (filter.equalsIgnoreCase("Possible Link Only")) isPossibleLinkOnly = true;
-                if (filter.equalsIgnoreCase("Contains Blacklisted Word")) containsBlacklistedWord = true;
-            }*/
             
             pp.addMessage(" **"+found+"**;");
-            
-            
-            //decide, which comment to use
-            /*if (hasNoCodeblock && isPossibleLinkOnly && !containsBlacklistedWord) {
-            	//link-only
-            	System.out.println("link-only");
-            	pp.addMessage(" **Proposed comment: link-only**;");
-            } else {
-            	System.out.println("naa");
-            	pp.addMessage(" **Proposed comment: NAA**;");
-            }*/
             
             AutoComment comment = AutoCommentUtils.commentForPostReport(report);
             if (comment.length() > 0) pp.addMessage(" **Proposed comment: "+comment.identifier+"**;");
@@ -126,7 +101,6 @@ public class Check implements SpecialCommand {
             }
         }
         catch (IOException e){
-        	System.out.println("ERROR");
             e.printStackTrace();
             room.replyTo(message.getId(), "Error occured, Try again");
         }
