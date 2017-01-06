@@ -5,6 +5,7 @@ import java.util.List;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.entities.AutoComment;
 import in.bhargavrao.stackoverflow.natty.entities.Natty;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
@@ -105,8 +106,8 @@ public class Check implements SpecialCommand {
             	pp.addMessage(" **Proposed comment: NAA**;");
             }*/
             
-            String comment = AutoCommentUtils.commentForPostReport(report);
-            if (comment.length() > 0) pp.addMessage(" **Proposed comment: "+comment+"**;");
+            AutoComment comment = AutoCommentUtils.commentForPostReport(report);
+            if (comment.length() > 0) pp.addMessage(" **Proposed comment: "+comment.identifier+"**;");
             
             
             if(returnValue==1) {

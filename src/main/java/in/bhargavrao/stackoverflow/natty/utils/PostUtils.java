@@ -17,6 +17,8 @@ import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
 import in.bhargavrao.stackoverflow.natty.entities.SOUser;
+import in.bhargavrao.stackoverflow.natty.entities.AutoComment;
+import in.bhargavrao.stackoverflow.natty.entities.AutoCommentType;
 import in.bhargavrao.stackoverflow.natty.filters.BlacklistedFilter;
 import in.bhargavrao.stackoverflow.natty.filters.ContainsQMFilter;
 import in.bhargavrao.stackoverflow.natty.filters.EndsWithQmFilter;
@@ -286,11 +288,12 @@ public class PostUtils {
 
     
     public static String autoFlag(Post post) {
-    	return autoFlag(post, "");
+    	AutoComment comment = new AutoComment(AutoCommentType.UNDEFINED);
+    	return autoFlag(post, comment);
     }
     
     
-    public static String autoFlag(Post post, String comment){
+    public static String autoFlag(Post post, AutoComment comment){
         ApiService apiService = new ApiService("stackoverflow");
         try{
             JsonObject flagOptions = apiService.getAnswerFlagOptions(post.getAnswerID());
@@ -300,7 +303,7 @@ public class PostUtils {
                     JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(),e.getAsJsonObject().get("option_id").getAsInt());
                     
                     //If a comment was passed, post it
-                    if (comment.length() > 0) return "Post Flagged Automatically\nWould add comment: "+comment;
+                    if (comment.length() > 0) return "Post Flagged Automatically\nWould add comment: "+comment.identifier;
                     
                     return "Post Flagged Automatically";
                 }
