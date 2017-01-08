@@ -83,7 +83,7 @@ public class Check implements SpecialCommand {
             
             AutoComment comment = AutoCommentUtils.commentForPostReport(report);
             if (comment.length() > 0) pp.addMessage(" **Proposed comment: "+comment.identifier+"**;");
-            
+
             
             if(returnValue==1) {
                 room.replyTo(message.getId(), "The NAA Value is " + found);
