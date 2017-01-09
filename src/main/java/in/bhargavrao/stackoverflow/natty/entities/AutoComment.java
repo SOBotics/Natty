@@ -23,8 +23,17 @@ public class AutoComment {
 	public AutoComment(AutoCommentType type) {
 		switch(type) {
 		case NAA:
+			//outdated. Will be replaced by NAA_LOW_REP and NAA_HIGH_REP
 			this.identifier = "NAA";
 			this.text = "This post isn't an actual attempt at answering the question. Please note [Stack Overflow doesn't work like a discussion forum](http://stackoverflow.com/tour), it is a Q&A site where every post is either a question or an answer to a question. Posts can also have [comments](http://stackoverflow.com/help/privileges/comment) - small sentences like this one - that can be used to critique or request clarification from an author. This should be either a comment or [a new question](http://stackoverflow.com/questions/ask).";
+			break;
+		case NAA_HIGH_REP:
+			this.identifier = "NAAhighrep";
+			this.text = "NAA for >=50 rep";
+			break;
+		case NAA_LOW_REP:
+			this.identifier = "NAAlowrep";
+			this.text = "This does not provide an answer to the question. Please note that [Stack Overflow doesn't work like a discussion forum](//stackoverflow.com/tour) and, although you do not have enough reputation to comment, [avoid posting comments as answers](http://meta.stackexchange.com/q/214173/347985). You can [search for similar questions](//stackoverflow.com/search), or refer to the related linked questions, to find an answer. If you have a related but different question, [ask a new question](//stackoverflow.com/questions/ask), possibly referencing this one to help provide context.";
 			break;
 		case LINK_ONLY:
 			this.identifier = "link-only";

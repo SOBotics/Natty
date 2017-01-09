@@ -318,7 +318,7 @@ public class PostUtils {
                     JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(),e.getAsJsonObject().get("option_id").getAsInt());
                     
                     //If a comment was passed, post it
-                    if (comment.length() > 0) return "Post Flagged Automatically\nWould add comment: "+comment.identifier;
+                    if (comment.length() > 0) return "Post Flagged Automatically - Would add comment: "+comment.identifier;
                     
                     return "Post Flagged Automatically";
                 }
