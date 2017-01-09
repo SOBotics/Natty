@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.*;
 
 public class CheckUtils {
 
@@ -247,5 +248,15 @@ public class CheckUtils {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Checks if the post contains piled symbols such as "???" or "!!!"
+     * @returns The matched symbols; null, if the post doesn't contain piled symbols
+     * */
+    public static String checkForPiledSymbols(Post post) {
+    	Pattern regex = Pattern.compile("(\\?{2,}|!{2,})");
+    	Matcher matcher = regex.matcher(post.getBody());
+    	return matcher.find() ? matcher.group(1) : null;
     }
 }

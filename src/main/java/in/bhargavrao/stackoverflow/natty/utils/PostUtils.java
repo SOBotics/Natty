@@ -30,6 +30,7 @@ import in.bhargavrao.stackoverflow.natty.filters.LinkOnlyAnswerFilter;
 import in.bhargavrao.stackoverflow.natty.filters.NoCodeBlockFilter;
 import in.bhargavrao.stackoverflow.natty.filters.NonEnglishFilter;
 import in.bhargavrao.stackoverflow.natty.filters.OneLineFilter;
+import in.bhargavrao.stackoverflow.natty.filters.PiledSymbolsFilter;
 import in.bhargavrao.stackoverflow.natty.filters.ReputationFilter;
 import in.bhargavrao.stackoverflow.natty.filters.SalutationsFilter;
 import in.bhargavrao.stackoverflow.natty.filters.SelfAnswerFilter;
@@ -149,6 +150,7 @@ public class PostUtils {
             add(new NoCodeBlockFilter(np));
             add(new NonEnglishFilter(np));
             add(new OneLineFilter(np));
+            add(new PiledSymbolsFilter(np));
             add(new ReputationFilter(np));
             add(new SalutationsFilter(np));
             add(new SelfAnswerFilter(np));
