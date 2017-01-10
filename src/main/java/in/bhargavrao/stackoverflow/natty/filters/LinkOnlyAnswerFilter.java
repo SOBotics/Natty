@@ -18,7 +18,7 @@ public class LinkOnlyAnswerFilter implements Filter {
 
     @Override
     public boolean filter() {
-        return CheckUtils.checkIfLinkOnlyAnswer(post,40);
+        return CheckUtils.checkIfLinkOnlyAnswer(post,40) && !CheckUtils.checkIfCodeBlock(post);
     }
 
     @Override
