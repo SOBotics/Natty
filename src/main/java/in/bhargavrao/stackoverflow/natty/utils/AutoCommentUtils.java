@@ -1,9 +1,8 @@
 package in.bhargavrao.stackoverflow.natty.utils;
 
-import in.bhargavrao.stackoverflow.natty.entities.AutoComment;
-import in.bhargavrao.stackoverflow.natty.entities.AutoComment.*;
 import in.bhargavrao.stackoverflow.natty.entities.AutoCommentType;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.entities.autocomments.*;
 
 public class AutoCommentUtils {
 	
@@ -35,23 +34,23 @@ public class AutoCommentUtils {
         
         //gibberish?
         if (containsVeryLongWord && isNonEnglish) {
-        	return new AutoComment(AutoCommentType.UNDEFINED);
+        	return null;
         }
         
         if (hasNoCodeblock && isPossibleLinkOnly && !containsBlacklistedWord && !containsQM) {
         	//link-only
         	System.out.println("link-only");
-        	return new AutoComment(AutoCommentType.LINK_ONLY);
+        	return new AutoCommentLinkOnly();
         } else {
         	System.out.println("Some NAA");
         	//check the reputation to provide different instructions for users that can't comment yet
         	if (report.getPost().getAnswerer().getReputation() < 50) {
         		//not enough rep to comment
         		System.out.println("low rep");
-        		return new AutoComment(AutoCommentType.NAA_LOW_REP);
+        		return new AutoCommentNAALowRep();
         	} else {
         		System.out.println("high rep");
-        		return new AutoComment(AutoCommentType.NAA_HIGH_REP);
+        		return new AutoCommentNAAHighRep();
         	}
         }
 	}
