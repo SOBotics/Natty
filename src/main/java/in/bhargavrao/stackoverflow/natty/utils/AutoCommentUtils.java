@@ -20,13 +20,22 @@ public class AutoCommentUtils {
         Boolean containsVeryLongWord = false;
         Boolean isNonEnglish = false;
         
+        for (String filter : report.getCaughtFor()) {
+        	if (filter.startsWith("No Code Block")) hasNoCodeblock = true;
+        	if (filter.startsWith("Possible Link Only")) isPossibleLinkOnly = true;
+            if (filter.startsWith("Contains Blacklisted Word")) containsBlacklistedWord = true;  
+            if (filter.startsWith("Contains Very Long Word")) containsVeryLongWord = true;
+            if (filter.startsWith("Non English Post")) isNonEnglish = true;
+        }
         
-        if (report.getCaughtFor().contains("No Code Block")) hasNoCodeblock = true;
+        
+        
+        /*if (report.getCaughtFor().contains("No Code Block")) hasNoCodeblock = true;
         if (report.getCaughtFor().contains("Possible Link Only")) isPossibleLinkOnly = true;
         if (report.getCaughtFor().contains("Contains Blacklisted Word")) containsBlacklistedWord = true;
                 
         if (report.getCaughtFor().contains("Contains Very Long Word")) containsVeryLongWord = true;
-        if (report.getCaughtFor().contains("Non English Post")) isNonEnglish = true;
+        if (report.getCaughtFor().contains("Non English Post")) isNonEnglish = true;*/
         
         
         //decide, which comment to use
