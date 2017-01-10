@@ -29,15 +29,6 @@ public class AutoCommentUtils {
         }
         
         
-        
-        /*if (report.getCaughtFor().contains("No Code Block")) hasNoCodeblock = true;
-        if (report.getCaughtFor().contains("Possible Link Only")) isPossibleLinkOnly = true;
-        if (report.getCaughtFor().contains("Contains Blacklisted Word")) containsBlacklistedWord = true;
-                
-        if (report.getCaughtFor().contains("Contains Very Long Word")) containsVeryLongWord = true;
-        if (report.getCaughtFor().contains("Non English Post")) isNonEnglish = true;*/
-        
-        
         //decide, which comment to use
         
         //gibberish?
