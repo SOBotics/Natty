@@ -16,6 +16,7 @@ public class AutoCommentUtils {
 		Boolean isPossibleLinkOnly = false;
         Boolean hasNoCodeblock = false;
         Boolean containsBlacklistedWord = false;
+        Boolean containsQM = false;
         
         Boolean containsVeryLongWord = false;
         Boolean isNonEnglish = false;
@@ -26,6 +27,7 @@ public class AutoCommentUtils {
             if (filter.startsWith("Contains Blacklisted Word")) containsBlacklistedWord = true;  
             if (filter.startsWith("Contains Very Long Word")) containsVeryLongWord = true;
             if (filter.startsWith("Non English Post")) isNonEnglish = true;
+            if (filter.startsWith("Contains ?")) containsQM = true;
         }
         
         
@@ -36,7 +38,7 @@ public class AutoCommentUtils {
         	return new AutoComment(AutoCommentType.UNDEFINED);
         }
         
-        if (hasNoCodeblock && isPossibleLinkOnly && !containsBlacklistedWord) {
+        if (hasNoCodeblock && isPossibleLinkOnly && !containsBlacklistedWord && !containsQM) {
         	//link-only
         	System.out.println("link-only");
         	return new AutoComment(AutoCommentType.LINK_ONLY);
