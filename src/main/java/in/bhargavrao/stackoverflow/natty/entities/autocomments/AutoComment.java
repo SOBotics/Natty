@@ -13,4 +13,11 @@ public interface AutoComment {
 	 * @returns The text that will be posted
 	 * */
 	String getText();
+	
+	/**
+	 * The length of the comment
+	 * */
+	default int length() {
+		return getText().length();
+	}
 }
