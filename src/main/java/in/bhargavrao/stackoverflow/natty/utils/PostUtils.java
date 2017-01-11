@@ -228,6 +228,8 @@ public class PostUtils {
                 reason = "Non English Post";
             if(reason.startsWith("User @"))
                 reason = "User Mentioned";
+            if(reason.startsWith("Piled symbols"))
+                reason = "Piled symbols";
             reasons.add(reason);
         }
 

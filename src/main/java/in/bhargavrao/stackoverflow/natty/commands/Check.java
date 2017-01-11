@@ -35,8 +35,7 @@ public class Check implements SpecialCommand {
     @Override
     public void execute(Room room) {
         try {
-        	System.out.println("Checking post...");
-        	
+
             String filename = FilePathUtils.checkUsers;
             String word = CommandUtils.extractData(message.getPlainContent()).trim();
             Integer returnValue = 0;

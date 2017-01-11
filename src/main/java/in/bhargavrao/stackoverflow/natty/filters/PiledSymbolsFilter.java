@@ -24,7 +24,7 @@ public class PiledSymbolsFilter implements Filter {
 	@Override
 	public boolean filter() {
 		this.symbols = CheckUtils.checkForPiledSymbols(this.post);
-		return (this.symbols != null && this.symbols.length() > 0) ? true : false;
+		return this.symbols != null && this.symbols.length() > 0;
 	}
 
 	@Override
