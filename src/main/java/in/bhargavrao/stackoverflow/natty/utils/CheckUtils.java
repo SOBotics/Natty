@@ -121,7 +121,7 @@ public class CheckUtils {
                 else if(dataToCheck.length()<50){
                     return null;
                 }
-                if(checkIfCodeBlock(post)){
+                if(checkIfNoCodeBlock(post)){
                     return "Gibberish";
                 }
                 return null;
@@ -212,7 +212,7 @@ public class CheckUtils {
     public static boolean checkIfUnregistered(Post post){
         return post.getAnswerer().getUserType().equals("unregistered");
     }
-    public static boolean checkIfCodeBlock(Post post){
+    public static boolean checkIfNoCodeBlock(Post post){
         return (!post.getBody().contains("<code>"));
     }
     public static boolean checkIfEndsWithQm(Post post){

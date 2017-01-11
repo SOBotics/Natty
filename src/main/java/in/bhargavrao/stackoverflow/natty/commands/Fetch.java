@@ -1,10 +1,16 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
@@ -76,6 +82,34 @@ public class Fetch implements SpecialCommand {
                 }
                 room.replyTo(message.getId(), links);
             }
+            else if(data.split(" ")[0].equals("deleted") && lines.size()!=0) {
+
+                if(lines.size()>100) room.send("There are more than 100 requests. Hence fetching deleted posts from the first 100 only");
+
+                lines = lines.subList(0,100);
+
+                ApiService apiService = new ApiService("stackoverflow");
+                List<Integer> answerIds = lines.stream().map(Integer::parseInt).collect(Collectors.toList());
+                JsonObject answersJson = apiService.getAnswerDetailsByIds(answerIds);
+
+                if(answersJson.has("items")){
+                    JsonArray answers = answersJson.get("items").getAsJsonArray();
+                    for (JsonElement element: answers){
+                        JsonObject answer = element.getAsJsonObject();
+                        String answerId = answer.get("answer_id").getAsString();
+                        int index = lines.indexOf(answerId);
+                        if (index!=-1){
+                            lines.remove(index);
+                        }
+                    }
+                }
+                String links = "";
+                for(String line: lines) {
+                    links += "["+line.trim()+"](//stackoverflow.com/a/"+line.trim()+"); ";
+                }
+                room.replyTo(message.getId(), links);
+            }
+
             else if(data.split(" ")[0].toLowerCase().equals("sentinel") && lines.size()!=0) {
 
                 String links = "";

@@ -18,7 +18,7 @@ public class NoCodeBlockFilter implements Filter {
 
     @Override
     public boolean filter() {
-        return CheckUtils.checkIfCodeBlock(post);
+        return CheckUtils.checkIfNoCodeBlock(post);
     }
 
     @Override
