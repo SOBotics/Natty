@@ -30,3 +30,6 @@ Sentinel posts receive feedback through Natty. Whenever a Natty report is given 
 
 The source code of Sentinel is available on [Github](https://github.com/ArtOfCode-/Sentinel). You can raise issues or request new features there. 
 
+----
+
+<sub>Back to [Home](/Natty)</sub>
