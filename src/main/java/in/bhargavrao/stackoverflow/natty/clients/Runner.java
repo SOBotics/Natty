@@ -3,7 +3,7 @@ package in.bhargavrao.stackoverflow.natty.clients;
 import fr.tunaki.stackoverflow.chat.Room;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
-import in.bhargavrao.stackoverflow.natty.entities.AutoComment;
+import in.bhargavrao.stackoverflow.natty.entities.autocomments.AutoComment;
 import in.bhargavrao.stackoverflow.natty.entities.OptedInUser;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.utils.*;
