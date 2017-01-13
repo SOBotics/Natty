@@ -255,8 +255,18 @@ public class CheckUtils {
      * @returns The matched symbols; null, if the post doesn't contain piled symbols
      * */
     public static String checkForPiledSymbols(Post post) {
+    	//RegEx to match all code-blocks: (<code>(?!:<\/code>).*|<\/code>)
+    	//Example: https://regex101.com/r/FEV4PJ/4
+    	
+    	//System.out.println(post.getBody());
+    	
+    	//Remove all code from the post
+      	String cleanPost = post.getBody().replaceAll("(<code>(?!:<\\/code>).*|<\\/code>)", "");
+    	
+    	//System.out.println(cleanPost);
+    	
     	Pattern regex = Pattern.compile("(\\?{2,}|!{2,})");
-    	Matcher matcher = regex.matcher(post.getBody());
+    	Matcher matcher = regex.matcher(cleanPost);
     	return matcher.find() ? matcher.group(1) : null;
     }
 }

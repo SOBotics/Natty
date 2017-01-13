@@ -84,14 +84,22 @@ public class Fetch implements SpecialCommand {
             }
             else if(data.split(" ")[0].equals("deleted") && lines.size()!=0) {
 
+            	System.out.println("point1");
+            	
                 if(lines.size()>100) room.send("There are more than 100 requests. Hence fetching deleted posts from the first 100 only");
 
                 lines = lines.subList(0,100);
 
+                System.out.println("point2");
+                
                 ApiService apiService = new ApiService("stackoverflow");
+                System.out.println("point2.1");
                 List<Integer> answerIds = lines.stream().map(Integer::parseInt).collect(Collectors.toList());
+                System.out.println("point2.2");
                 JsonObject answersJson = apiService.getAnswerDetailsByIds(answerIds);
 
+                System.out.println("point3");
+                
                 if(answersJson.has("items")){
                     JsonArray answers = answersJson.get("items").getAsJsonArray();
                     for (JsonElement element: answers){
