@@ -261,8 +261,8 @@ public class CheckUtils {
     	//System.out.println(post.getBody());
     	
     	//Remove all code from the post
-      	String cleanPost = post.getBody().replaceAll("(<code>(?!:<\\/code>).*|<\\/code>)", "");
-    	
+      	//String cleanPost = post.getBody().replaceAll("(<code>(?!:<\\/code>).*|<\\/code>)", "");
+    	String cleanPost = CheckUtils.stripBody(post);
     	//System.out.println(cleanPost);
     	
     	Pattern regex = Pattern.compile("(\\?{2,}|!{2,})");
