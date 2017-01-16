@@ -20,7 +20,7 @@ public class GmtsPostPrinter implements in.bhargavrao.stackoverflow.natty.printe
 
         String description= ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.sentinelMainUrl + "/posts/aid/" + report.getPost().getAnswerID() + ") ]");
 
-        PostPrinter postPrinter = new PostPrinter(np,description).addMainTag().addQuesionLink().addUserDetails();
+        PostPrinter postPrinter = new PostPrinter(np,description).addMainTag().addDescription().addUserDetails();
 
         return postPrinter.print();
     }
