@@ -13,7 +13,7 @@ public class OneLineFilter implements Filter {
 
     public OneLineFilter(Post post) {
         this.post = post;
-        value = 1;
+        value = 0.5;
     }
 
     @Override
