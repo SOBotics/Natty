@@ -1,4 +1,6 @@
 
+[![Build Status](https://travis-ci.org/SOBotics/Natty.svg?branch=master)](https://travis-ci.org/SOBotics/Natty)
+
 [Natty](http://stackapps.com/questions/7049/natty-bringing-10k-moderation-to-all) 
 ---
 
