@@ -16,7 +16,7 @@ public class PiledSymbolsFilter implements Filter {
 	
 	public PiledSymbolsFilter(Post post) {
 		this.post = post;
-		this.value = 0;
+		this.value = 1;
 		this.symbols = null;
 	}
 	
