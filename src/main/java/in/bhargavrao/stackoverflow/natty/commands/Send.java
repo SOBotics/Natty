@@ -43,7 +43,7 @@ public class Send implements SpecialCommand {
                 Collections.reverse(lines);
             }
             if(feedbacks.length>lines.size()){
-                room.replyTo(message.getId(), "Too many feedbacks, Too less reports");
+                room.replyTo(message.getId(), feedbacks.length+" feedbacks, "+lines.size()+" reports");
                 return;
             }
             for(int i  =0 ;i<=feedbacks.length;i++){

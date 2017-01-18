@@ -57,8 +57,6 @@ public class CheckUtils {
         return doc.text();
     }
 
-
-
     private static String stripBodyMarkdown(Post post){
         // TO DO
         return post.getBodyMarkdown();
@@ -87,12 +85,7 @@ public class CheckUtils {
         org.apache.tika.language.detect.LanguageDetector tikaDetector;
         TextObjectFactory textObjectFactory;
 
-
-
         String dataToCheck = stripTags(stripBody(post)).replaceAll("\\p{Punct}+", "");
-
-
-
         try {
 
             languageProfiles = new LanguageProfileReader().readAllBuiltIn();
