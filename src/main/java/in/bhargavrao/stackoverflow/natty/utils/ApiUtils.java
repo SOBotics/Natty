@@ -51,4 +51,14 @@ public class ApiUtils {
         String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerId+"/flags/add";
         return JsonUtils.post(answerIdUrl,"option_id",Integer.toString(flagType),"site",site,"key",apiKey,"access_token",token);
     }
+
+    public static JsonObject addComment(String comment, Integer postID, String site, String apiKey, String token) throws IOException{
+        String answerIdUrl = "https://api.stackexchange.com/2.2/posts/"+postID+"/comments/add";
+        return JsonUtils.post(answerIdUrl,"body",comment,"site",site,"key",apiKey,"access_token",token);
+    }
+
+    public static JsonObject deleteComment(Integer commentID, String site, String apiKey, String token) throws IOException{
+        String answerIdUrl = "https://api.stackexchange.com/2.2/comments/"+commentID+"/delete";
+        return JsonUtils.post(answerIdUrl,"site",site,"key",apiKey,"access_token",token);
+    }
 }

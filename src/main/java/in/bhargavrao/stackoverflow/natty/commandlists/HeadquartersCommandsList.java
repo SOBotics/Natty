@@ -13,13 +13,14 @@ import in.bhargavrao.stackoverflow.natty.commands.Help;
 import in.bhargavrao.stackoverflow.natty.commands.OptIn;
 import in.bhargavrao.stackoverflow.natty.commands.OptOut;
 import in.bhargavrao.stackoverflow.natty.commands.SpecialCommand;
+import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 
 /**
  * Created by bhargav.h on 28-Oct-16.
  */
 public class HeadquartersCommandsList {
-    public void mention(Room room, PingMessageEvent event, boolean isReply){
+    public void mention(Room room, PingMessageEvent event, RunnerService service, boolean isReply){
 
         if(CheckUtils.checkIfUserIsBlacklisted(event.getUserId()))
             return;

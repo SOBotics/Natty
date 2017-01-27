@@ -4,40 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import in.bhargavrao.stackoverflow.natty.commands.*;
+import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
-import in.bhargavrao.stackoverflow.natty.commands.AddCheckUser;
-import in.bhargavrao.stackoverflow.natty.commands.AddSalute;
-import in.bhargavrao.stackoverflow.natty.commands.Alive;
-import in.bhargavrao.stackoverflow.natty.commands.Blacklist;
-import in.bhargavrao.stackoverflow.natty.commands.Check;
-import in.bhargavrao.stackoverflow.natty.commands.Commands;
-import in.bhargavrao.stackoverflow.natty.commands.Feedback;
-import in.bhargavrao.stackoverflow.natty.commands.Fetch;
-import in.bhargavrao.stackoverflow.natty.commands.Halp;
-import in.bhargavrao.stackoverflow.natty.commands.Help;
-import in.bhargavrao.stackoverflow.natty.commands.Hi;
-import in.bhargavrao.stackoverflow.natty.commands.IsBlacklisted;
-import in.bhargavrao.stackoverflow.natty.commands.IsWhitelisted;
-import in.bhargavrao.stackoverflow.natty.commands.OptIn;
-import in.bhargavrao.stackoverflow.natty.commands.OptOut;
-import in.bhargavrao.stackoverflow.natty.commands.Quota;
-import in.bhargavrao.stackoverflow.natty.commands.Remind;
-import in.bhargavrao.stackoverflow.natty.commands.RemoveBlackList;
-import in.bhargavrao.stackoverflow.natty.commands.RemoveRequest;
-import in.bhargavrao.stackoverflow.natty.commands.RemoveWhitelist;
-import in.bhargavrao.stackoverflow.natty.commands.Report;
-import in.bhargavrao.stackoverflow.natty.commands.Say;
-import in.bhargavrao.stackoverflow.natty.commands.Send;
-import in.bhargavrao.stackoverflow.natty.commands.ShowRequests;
-import in.bhargavrao.stackoverflow.natty.commands.SpecialCommand;
-import in.bhargavrao.stackoverflow.natty.commands.Status;
-import in.bhargavrao.stackoverflow.natty.commands.Whitelist;
-import in.bhargavrao.stackoverflow.natty.commands.WishBirthday;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
 
@@ -48,7 +22,7 @@ public class SoBoticsCommandsList {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SoBoticsCommandsList.class);
 
-    public void mention(Room room, PingMessageEvent event, boolean isReply){
+    public void mention(Room room, PingMessageEvent event, RunnerService service, boolean isReply){
 
         if(CheckUtils.checkIfUserIsBlacklisted(event.getUserId()))
             return;
@@ -60,6 +34,7 @@ public class SoBoticsCommandsList {
             new Alive(message),
             new Blacklist(message),
             new Check(message),
+            new Delete(message),
             new Feedback(message),
             new Fetch(message),
             new Halp(message),
@@ -70,11 +45,12 @@ public class SoBoticsCommandsList {
             new OptIn(message),
             new OptOut(message),
             new Quota(message),
+            new Reboot(message,service),
             new Remind(message),
             new RemoveBlackList(message),
             new RemoveRequest(message),
             new RemoveWhitelist(message),
-            new Report(message, new AllowAllNewAnswersValidator()),
+            new Report(message, new AllowAllNewAnswersValidator(), 3.5),
             new Say(message),
             new Send(message),
             new ShowRequests(message),

@@ -107,6 +107,9 @@ public class Fetch implements SpecialCommand {
                 for(String line: lines) {
                     links += "["+line.trim()+"](//stackoverflow.com/a/"+line.trim()+"); ";
                 }
+
+                if(links.trim().equals(""))
+                    links = "There are no deleted posts";
                 room.replyTo(message.getId(), links);
             }
 

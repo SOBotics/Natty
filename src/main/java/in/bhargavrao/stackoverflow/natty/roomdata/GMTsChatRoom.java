@@ -6,6 +6,7 @@ import fr.tunaki.stackoverflow.chat.event.UserMentionedEvent;
 import in.bhargavrao.stackoverflow.natty.commandlists.GMTsCommandsList;
 import in.bhargavrao.stackoverflow.natty.printers.GmtsPostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowOnlyTagValidator;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
@@ -22,8 +23,8 @@ public class GMTsChatRoom implements BotRoom{
     }
 
     @Override
-    public Consumer<UserMentionedEvent> getMention(Room room) {
-        return event->new GMTsCommandsList().mention(room, event, true);
+    public Consumer<UserMentionedEvent> getMention(Room room, RunnerService service) {
+        return event->new GMTsCommandsList().mention(room, event, service, true);
     }
 
     @Override

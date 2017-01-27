@@ -13,6 +13,7 @@ import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -39,7 +40,14 @@ public class RunnerService {
 
     public void start(){
         for(BotRoom room:rooms){
-            Room chatroom = client.joinRoom(ChatHost.STACK_OVERFLOW ,room.getRoomId());
+
+            Room chatroom = null;
+            try {
+                chatroom = client.joinRoom(ChatHost.STACK_OVERFLOW, room.getRoomId());
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
 
             if(room.getRoomId()==111347){
             	//check if Natty is running on the server
@@ -62,11 +70,12 @@ public class RunnerService {
             }
 
             chatRooms.add(chatroom);
-            if(room.getMention(chatroom)!=null)
-                chatroom.addEventListener(EventType.USER_MENTIONED, room.getMention(chatroom));
+            if(room.getMention(chatroom,this)!=null)
+                chatroom.addEventListener(EventType.USER_MENTIONED, room.getMention(chatroom,this));
             if(room.getReply(chatroom)!=null)
                 chatroom.addEventListener(EventType.MESSAGE_REPLY, room.getReply(chatroom));
         }
+
         executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
@@ -89,7 +98,22 @@ public class RunnerService {
         }
     }
 
-    public void stop(long RoomId){
+    public void stop(){
+        executorService.shutdown();
+    }
 
+    public void reboot(){
+
+        this.stop();
+        executorService = Executors.newSingleThreadScheduledExecutor();
+        this.run();
+        for(Room room:chatRooms){
+            room.send("Rebooted at "+ Instant.now());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

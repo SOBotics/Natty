@@ -69,7 +69,6 @@ public class ApiService {
         quota = answersJson.get("quota_remaining").getAsInt();
         return answersJson;
     }
-
     public JsonObject getAnswerFlagOptions(Integer answerId) throws IOException{
         JsonObject flagOptionsJson = ApiUtils.getAnswerFlagOptions(answerId,site,autoflagKey,autoflagToken);
         quota = flagOptionsJson.get("quota_remaining").getAsInt();
@@ -78,6 +77,18 @@ public class ApiService {
 
     public JsonObject flagAnswer(Integer answerId, Integer flagType) throws IOException{
         JsonObject flaggedPost = ApiUtils.FlagAnswer(answerId,flagType,site,autoflagKey,autoflagToken);
+        quota = flaggedPost.get("quota_remaining").getAsInt();
+        return flaggedPost;
+    }
+
+    public JsonObject addComment(String comment, Integer postId) throws IOException{
+        JsonObject flaggedPost = ApiUtils.addComment(comment,postId,site,autoflagKey,autoflagToken);
+        quota = flaggedPost.get("quota_remaining").getAsInt();
+        return flaggedPost;
+    }
+
+    public JsonObject deleteComment(Integer commentId) throws IOException{
+        JsonObject flaggedPost = ApiUtils.deleteComment(commentId,site,autoflagKey,autoflagToken);
         quota = flaggedPost.get("quota_remaining").getAsInt();
         return flaggedPost;
     }

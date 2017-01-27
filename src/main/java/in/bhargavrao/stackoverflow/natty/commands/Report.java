@@ -26,10 +26,12 @@ public class Report implements SpecialCommand {
 
     private Message message;
     private Validator validator;
+    private Double naaLimit;
 
-    public Report(Message message, Validator validator) {
+    public Report(Message message, Validator validator, Double naaLimit) {
         this.message = message;
         this.validator = validator;
+        this.naaLimit = naaLimit;
     }
 
     @Override
@@ -72,8 +74,12 @@ public class Report implements SpecialCommand {
                 if(validator.validate(np)) {
 
                     PostReport report = PostUtils.getNaaValue(np);
+                    String feedback_type = "tn";
 
-                    String completeLog = "tn," + np.getAnswerID() + "," + np.getAnswerCreationDate() + "," + report.getNaaValue() + "," + np.getBodyMarkdown().length() + "," + np.getAnswerer().getReputation() + "," + report.getCaughtFor().stream().collect(Collectors.joining(";")) + ";";
+                    if (report.getNaaValue()>naaLimit)
+                        feedback_type = "tp";
+
+                    String completeLog = feedback_type+"," + np.getAnswerID() + "," + np.getAnswerCreationDate() + "," + report.getNaaValue() + "," + np.getBodyMarkdown().length() + "," + np.getAnswerer().getReputation() + "," + report.getCaughtFor().stream().collect(Collectors.joining(";")) + ";";
                     FileUtils.appendToFile(FilePathUtils.outputCSVLogFile, completeLog);
 
                     long postId = PostUtils.addSentinel(report);
@@ -97,7 +103,7 @@ public class Report implements SpecialCommand {
                     pp.addMessage(" **" + found + "**;");
 
                     User user = message.getUser();
-                    PostUtils.addFeedback(postId, user.getId(), user.getName(), "tn");
+                    PostUtils.addFeedback(postId, user.getId(), user.getName(), feedback_type);
                     //FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+postId);
 
                     room.send(pp.print());

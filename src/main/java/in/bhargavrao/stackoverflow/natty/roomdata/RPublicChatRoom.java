@@ -6,6 +6,7 @@ import fr.tunaki.stackoverflow.chat.event.UserMentionedEvent;
 import in.bhargavrao.stackoverflow.natty.commandlists.RPublicCommandsList;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.RPublicPostPrinter;
+import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.validators.RPublicValidator;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
@@ -21,8 +22,8 @@ public class RPublicChatRoom implements BotRoom{
     }
 
     @Override
-    public Consumer<UserMentionedEvent> getMention(Room room) {
-        return event->new RPublicCommandsList().mention(room, event, true);
+    public Consumer<UserMentionedEvent> getMention(Room room, RunnerService service) {
+        return event->new RPublicCommandsList().mention(room, event,service, true);
     }
 
     @Override
