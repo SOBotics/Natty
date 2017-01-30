@@ -9,7 +9,7 @@ public class AutoCommentNAAHighRep implements AutoComment {
 
 	@Override
 	public String getText() {
-		return "This post isn't an actual attempt at answering the question. Please note [Stack Overflow doesn't work like a discussion forum](http://stackoverflow.com/tour), it is a Q&A site where every post is either a question or an answer to a question. Posts can also have [comments](http://stackoverflow.com/help/privileges/comment) - small sentences like this one - that can be used to critique or request clarification from an author. This should be either a comment or [a new question](http://stackoverflow.com/questions/ask).";
+		return "This post doesn't look like an attempt to answer this question. Every post here is expected to be an explicit attempt to *answer* this question; if you have a critique or need a clarification of the question or another answer, you can [post a comment](//stackoverflow.com/help/privileges/comment) (like this one) directly below it. Please remove this answer and create either a comment or a new question. See: [Ask questions, get answers, no distractions](//stackoverflow.com/tour)";
 	}
 
 }

@@ -9,7 +9,7 @@ public class AutoCommentLinkOnly implements AutoComment {
 
 	@Override
 	public String getText() {
-		return "A link to a potential solution is always welcome, but please [add context around the link](http://meta.stackexchange.com/a/8259) so your fellow users will have some idea what it is and why it’s there. Always quote the most relevant part of an important link, in case the target site is unreachable or goes permanently offline. Take into account that being barely more than a link to an external site is a possible reason as to [Why and how are some answers deleted?](http://stackoverflow.com/help/deleted-answers).";
+		return "A link to a solution is welcome, but please ensure your answer is useful without it: [add context around the link](//meta.stackexchange.com/a/8259) so your fellow users will have some idea what it is and why it’s there, then quote the most relevant part of the page you're linking to in case the target page is unavailable. [Answers that are little more than a link may be deleted.](//stackoverflow.com/help/deleted-answers)";
 	}
 	
 }
