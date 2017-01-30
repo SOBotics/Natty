@@ -320,7 +320,12 @@ public class PostUtils {
                     JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(),e.getAsJsonObject().get("option_id").getAsInt());
                     
                     //If a comment was passed, post it
-                    if (comment != null && comment.length() > 0) return "Post Flagged Automatically - Would add comment: "+comment.getIdentifier();
+                    if (comment != null && comment.length() > 0) {
+                        //JsonObject commentJson = apiService.addComment(comment.getText(),post.getAnswerID());
+                        //Integer commentId = commentJson.get("items").getAsJsonArray().get(0).getAsJsonObject().get("comment_id").getAsInt();
+                        //return "Post Flagged Automatically - Added [comment](//stackoverflow.com/posts/comments/"+commentId+"): "+comment.getIdentifier();
+                        return "Post Flagged Automatically - would add comment: "+comment.getIdentifier();
+                    }
                     
                     return "Post Flagged Automatically";
                 }

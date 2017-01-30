@@ -48,6 +48,7 @@ public class Runner {
                     // IGNORING LINK ONLY FOR NOW AS THERE ARE A FEW FPs
                     AutoComment comment = AutoCommentUtils.commentForPostReport(report);
                     room.send(PostUtils.autoFlag(np, comment) + " on this [post](//stackoverflow.com/a/"+np.getAnswerID()+")");
+
                 }
             }
         }
