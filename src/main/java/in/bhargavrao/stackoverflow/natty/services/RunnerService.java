@@ -64,6 +64,9 @@ public class RunnerService {
                 	chatroom.send("Hiya o/ (SERVER VERSION)" );
                     FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
                     feederService.start();
+                    CleanerService cleanerService = new CleanerService(chatroom);
+                    cleanerService.start();
+
                 } else {
                 	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
                 }

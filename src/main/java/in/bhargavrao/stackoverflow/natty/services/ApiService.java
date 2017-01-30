@@ -19,6 +19,7 @@ public class ApiService {
     private String apiKey;
     private String autoflagKey;
     private String autoflagToken;
+    private String userId;
     private String site;
 
     private static int quota=0;
@@ -37,6 +38,8 @@ public class ApiService {
         this.apiKey = prop.getProperty("apikey");
         this.autoflagKey = prop.getProperty("autoflagkey");
         this.autoflagToken = prop.getProperty("autoflagtoken");
+        this.userId = prop.getProperty("userid");
+
 
     }
 
@@ -82,15 +85,21 @@ public class ApiService {
     }
 
     public JsonObject addComment(String comment, Integer postId) throws IOException{
-        JsonObject flaggedPost = ApiUtils.addComment(comment,postId,site,autoflagKey,autoflagToken);
-        quota = flaggedPost.get("quota_remaining").getAsInt();
-        return flaggedPost;
+        JsonObject addedComment = ApiUtils.addComment(comment,postId,site,autoflagKey,autoflagToken);
+        quota = addedComment.get("quota_remaining").getAsInt();
+        return addedComment;
     }
 
     public JsonObject deleteComment(Integer commentId) throws IOException{
-        JsonObject flaggedPost = ApiUtils.deleteComment(commentId,site,autoflagKey,autoflagToken);
-        quota = flaggedPost.get("quota_remaining").getAsInt();
-        return flaggedPost;
+        JsonObject deletedComment  = ApiUtils.deleteComment(commentId,site,autoflagKey,autoflagToken);
+        quota = deletedComment.get("quota_remaining").getAsInt();
+        return deletedComment;
+    }
+
+    public JsonObject getComments() throws IOException{
+        JsonObject commentList = ApiUtils.getComments(Integer.parseInt(userId),site,apiKey);
+        quota = commentList.get("quota_remaining").getAsInt();
+        return commentList;
     }
 
     public int getQuota(){
