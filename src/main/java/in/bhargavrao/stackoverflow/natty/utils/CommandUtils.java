@@ -59,5 +59,26 @@ public class CommandUtils {
         }
         return word;
     }
+    public static String getCommentId(String word){
+        String parts[]= word.split("//")[1].split("/");
+        if(parts[1].equals("posts") && parts[2].equals("comments")){
+            word = parts[3];
+        }
+        else if (parts[3].contains("#comment") ){
+            if (parts[3].contains("#"))
+            {
+                String commentAnchor = parts[3].split("#")[1];
+                word = commentAnchor.substring(7,commentAnchor.indexOf("_"));
+            }
+        }
+        else if (parts.length==5 && parts[4].contains("#comment") ){
+            if (parts[4].contains("#"))
+            {
+                String commentAnchor = parts[4].split("#")[1];
+                word = commentAnchor.substring(7,commentAnchor.indexOf("_"));
+            }
+        }
+        return word;
+    }
 
 }

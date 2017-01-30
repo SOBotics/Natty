@@ -53,13 +53,11 @@ public class Fetch implements SpecialCommand {
                 room.replyTo(message.getId(), "Deprecated, Please use `fetch links` instead.");
             }
             else if(data.split(" ")[0].equals("links") && lines.size()!=0) {
-
                 if (lines.size() == 0)
                     room.replyTo(message.getId(), "All reports have been tended to");
                 else {
-
                     int stopValue = lines.size();
-                    if(CheckUtils.checkIfInteger(data.split(" ")[1])){
+                    if(data.split(" ").length==2&&CheckUtils.checkIfInteger(data.split(" ")[1])){
                         stopValue = Integer.parseInt(data.split(" ")[1]);
                     }
 
@@ -84,9 +82,11 @@ public class Fetch implements SpecialCommand {
             }
             else if(data.split(" ")[0].equals("deleted") && lines.size()!=0) {
 
-                if(lines.size()>100) room.send("There are more than 100 requests. Hence fetching deleted posts from the first 100 only");
-
-                lines = lines.subList(0,100);
+                if(lines.size()>100)
+                {
+                    room.send("There are more than 100 requests. Hence fetching deleted posts from the first 100 only");
+                    lines = lines.subList(0,100);
+                }
 
                 ApiService apiService = new ApiService("stackoverflow");
                 List<Integer> answerIds = lines.stream().map(Integer::parseInt).collect(Collectors.toList());

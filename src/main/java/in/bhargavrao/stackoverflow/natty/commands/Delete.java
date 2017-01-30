@@ -6,6 +6,7 @@ import in.bhargavrao.stackoverflow.natty.entities.Natty;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
 import in.bhargavrao.stackoverflow.natty.entities.autocomments.AutoComment;
+import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import in.bhargavrao.stackoverflow.natty.utils.*;
 
 import java.io.IOException;
@@ -29,7 +30,17 @@ public class Delete implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        // TODO
+        String commentId = CommandUtils.extractData(message.getPlainContent()).trim();
+        if(commentId.contains("/"))
+            commentId = CommandUtils.getCommentId(commentId);
+        if(CheckUtils.checkIfInteger(commentId)) {
+            ApiService apiService = new ApiService("stackoverflow");
+            try {
+                apiService.deleteComment(Integer.parseInt(commentId));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

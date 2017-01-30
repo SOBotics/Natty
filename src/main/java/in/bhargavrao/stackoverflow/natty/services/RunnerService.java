@@ -107,12 +107,15 @@ public class RunnerService {
         this.stop();
         executorService = Executors.newSingleThreadScheduledExecutor();
         this.run();
-        for(Room room:chatRooms){
-            room.send("Rebooted at "+ Instant.now());
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        for(int i = 0;i<rooms.size(); i++){
+            if(rooms.get(i).getIsLogged()) {
+                Room room = chatRooms.get(i);
+                room.send("Rebooted at " + Instant.now());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
