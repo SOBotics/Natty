@@ -39,17 +39,13 @@ public class AutoCommentUtils {
         
         if (hasNoCodeblock && isPossibleLinkOnly && !containsBlacklistedWord && !containsQM) {
         	//link-only
-        	System.out.println("link-only");
         	return new AutoCommentLinkOnly();
         } else {
-        	System.out.println("Some NAA");
         	//check the reputation to provide different instructions for users that can't comment yet
         	if (report.getPost().getAnswerer().getReputation() < 50) {
         		//not enough rep to comment
-        		System.out.println("low rep");
         		return new AutoCommentNAALowRep();
         	} else {
-        		System.out.println("high rep");
         		return new AutoCommentNAAHighRep();
         	}
         }
