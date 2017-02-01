@@ -53,14 +53,23 @@ public class NewBlacklistedFilter implements Filter {
             	
             	String phrase = object.get("phrase").getAsString();
             	if (phrase != null && phrase.equals(this.listedWord)) {
-            		double tp = object.get("tp").getAsDouble();
-            		double fp = object.get("fp").getAsDouble();
-            		double tn = object.get("tn").getAsDouble();
-            		double ne = object.get("ne").getAsDouble();
-            		double totalPosts = tp+fp+tn+ne;
+            		JsonObject feedbacks = object.getAsJsonObject("feedback_counts");
+            		JsonObject tpObj = (JsonObject) feedbacks.get("tp");
+            		JsonObject fpObj = (JsonObject) feedbacks.get("fp");
+            		JsonObject tnObj = (JsonObject) feedbacks.get("tn");
+            		JsonObject neObj = (JsonObject) feedbacks.get("ne");
             		
-            		//Score calculation: ((1−fps/postsMatchingThePhrase)^maxScore) * maxScore
-            		this.value = Math.pow((1 - (fp / totalPosts)), this.maxValue) * this.maxValue;
+            		if (tpObj != null && fpObj != null && tnObj != null && neObj != null ) {
+            			double tp = tpObj.getAsDouble();
+            			double fp = fpObj.getAsDouble();
+            			double tn = tnObj.getAsDouble();
+            			double ne = neObj.getAsDouble();
+            			
+            			double totalPosts = tp+fp+tn+ne;
+                		
+                		//Score calculation: ((1−fps/postsMatchingThePhrase)^maxScore) * maxScore
+                		this.value = Math.pow((1 - (fp / totalPosts)), this.maxValue) * this.maxValue;
+            		}
             		
             		
             		break;
