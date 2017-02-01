@@ -277,9 +277,13 @@ public class PostUtils {
         long repliedTo = event.getParentMessageId();
         Message repliedToMessage = room.getMessage(repliedTo);
         String message = repliedToMessage.getPlainContent().trim();
-        message = message.split("Link to Post")[1];
-        String linkToPost = message.substring(message.indexOf("(")+1,message.indexOf(")")).replace("//stackoverflow.com/a/","");
+        String linkToPost = getPostIdFromMessage(message);
         handleFeedback(event.getMessage().getUser(), type, linkToPost);
+    }
+
+    public static String getPostIdFromMessage(String message) {
+        message = message.split("//stackoverflow.com/a/")[1];
+        return message.substring(0,message.indexOf(")"));
     }
 
 
