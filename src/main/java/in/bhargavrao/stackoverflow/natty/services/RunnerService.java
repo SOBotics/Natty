@@ -71,6 +71,8 @@ public class RunnerService {
 
                 } else {
                 	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
+                	BlacklistDataService blacklistService = new BlacklistDataService(chatroom);
+                    blacklistService.start();
                 }
             }
 
