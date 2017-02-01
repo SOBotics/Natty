@@ -26,6 +26,7 @@ import in.bhargavrao.stackoverflow.natty.filters.EndsWithQmFilter;
 import in.bhargavrao.stackoverflow.natty.filters.Filter;
 import in.bhargavrao.stackoverflow.natty.filters.LengthFilter;
 import in.bhargavrao.stackoverflow.natty.filters.LinkOnlyAnswerFilter;
+import in.bhargavrao.stackoverflow.natty.filters.NewBlacklistedFilter;
 import in.bhargavrao.stackoverflow.natty.filters.NoCodeBlockFilter;
 import in.bhargavrao.stackoverflow.natty.filters.NonEnglishFilter;
 import in.bhargavrao.stackoverflow.natty.filters.OneLineFilter;
@@ -142,6 +143,7 @@ public class PostUtils {
 
         List<Filter> filters = new ArrayList<Filter>(){{
             add(new BlacklistedFilter(np));
+            add(new NewBlacklistedFilter(np));
             add(new ContainsQMFilter(np));
             add(new EndsWithQmFilter(np));
             add(new LengthFilter(np));
