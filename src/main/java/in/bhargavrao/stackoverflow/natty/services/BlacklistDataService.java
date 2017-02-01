@@ -22,15 +22,13 @@ import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 
 public class BlacklistDataService {
 	private StackExchangeClient client;
-    private List<BotRoom> rooms;
-    private List<Room> chatRooms;
+    private Room chatRoom;
     private ScheduledExecutorService executorService;
 
 
-    public BlacklistDataService(StackExchangeClient client, List<BotRoom> rooms) {
+    public BlacklistDataService(Room chatroom) {
         this.client = client;
-        this.rooms = rooms;
-        chatRooms = new ArrayList<>();
+        this.chatRoom = chatroom;
     }
     
     public void start() {

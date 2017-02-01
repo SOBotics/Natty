@@ -62,6 +62,8 @@ public class RunnerService {
             	
                 if (prop.getProperty("location").equals("server")) {
                 	chatroom.send("Hiya o/ (SERVER VERSION)" );
+                	BlacklistDataService blacklistService = new BlacklistDataService(chatroom);
+                    blacklistService.start();
                     FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
                     feederService.start();
                     CleanerService cleanerService = new CleanerService(chatroom);
