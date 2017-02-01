@@ -142,7 +142,7 @@ public class PostUtils {
         Double f = 0.0;
 
         List<Filter> filters = new ArrayList<Filter>(){{
-            add(new BlacklistedFilter(np));
+            //add(new BlacklistedFilter(np));
             add(new NewBlacklistedFilter(np));
             add(new ContainsQMFilter(np));
             add(new EndsWithQmFilter(np));
