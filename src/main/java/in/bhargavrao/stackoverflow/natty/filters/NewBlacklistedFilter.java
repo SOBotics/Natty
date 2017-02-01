@@ -1,6 +1,8 @@
 package in.bhargavrao.stackoverflow.natty.filters;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -32,47 +34,64 @@ public class NewBlacklistedFilter implements Filter {
 		String listedWord = CheckUtils.checkForBlackListedWords(post);
         if(listedWord!=null){
             this.listedWord = listedWord;
-            
+            System.out.println(this.listedWord + " is blackisted");
             //calculate the value
             String jsonString;
             try {
-            	InputStream is = JsonParser.class.getResourceAsStream(FilePathUtils.intelligentBlacklistFile);
-            	jsonString = is.toString();
+            	//InputStream is = JsonParser.class.getResourceAsStream(FilePathUtils.intelligentBlacklistFile);
+            	//jsonString = is.toString();
+            	jsonString = new String(Files.readAllBytes(Paths.get(FilePathUtils.intelligentBlacklistFile)));
             } catch (Throwable e) {
             	e.printStackTrace();
             	return false;
             }
-            
+                        
             JsonParser parser = new JsonParser();
             
-            JsonObject list = (JsonObject) parser.parse(jsonString);
-            JsonArray array = list.getAsJsonArray();
-            
+            JsonElement list = null;
+            JsonArray array = null;
+            try {
+            	list = parser.parse(jsonString);
+            	array = list.getAsJsonArray();
+            } catch (Throwable e) {
+            	e.printStackTrace();
+            	return false;
+            }
+                                    
             for(JsonElement item : array) {
-            	JsonObject object = item.getAsJsonObject();
+            	JsonObject object = null;
             	
+            	try {
+            		object = item.getAsJsonObject();
+            	} catch (Throwable e) {
+                	e.printStackTrace();
+                	return false;
+                }
+            	            	
             	String phrase = object.get("phrase").getAsString();
             	if (phrase != null && phrase.equals(this.listedWord)) {
+            		            		
             		JsonObject feedbacks = object.getAsJsonObject("feedback_counts");
-            		JsonObject tpObj = (JsonObject) feedbacks.get("tp");
-            		JsonObject fpObj = (JsonObject) feedbacks.get("fp");
-            		JsonObject tnObj = (JsonObject) feedbacks.get("tn");
-            		JsonObject neObj = (JsonObject) feedbacks.get("ne");
+            		JsonElement tpObj = feedbacks.get("tp");
+            		JsonElement fpObj = feedbacks.get("fp");
+            		JsonElement tnObj = feedbacks.get("tn");
+            		JsonElement neObj = feedbacks.get("ne");
             		
-            		if (tpObj != null && fpObj != null && tnObj != null && neObj != null ) {
-            			double tp = tpObj.getAsDouble();
-            			double fp = fpObj.getAsDouble();
-            			double tn = tnObj.getAsDouble();
-            			double ne = neObj.getAsDouble();
-            			
-            			double totalPosts = tp+fp+tn+ne;
-                		
-                		//Score calculation: ((1−fps/postsMatchingThePhrase)^maxScore) * maxScore
-                		this.value = Math.pow((1 - (fp / totalPosts)), this.maxValue) * this.maxValue;
-            		}
+            		double tp = tpObj != null ? tpObj.getAsDouble() : 0;
+        			double fp = fpObj != null ? fpObj.getAsDouble() : 0;
+        			double tn = tnObj != null ? tnObj.getAsDouble() : 0;
+        			double ne = neObj != null ? neObj.getAsDouble() : 0;
+        			
+        			double totalPosts = tp+fp+tn+ne;
             		
+            		//Score calculation: ((1−fps/postsMatchingThePhrase)^maxScore) * maxScore
+            		this.value = Math.pow((1 - (fp / totalPosts)), this.maxValue) * this.maxValue;
             		
-            		break;
+            		//round value
+            		this.value = Math.round(this.value*10.0)/10.0;
+            		
+            		return true;
+            		
             	}
             }
             
