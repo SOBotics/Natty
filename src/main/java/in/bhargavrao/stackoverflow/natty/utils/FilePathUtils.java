@@ -5,6 +5,7 @@ package in.bhargavrao.stackoverflow.natty.utils;
  */
 public class FilePathUtils {
     public static String blacklistFile = "./data/BlackListedWords.txt";
+    public static String intelligentBlacklistFile = "./data/IntelligentBlacklist.json";
     public static String whitelistFile = "./data/WhiteListedWords.txt";
     public static String salutationsFile = "./data/Salutations.txt";
     public static String optedUsersFile = "./data/OptedInUsersList.txt";
