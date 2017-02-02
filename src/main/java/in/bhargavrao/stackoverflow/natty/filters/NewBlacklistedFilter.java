@@ -24,7 +24,7 @@ public class NewBlacklistedFilter implements Filter {
     public NewBlacklistedFilter(Post post) {
         this.post = post;
         value = 0;
-        maxValue = 4.0;
+        maxValue = 2.5;
         listedWord = null;
     }
 	
@@ -34,12 +34,11 @@ public class NewBlacklistedFilter implements Filter {
 		String listedWord = CheckUtils.checkForBlackListedWords(post);
         if(listedWord!=null){
             this.listedWord = listedWord;
-            System.out.println(this.listedWord + " is blackisted");
+            //System.out.println(this.listedWord + " is blackisted");
+            
             //calculate the value
             String jsonString;
             try {
-            	//InputStream is = JsonParser.class.getResourceAsStream(FilePathUtils.intelligentBlacklistFile);
-            	//jsonString = is.toString();
             	jsonString = new String(Files.readAllBytes(Paths.get(FilePathUtils.intelligentBlacklistFile)));
             } catch (Throwable e) {
             	e.printStackTrace();
