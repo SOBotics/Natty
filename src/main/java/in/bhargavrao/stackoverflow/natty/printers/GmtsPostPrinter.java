@@ -22,6 +22,9 @@ public class GmtsPostPrinter implements in.bhargavrao.stackoverflow.natty.printe
 
         PostPrinter postPrinter = new PostPrinter(np,description).addMainTag().addDescription().addUserDetails();
 
+        if(report.getNaaValue()>=7.0)
+            postPrinter.addMessage(" **Auto-Flagged**");
+
         return postPrinter.print();
     }
 }
