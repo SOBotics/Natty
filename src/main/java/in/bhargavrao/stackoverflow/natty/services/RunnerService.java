@@ -66,6 +66,8 @@ public class RunnerService {
                     feederService.start();
                     CleanerService cleanerService = new CleanerService(chatroom);
                     cleanerService.start();
+                    MentionService mentionService = new MentionService(chatroom);
+                    mentionService.start();
 
                 } else {
                 	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );

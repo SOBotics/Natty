@@ -22,7 +22,7 @@ public class MentionService {
         this.room = room;
         this.mentionService = Executors.newSingleThreadScheduledExecutor();
     }
-    public void clean(){
+    public void mention(){
         try
         {
             ApiService service = new ApiService("stackoverflow");
@@ -41,8 +41,8 @@ public class MentionService {
     }
 
     public void start(){
-        Runnable cleaner = () -> clean();
-        mentionService.scheduleAtFixedRate(cleaner, 0, 1, TimeUnit.DAYS);
+        Runnable mentioner = () -> mention();
+        mentionService.scheduleAtFixedRate(mentioner, 0, 5, TimeUnit.MINUTES);
     }
 
     public void stop(){
