@@ -9,6 +9,7 @@ import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.utils.*;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,9 @@ import java.util.stream.Collectors;
  */
 public class Runner {
     public int runOnce(Room room, Validator validator, List<Post> posts, double naaValueLimit, PostPrinter postPrinter, boolean logging){
-        int numOfAnswers = 0;
+        Instant startDate = Instant.now();
+    	
+    	int numOfAnswers = 0;
         try{
             for (Post np : posts) {
 
@@ -55,6 +58,12 @@ public class Runner {
         catch(Exception e){
             e.printStackTrace();
         }
+        
+        //Didn't crash/freeze
+        StatusUtils.lastSucceededExecutionStarted = startDate;
+        StatusUtils.lastExecutionFinished = Instant.now();
+        
+        
         return numOfAnswers;
     }
 

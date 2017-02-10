@@ -4,6 +4,7 @@ import fr.tunaki.stackoverflow.chat.StackExchangeClient;
 import in.bhargavrao.stackoverflow.natty.roomdata.*;
 import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
+import in.bhargavrao.stackoverflow.natty.utils.StatusUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class RunNewNatty {
         runner.start();
         runner.run();
 
+        StatusUtils.startupDate = Instant.now();
         System.out.println("LOADED  - "+Instant.now());
 
 
