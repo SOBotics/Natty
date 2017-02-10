@@ -66,4 +66,9 @@ public class ApiUtils {
         String commentsUrl = "https://api.stackexchange.com/2.2/users/"+userId+"/comments";
         return JsonUtils.get(commentsUrl,"site",site,"key",apiKey, "filter","!9YdnSOQH3");
     }
+
+    public static JsonObject getMentions(Integer userId,String site, String apiKey) throws IOException{
+        String mentionUrl = "https://api.stackexchange.com/2.2/users/"+userId+"/mentioned";
+        return JsonUtils.get(mentionUrl,"site",site,"key",apiKey, "filter","!bZA*iTYWJS8yRg");
+    }
 }

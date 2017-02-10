@@ -33,14 +33,14 @@ public class JsonUtils {
         JsonObject root = new JsonParser().parse(json).getAsJsonObject();
         return root;
     }
-    public static void handleBackoff(Logger LOGGER, JsonObject root) {
+    public static void handleBackoff(JsonObject root) {
         if (root.has("backoff")) {
             int backoff = root.get("backoff").getAsInt();
-            LOGGER.warn("Backing off {} seconds", backoff);
+            System.out.println("Backing off " + backoff);
             try {
                 Thread.sleep(1000 * backoff);
             } catch (InterruptedException e) {
-                LOGGER.error("Couldn't backoff for {} seconds, was interrupted!", backoff, e);
+                e.printStackTrace();
             }
         }
     }
