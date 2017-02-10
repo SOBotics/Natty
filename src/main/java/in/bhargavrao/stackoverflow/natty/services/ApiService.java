@@ -113,8 +113,8 @@ public class ApiService {
         return commentList;
     }
 
-    public JsonObject getMentions() throws IOException{
-        JsonObject mentionsList = ApiUtils.getMentions(Integer.parseInt(userId),site,apiKey);
+    public JsonObject getMentions(Instant fromTimestamp) throws IOException{
+        JsonObject mentionsList = ApiUtils.getMentions(fromTimestamp, Integer.parseInt(userId),site,apiKey);
         JsonUtils.handleBackoff(mentionsList);
         quota = mentionsList.get("quota_remaining").getAsInt();
         return mentionsList;

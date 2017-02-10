@@ -64,10 +64,6 @@ public class RunnerService {
                 	chatroom.send("Hiya o/ (SERVER VERSION)" );
                     FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
                     feederService.start();
-                    CleanerService cleanerService = new CleanerService(chatroom);
-                    cleanerService.start();
-                    MentionService mentionService = new MentionService(chatroom);
-                    mentionService.start();
 
                 } else {
                 	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
@@ -75,6 +71,10 @@ public class RunnerService {
                 
                 SelfCheckService selfCheck = new SelfCheckService(this);
                 selfCheck.start();
+                CleanerService cleanerService = new CleanerService(chatroom);
+                cleanerService.start();
+                MentionService mentionService = new MentionService(chatroom);
+                mentionService.start();
                 
                 
             }

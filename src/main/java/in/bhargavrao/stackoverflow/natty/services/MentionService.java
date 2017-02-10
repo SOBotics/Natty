@@ -17,16 +17,19 @@ import java.util.concurrent.TimeUnit;
 public class MentionService {
     private Room room;
     private ScheduledExecutorService mentionService;
+    private Instant previousTimeStamp;
 
     public MentionService(Room room){
         this.room = room;
         this.mentionService = Executors.newSingleThreadScheduledExecutor();
+        this.previousTimeStamp = Instant.now().minusSeconds(300);
     }
     public void mention(){
         try
         {
             ApiService service = new ApiService("stackoverflow");
-            JsonObject comments = service.getMentions();
+            JsonObject comments = service.getMentions(previousTimeStamp);
+            previousTimeStamp = Instant.now();
             if(comments.has("items")){
                 for(JsonElement e : comments.get("items").getAsJsonArray()){
                     JsonObject comment = e.getAsJsonObject();
