@@ -70,6 +70,11 @@ public class RunnerService {
                 } else {
                 	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
                 }
+                
+                SelfCheckService selfCheck = new SelfCheckService(this);
+                selfCheck.start();
+                
+                
             }
 
             chatRooms.add(chatroom);
