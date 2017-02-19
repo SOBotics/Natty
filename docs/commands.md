@@ -9,13 +9,13 @@ The list of all commands are
     check           - Checks the sanity of a given post
     delete          - Deletes a given comment
     feedback        - Provides feedback on a given post
-    fetch           - Returns a list of posts that need feedback, See the wiki for more details
+    fetch           - Returns a list of posts that need feedback
     halp            - Plop, check it out
     help            - Returns information regarding the chatbot
     hi              - Hi, Test it out
     isblacklisted   - Checks if the given statement is blacklisted
     iswhitelisted   - Checks if the given statement is whitelisted
-    opt-in          - Notifies the user of the requested posts, see the wiki for more details
+    opt-in          - Notifies the user of the requested posts
     opt-out         - Unnotifies the user. 
     quota           - Returns the remaining API Quota
     reboot          - Reboots the bot
