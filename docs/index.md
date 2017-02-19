@@ -6,8 +6,11 @@ Petter once told
 
 and thus Natty was born. 
 
-To see a list of commands [jump here](https://github.com/SOBotics/Natty/wiki/Commands). 
 
-To learn about providing feedback to the bot [jump here](https://github.com/SOBotics/Natty/wiki/Interacting-with-the-bot).
-
-To see the history of the bot [jump here](https://github.com/SOBotics/Natty/wiki/History)
+- [List of Commands](/Natty/commands). 
+- [Interacting with the bot and providing feedback](/Natty/interacting).
+- [Etiqutte while dealing with the bot](/Natty/etiquette). 
+- [Working of the bot](/Natty/working).
+- [Useful userscripts](/Natty/userscripts). 
+- [What is Sentinel](/Natty/sentinel).
+- [Autoflagging of bad posts](/Natty/autoflagging). 
