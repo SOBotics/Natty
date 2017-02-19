@@ -62,7 +62,7 @@ public class RunnerService {
             	
                 if (prop.getProperty("location").equals("server")) {
                 	chatroom.send("Hiya o/ (SERVER VERSION)" );
-                    FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
+                    FeederService feederService = new FeederService("*Feeds Kyll*",chatroom,8);
                     feederService.start();
 
                 } else {
