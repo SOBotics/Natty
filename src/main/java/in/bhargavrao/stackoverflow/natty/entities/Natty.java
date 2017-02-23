@@ -25,7 +25,6 @@ import java.util.stream.StreamSupport;
  */
 public class Natty {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Natty.class);
 
     private Instant previousAnswerTimestamp;
     private ApiService apiService;
@@ -39,14 +38,12 @@ public class Natty {
         ArrayList<Post> posts = new ArrayList<>();
 
         JsonObject answersJson = apiService.getFirstPageOfAnswers(previousAnswerTimestamp);
-        JsonUtils.handleBackoff(LOGGER, answersJson);
         if (answersJson.has("items")) {
             JsonArray answers = answersJson.get("items").getAsJsonArray();
 
             List<Integer> questionIdList = StreamSupport.stream(answers.spliterator(),false).map(x -> x.getAsJsonObject().get("question_id").getAsInt()).collect(Collectors.toList());
 
             JsonObject questionsJson = apiService.getQuestionDetailsByIds(questionIdList);
-            JsonUtils.handleBackoff(LOGGER, questionsJson);
 
             if(questionsJson.has("items")){
                 JsonArray questions = questionsJson.get("items").getAsJsonArray();
@@ -84,12 +81,10 @@ public class Natty {
 
     public Post checkPost(int answerId) throws IOException{
         JsonObject answerApiJson = apiService.getAnswerDetailsById(answerId);
-        JsonUtils.handleBackoff(LOGGER,answerApiJson);
         if(answerApiJson.has("items")) {
             JsonObject answer = answerApiJson.getAsJsonArray("items").get(0).getAsJsonObject();
             int questionId = answer.get("question_id").getAsInt();
             JsonObject questionApiJson = apiService.getQuestionDetailsById(questionId);
-            JsonUtils.handleBackoff(LOGGER,questionApiJson);
             if(questionApiJson.has("items")){
                 JsonObject question = questionApiJson.getAsJsonArray("items").get(0).getAsJsonObject();
                 return PostUtils.getPost(answer,question);

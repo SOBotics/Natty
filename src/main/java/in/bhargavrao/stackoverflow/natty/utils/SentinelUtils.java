@@ -12,7 +12,7 @@ import java.net.URL;
  * Partly taken from Tunaki, with changes made.
  */
 public class SentinelUtils {
-    public static final String sentinelMainUrl = "http://sentinel.erwaysoftware.com";
+    public static final String sentinelMainUrl = "https://sentinel.erwaysoftware.com";
     private static final String sentinelPostUrl = sentinelMainUrl+"/posts/new";
     private static final String sentinelFeedbackUrl = sentinelMainUrl+"/feedbacks/new";
 

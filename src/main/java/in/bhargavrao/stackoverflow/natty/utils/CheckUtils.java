@@ -258,7 +258,7 @@ public class CheckUtils {
     	String cleanPost = CheckUtils.stripBody(post);
     	//System.out.println(cleanPost);
     	
-    	Pattern regex = Pattern.compile("(\\?{2,}|!{2,})");
+    	Pattern regex = Pattern.compile("(\\?{2,}|!{2,}|!,{2,})");
     	Matcher matcher = regex.matcher(cleanPost);
     	return matcher.find() ? matcher.group(1) : null;
     }

@@ -61,19 +61,23 @@ public class RunnerService {
                 }
             	
                 if (prop.getProperty("location").equals("server")) {
-                	chatroom.send("Hiya o/ (SERVER VERSION)" );
-                	BlacklistDataService blacklistService = new BlacklistDataService(chatroom);
-                    blacklistService.start();
-                    FeederService feederService = new FeederService("*Feeds @Kyll*",chatroom,8);
+                	  chatroom.send("Hiya o/ (SERVER VERSION)" );
+                    FeederService feederService = new FeederService("*Feeds Kyll*",chatroom,8);
                     feederService.start();
-                    CleanerService cleanerService = new CleanerService(chatroom);
-                    cleanerService.start();
-
                 } else {
                 	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
-                	BlacklistDataService blacklistService = new BlacklistDataService(chatroom);
-                    blacklistService.start();
                 }
+                
+                SelfCheckService selfCheck = new SelfCheckService(this);
+                selfCheck.start();
+                CleanerService cleanerService = new CleanerService(chatroom);
+                cleanerService.start();
+                MentionService mentionService = new MentionService(chatroom);
+                mentionService.start();
+                BlacklistDataService blacklistService = new BlacklistDataService(chatroom);
+                blacklistService.start();
+                
+                
             }
 
             chatRooms.add(chatroom);
