@@ -127,7 +127,7 @@ public class Fetch implements SpecialCommand {
                 }
                 room.replyTo(message.getId(), links);
             }
-            else if(data.split(" ")[0].equals("amount") && lines.size()!=0) {
+            else if((data.split(" ")[0].equals("amount") || data.split(" ")[0].equals("count") || data.split(" ")[0].equals("number"))  && lines.size()!=0) {
                 room.replyTo(message.getId(), Integer.toString(lines.size()));
             }
             else {
