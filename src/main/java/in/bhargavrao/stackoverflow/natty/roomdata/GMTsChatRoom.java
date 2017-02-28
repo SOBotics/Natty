@@ -1,5 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.roomdata;
 
+import fr.tunaki.stackoverflow.chat.ChatHost;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.MessageReplyEvent;
 import fr.tunaki.stackoverflow.chat.event.UserMentionedEvent;
@@ -52,5 +53,9 @@ public class GMTsChatRoom implements BotRoom{
         return false;
     }
 
+    @Override
+    public ChatHost getHost() {
+        return ChatHost.STACK_OVERFLOW;
+    }
 
 }
