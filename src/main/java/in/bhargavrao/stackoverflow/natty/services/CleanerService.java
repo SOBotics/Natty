@@ -30,6 +30,9 @@ public class CleanerService {
     	cleanOldLogfiles();
     }
     
+    /**
+     * Deletes old auto-comments
+     * */
     private void cleanAutoComments(){
         try
         {
@@ -50,6 +53,9 @@ public class CleanerService {
         }
     }
     
+    /**
+     * Deletes all files in ./logs that are older than 28 days
+     * */
     private void cleanOldLogfiles() {
     	int keepLogsForDays = 28;
         File logsDir = new File("./logs");
