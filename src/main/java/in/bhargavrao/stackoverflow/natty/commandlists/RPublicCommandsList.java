@@ -23,7 +23,7 @@ import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
  * Created by bhargav.h on 28-Oct-16.
  */
 public class RPublicCommandsList {
-    public void mention(Room room, PingMessageEvent event, RunnerService service, boolean isReply){
+    public void mention(Room room, PingMessageEvent event, RunnerService service, String sitename, String siteurl, boolean isReply){
 
         if(CheckUtils.checkIfUserIsBlacklisted(event.getUserId()))
             return;
@@ -31,7 +31,7 @@ public class RPublicCommandsList {
         Message message = event.getMessage();
         List<SpecialCommand> commands = new ArrayList<>(Arrays.asList(
             new Alive(message),
-            new Check(message),
+            new Check(message, sitename, siteurl),
             new Help(message),
             new Hi(message, event.getUserId()),
             new OptIn(message),

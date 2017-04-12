@@ -25,12 +25,12 @@ public class SOBoticsChatRoom implements BotRoom{
 
     @Override
     public Consumer<UserMentionedEvent> getMention(Room room, RunnerService service) {
-        return event->new SoBoticsCommandsList().mention(room, event, service, true);
+        return event->new SoBoticsCommandsList().mention(room, event, service, getSiteName(), getSiteUrl(),  true);
     }
 
     @Override
     public Consumer<MessageReplyEvent> getReply(Room room) {
-        return event-> PostUtils.reply(room, event, true);
+        return event-> PostUtils.reply(room, event, getSiteName(), getSiteUrl(), true);
     }
 
     @Override
@@ -56,5 +56,15 @@ public class SOBoticsChatRoom implements BotRoom{
     @Override
     public ChatHost getHost() {
         return ChatHost.STACK_OVERFLOW;
+    }
+
+    @Override
+    public String getSiteName() {
+        return "stackoverflow";
+    }
+
+    @Override
+    public String getSiteUrl() {
+        return "stackoverflow.com";
     }
 }

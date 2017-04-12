@@ -9,7 +9,7 @@ public class GMTsValidator implements Validator {
 
     @Override
     public boolean validate(Post post) {
-        return new AllowOnlyNRepValidator(1000).validate(post) &&
+        return new AllowAllNewAnswersValidator().validate(post) &&
                new AllowOnlyTagValidator("r").validate(post);
     }
 

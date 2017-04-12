@@ -15,6 +15,7 @@ import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -22,9 +23,13 @@ import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 public class Check implements SpecialCommand {
 
     private Message message;
+    private String sitename;
+    private String siteurl;
 
-    public Check(Message message) {
+    public Check(Message message, String sitename, String siteurl) {
         this.message = message;
+        this.sitename = sitename;
+        this.siteurl = siteurl;
     }
 
     @Override
@@ -63,46 +68,66 @@ public class Check implements SpecialCommand {
                     }
                 }
                 else {
+                    if (!word.contains(siteurl))
+                    {
+                        room.replyTo(message.getId(), "Wrong site");
+                        return;
+                    }
                     word = CommandUtils.getAnswerId(word);
                 }
             }
-                        
-            Natty cc = new Natty();
-            Post np = cc.checkPost(Integer.parseInt(word));
-            PostPrinter pp = new PostPrinter(np);
-            pp.addQuesionLink();
 
-            PostReport report = PostUtils.getNaaValue(np);
+            String returnParams[] = getCheckData(word, returnValue);
 
-            Double found = report.getNaaValue();
-            List<String> caughtFilters = report.getCaughtFor();
-            List<Double> caughtFiltersValues = report.getCaughtForValues();
-            
-            pp.addMessage(" **"+found+"**;");
-            
-            AutoComment comment = AutoCommentUtils.commentForPostReport(report);
-            if (comment.length() > 0) pp.addMessage(" **Proposed comment: "+comment.getIdentifier()+"**;");
+            room.replyTo(message.getId(), returnParams[0]);
+            if (!returnParams[1].equals(""))
+                room.send(returnParams[1]);
 
-            
-            if(returnValue==1) {
-                room.replyTo(message.getId(), "The NAA Value is " + found);
-            }
-            if(returnValue==2) {
-                room.replyTo(message.getId(), "The NAA Value is " + found + ". The explanation for the filters is:");
-                String explanation = "";
-                for(int i=0;i<caughtFilters.size();i++){
-                    explanation+="    "+caughtFiltersValues.get(i)+" - "+caughtFilters.get(i)+"\n";
-                }
-                room.send(explanation);
-            }
-            else {
-                room.replyTo(message.getId(), pp.print());
-            }
         }
         catch (IOException e){
             e.printStackTrace();
             room.replyTo(message.getId(), "Error occured, Try again");
         }
+    }
+
+    public String[] getCheckData(String word, Integer returnValue) throws IOException {
+        String[] returnParams;
+        Natty cc = new Natty(sitename, siteurl);
+        Post np = cc.checkPost(Integer.parseInt(word));
+        PostPrinter pp = new PostPrinter(np);
+        pp.addQuesionLink();
+
+        PostReport report = PostUtils.getNaaValue(np);
+
+        Double found = report.getNaaValue();
+        List<String> caughtFilters = report.getCaughtFor();
+        List<Double> caughtFiltersValues = report.getCaughtForValues();
+
+        pp.addMessage(" **"+found+"**;");
+
+        AutoComment comment = AutoCommentUtils.commentForPostReport(report);
+        if (comment.length() > 0) pp.addMessage(" **Proposed comment: "+comment.getIdentifier()+"**;");
+
+        String returnString;
+        String additionalData = "";
+
+        if(returnValue==1) {
+            returnString =  "The NAA Value is " + found;
+        }
+        else if(returnValue==2) {
+            returnString =  "The NAA Value is " + found + ". The explanation for the filters is:";
+            String explanation = "";
+            for(int i=0;i<caughtFilters.size();i++){
+                explanation+="    "+caughtFiltersValues.get(i)+" - "+caughtFilters.get(i)+"\n";
+            }
+            additionalData = explanation;
+        }
+        else {
+            returnString = pp.print();
+        }
+
+        returnParams = new String[]{returnString, additionalData};
+        return returnParams;
     }
 
     @Override

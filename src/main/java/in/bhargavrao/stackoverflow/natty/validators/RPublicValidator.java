@@ -10,7 +10,8 @@ public class RPublicValidator implements Validator {
     @Override
     public boolean validate(Post post) {
         return new AllowAboveNRepValidator(10000).validate(post) &&
-               new AllowOnlyTagValidator("r").validate(post);
+               new AllowOnlyTagValidator("r").validate(post) &&
+               new AllowAllNewAnswersValidator().validate(post);
     }
 
 }

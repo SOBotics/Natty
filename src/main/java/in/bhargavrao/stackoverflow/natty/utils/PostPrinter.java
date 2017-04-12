@@ -46,7 +46,7 @@ public class PostPrinter {
     }
 
     public PostPrinter addQuestionDetails(){
-        this.printStr+= " [Question](//stackoverflow.com/q/"+ post.getQuestionID()+")";
+        this.printStr+= " [Question](//"+post.getSiteUrl()+"/q/"+ post.getQuestionID()+")";
         return this;
     }
 
@@ -56,17 +56,17 @@ public class PostPrinter {
     }
 
     public PostPrinter addDescription(){
-        this.printStr+= " ["+ post.getTitle()+"](//stackoverflow.com/a/"+ post.getAnswerID()+")";
+        this.printStr+= " ["+ post.getTitle()+"](//"+post.getSiteUrl()+"/a/"+ post.getAnswerID()+")";
         return this;
     }
 
     public PostPrinter addQuesionLink(){
-        this.printStr+= " [Link to Post](//stackoverflow.com/a/"+ post.getAnswerID()+")";
+        this.printStr+= " [Link to Post](//"+post.getSiteUrl()+"/a/"+ post.getAnswerID()+")";
         return this;
     }
 
     public PostPrinter addUserDetails(){
-        this.printStr+= " **By:** ["+ post.getAnswerer().getUsername()+"](//stackoverflow.com/u/"+ post.getAnswerer().getUserId()+")";
+        this.printStr+= " **By:** ["+ post.getAnswerer().getUsername()+"](//"+post.getSiteUrl()+"/u/"+ post.getAnswerer().getUserId()+")";
         return this;
     }
 

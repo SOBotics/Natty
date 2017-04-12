@@ -24,7 +24,7 @@ public class RPublicChatRoom implements BotRoom{
 
     @Override
     public Consumer<UserMentionedEvent> getMention(Room room, RunnerService service) {
-        return event->new RPublicCommandsList().mention(room, event,service, true);
+        return event->new RPublicCommandsList().mention(room, event,service, getSiteName(), getSiteUrl(), true);
     }
 
     @Override
@@ -55,6 +55,16 @@ public class RPublicChatRoom implements BotRoom{
     @Override
     public ChatHost getHost() {
         return ChatHost.STACK_OVERFLOW;
+    }
+
+    @Override
+    public String getSiteName() {
+        return "stackoverflow";
+    }
+
+    @Override
+    public String getSiteUrl() {
+        return "stackoverflow.com";
     }
 
 }

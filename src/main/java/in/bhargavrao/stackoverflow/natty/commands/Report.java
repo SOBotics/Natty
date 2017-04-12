@@ -27,11 +27,15 @@ public class Report implements SpecialCommand {
     private Message message;
     private Validator validator;
     private Double naaLimit;
+    private String siteName;
+    private String siteUrl;
 
-    public Report(Message message, Validator validator, Double naaLimit) {
+    public Report(Message message, Validator validator, Double naaLimit, String siteName, String siteUrl) {
         this.message = message;
         this.validator = validator;
         this.naaLimit = naaLimit;
+        this.siteName = siteName;
+        this.siteUrl = siteUrl;
     }
 
     @Override
@@ -48,68 +52,76 @@ public class Report implements SpecialCommand {
 
             if(word.contains("/"))
             {
+                if (!word.contains(siteUrl)){
+                    room.send("Post is not allowed to be reported in this room.");
+                    return;
+                }
                 word = CommandUtils.getAnswerId(word);
             }
 
-            if(FileUtils.checkIfInFile(FilePathUtils.outputReportLogFile,word)){
+            String outputReportLogFile = FilePathUtils.getOutputReportLogFile(siteName);
+            String outputCSVLogFile = FilePathUtils.getOutputCSVLogFile(siteName);
+            if(FileUtils.checkIfInFile(outputReportLogFile,word)){
                 room.replyTo(message.getId(), "Post already reported");
             }
-            else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tp,"+word)!=null) {
-                room.replyTo(message.getId(), "Post already registered as True Positive");
-            }
-            else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"fp,"+word)!=null) {
-                room.replyTo(message.getId(), "Post already registered as False Positive");
-            }
-            else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"ne,"+word)!=null) {
-                room.replyTo(message.getId(), "Post already registered as Needs Edit");
-            }
-            else if(FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tn,"+word)!=null) {
-                room.replyTo(message.getId(), "Post already registered as True Negative");
-            }
             else {
-                Natty cc = new Natty();
-                Post np = cc.checkPost(Integer.parseInt(word));
-
-
-                if(validator.validate(np)) {
-
-                    PostReport report = PostUtils.getNaaValue(np);
-                    String feedback_type = "tn";
-
-                    if (report.getNaaValue()>naaLimit)
-                        feedback_type = "tp";
-
-                    String completeLog = feedback_type+"," + np.getAnswerID() + "," + np.getAnswerCreationDate() + "," + report.getNaaValue() + "," + np.getBodyMarkdown().length() + "," + np.getAnswerer().getReputation() + "," + report.getCaughtFor().stream().collect(Collectors.joining(";")) + ";";
-                    FileUtils.appendToFile(FilePathUtils.outputCSVLogFile, completeLog);
-
-                    long postId = PostUtils.addSentinel(report);
-                    String description;
-
-                    if (postId == -1) {
-                        description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
-                    } else {
-                        description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.sentinelMainUrl + "/posts/" + postId + ") ]");
-                    }
-                    PostPrinter pp = new PostPrinter(np, description);
-                    pp.addQuesionLink();
-
-                    Double found = report.getNaaValue();
-                    List<String> caughtFilters = report.getCaughtFor();
-
-                    for (String filter : caughtFilters) {
-                        pp.addMessage(" **" + filter + "**; ");
-                    }
-
-                    pp.addMessage(" **" + found + "**;");
-
-                    User user = message.getUser();
-                    PostUtils.addFeedback(postId, user.getId(), user.getName(), feedback_type);
-                    //FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+postId);
-
-                    room.send(pp.print());
+                if(FileUtils.readLineFromFileStartswith(outputCSVLogFile,"tp,"+word)!=null) {
+                    room.replyTo(message.getId(), "Post already registered as True Positive");
+                }
+                else if(FileUtils.readLineFromFileStartswith(outputCSVLogFile,"fp,"+word)!=null) {
+                    room.replyTo(message.getId(), "Post already registered as False Positive");
+                }
+                else if(FileUtils.readLineFromFileStartswith(outputCSVLogFile,"ne,"+word)!=null) {
+                    room.replyTo(message.getId(), "Post already registered as Needs Edit");
+                }
+                else if(FileUtils.readLineFromFileStartswith(outputCSVLogFile,"tn,"+word)!=null) {
+                    room.replyTo(message.getId(), "Post already registered as True Negative");
                 }
                 else {
-                    room.send("Post is not allowed to be reported in this room.");
+                    Natty cc = new Natty(siteName, siteUrl);
+                    Post np = cc.checkPost(Integer.parseInt(word));
+
+
+                    if(validator.validate(np)) {
+
+                        PostReport report = PostUtils.getNaaValue(np);
+                        String feedback_type = "tn";
+
+                        if (report.getNaaValue()>naaLimit)
+                            feedback_type = "tp";
+
+                        String completeLog = feedback_type+"," + np.getAnswerID() + "," + np.getAnswerCreationDate() + "," + report.getNaaValue() + "," + np.getBodyMarkdown().length() + "," + np.getAnswerer().getReputation() + "," + report.getCaughtFor().stream().collect(Collectors.joining(";")) + ";";
+                        FileUtils.appendToFile(outputCSVLogFile, completeLog);
+
+                        long postId = PostUtils.addSentinel(report, siteName, siteUrl);
+                        String description;
+
+                        if (postId == -1) {
+                            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
+                        } else {
+                            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl(siteName) + "/posts/" + postId + ") ]");
+                        }
+                        PostPrinter pp = new PostPrinter(np, description);
+                        pp.addQuesionLink();
+
+                        Double found = report.getNaaValue();
+                        List<String> caughtFilters = report.getCaughtFor();
+
+                        for (String filter : caughtFilters) {
+                            pp.addMessage(" **" + filter + "**; ");
+                        }
+
+                        pp.addMessage(" **" + found + "**;");
+
+                        User user = message.getUser();
+                        PostUtils.addFeedback(postId, user.getId(), user.getName(), feedback_type, siteName, siteUrl);
+                        //FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+postId);
+
+                        room.send(pp.print());
+                    }
+                    else {
+                        room.send("Post is not allowed to be reported in this room.");
+                    }
                 }
             }
         }

@@ -16,6 +16,7 @@ import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import in.bhargavrao.stackoverflow.natty.commands.Check;
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
 import in.bhargavrao.stackoverflow.natty.entities.SOUser;
@@ -40,6 +41,7 @@ import in.bhargavrao.stackoverflow.natty.filters.UserMentionedFilter;
 import in.bhargavrao.stackoverflow.natty.filters.VeryLongWordFilter;
 import in.bhargavrao.stackoverflow.natty.filters.WhitelistedFilter;
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by bhargav.h on 29-Sep-16.
@@ -97,38 +99,42 @@ public class PostUtils {
 
     }
 
-    public static void handleFeedback(User user, String type, String linkToPost) {
-        String filename = FilePathUtils.outputCSVLogFile;
+    public static void handleFeedback(User user, String type, String linkToPost, String sitename, String siteurl) {
+        String outputCSVLogFile = FilePathUtils.getOutputCSVLogFile(sitename);
+        String outputReportLogFile = FilePathUtils.getOutputReportLogFile(sitename);
+        String outputCompleteLogFile = FilePathUtils.getOutputCompleteLogFile(sitename);
         try {
-
-            String sentinel = FileUtils.readLineFromFileStartswith(FilePathUtils.outputSentinelIdLogFile,linkToPost);
-
-            long postId = Long.parseLong(sentinel.split(",")[1]);
-            if(postId!=-1) {
-                long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), type);
+            String outputSentinelIdLogFile = FilePathUtils.getOutputSentinelIdLogFile(sitename);
+            String sentinel = FileUtils.readLineFromFileStartswith(outputSentinelIdLogFile,linkToPost);
+            long postId = -1;
+            if (sentinel!=null) {
+                postId = Long.parseLong(sentinel.split(",")[1]);
             }
-            String loggedLine = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCompleteLogFile,linkToPost);
-            String loggedAsTp = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tp,"+linkToPost);
-            String loggedAsTn = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"tn,"+linkToPost);
-            String loggedAsFp = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"fp,"+linkToPost);
-            String loggedAsNe = FileUtils.readLineFromFileStartswith(FilePathUtils.outputCSVLogFile,"ne,"+linkToPost);
+            if(postId!=-1) {
+                long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
+            }
+            String loggedLine = FileUtils.readLineFromFileStartswith(outputCompleteLogFile,linkToPost);
+            String loggedAsTp = FileUtils.readLineFromFileStartswith(outputCSVLogFile,"tp,"+linkToPost);
+            String loggedAsTn = FileUtils.readLineFromFileStartswith(outputCSVLogFile,"tn,"+linkToPost);
+            String loggedAsFp = FileUtils.readLineFromFileStartswith(outputCSVLogFile,"fp,"+linkToPost);
+            String loggedAsNe = FileUtils.readLineFromFileStartswith(outputCSVLogFile,"ne,"+linkToPost);
 
             if((loggedAsTp==null||loggedAsTn==null||loggedAsFp==null||loggedAsNe==null)&&loggedLine!=null) {
-                FileUtils.appendToFile(filename, type + "," +loggedLine);
-                FileUtils.removeFromFile(FilePathUtils.outputReportLogFile,linkToPost);
-                FileUtils.removeFromFileStartswith(FilePathUtils.outputCompleteLogFile,linkToPost);
+                FileUtils.appendToFile(outputCSVLogFile, type + "," +loggedLine);
+                FileUtils.removeFromFile(outputReportLogFile,linkToPost);
+                FileUtils.removeFromFileStartswith(outputCompleteLogFile,linkToPost);
             }
             else if(loggedAsTp!=null){
-                FileUtils.removeFromFile(filename,loggedAsTp);
-                FileUtils.appendToFile(filename,loggedAsTp.replace("tp,",type+","));
+                FileUtils.removeFromFile(outputCSVLogFile,loggedAsTp);
+                FileUtils.appendToFile(outputCSVLogFile,loggedAsTp.replace("tp,",type+","));
             }
             else if(loggedAsFp!=null){
-                FileUtils.removeFromFile(filename,loggedAsFp);
-                FileUtils.appendToFile(filename,loggedAsFp.replace("fp,",type+","));
+                FileUtils.removeFromFile(outputCSVLogFile,loggedAsFp);
+                FileUtils.appendToFile(outputCSVLogFile,loggedAsFp.replace("fp,",type+","));
             }
             else if(loggedAsNe!=null){
-                FileUtils.removeFromFile(filename,loggedAsNe);
-                FileUtils.appendToFile(filename,loggedAsNe.replace("ne,",type+","));
+                FileUtils.removeFromFile(outputCSVLogFile,loggedAsNe);
+                FileUtils.appendToFile(outputCSVLogFile,loggedAsNe.replace("ne,",type+","));
             }
         }
         catch (IOException e){
@@ -193,7 +199,7 @@ public class PostUtils {
         return "http://51.254.218.90:8000/Natty/"+np.getAnswerID()+".html";
     }
 
-    public static long addSentinel(PostReport report){
+    public static long addSentinel(PostReport report, String sitename, String siteurl){
     	//check if Natty is running on the server
     	Properties prop = new Properties();
 
@@ -213,9 +219,9 @@ public class PostUtils {
 
         post.addProperty("title",report.getPost().getTitle());
         post.addProperty("body",report.getPost().getBody());
-        post.addProperty("link","http://www.stackoverflow.com/a/"+report.getPost().getAnswerID());
+        post.addProperty("link","http://www."+siteurl+"/a/"+report.getPost().getAnswerID());
         post.addProperty("post_creation_date",report.getPost().getAnswerCreationDate().toString());
-        post.addProperty("user_link","http://stackoverflow.com/users/"+report.getPost().getAnswerer().getUserId());
+        post.addProperty("user_link","http://"+siteurl+"/users/"+report.getPost().getAnswerer().getUserId());
         post.addProperty("username",report.getPost().getAnswerer().getUsername());
         post.addProperty("user_reputation",report.getPost().getAnswerer().getReputation());
         post.addProperty("nato_score",report.getNaaValue());
@@ -233,7 +239,7 @@ public class PostUtils {
             reasons.add(reason);
         }
 
-        String authorization = "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
+        String authorization = getSentinelAuth(sitename);
 
         JsonObject json = new JsonObject();
 
@@ -241,10 +247,10 @@ public class PostUtils {
         json.add("reasons",reasons);
         json.addProperty("authorization",authorization);
 
-        long sentinelPostId = SentinelUtils.post(json);
+        long sentinelPostId = SentinelUtils.post(json, sitename);
 
         try{
-           FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+sentinelPostId);
+           FileUtils.appendToFile(FilePathUtils.getOutputSentinelIdLogFile(sitename),report.getPost().getAnswerID()+","+sentinelPostId);
         }
         catch (IOException e){
            e.printStackTrace();
@@ -253,7 +259,16 @@ public class PostUtils {
         return sentinelPostId;
     }
 
-    public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type){
+    @NotNull
+    private static String getSentinelAuth(String sitename) {
+        if (sitename.equals("stackoverflow"))
+            return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
+        else if (sitename.equals("askubuntu"))
+            return "3eddced9a0db7e1e8293c256a2887ef4bfd6c6a259233b18d4df24e12285de8b";
+        return "";
+    }
+
+    public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type, String sitename, String siteurl){
 
         JsonObject feedback = new JsonObject();
 
@@ -261,8 +276,7 @@ public class PostUtils {
         feedback.addProperty("chat_id",chat_id);
         feedback.addProperty("chat_username",chat_username);
 
-
-        String authorization = "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
+        String authorization = getSentinelAuth(sitename);
 
         JsonObject json = new JsonObject();
 
@@ -270,24 +284,24 @@ public class PostUtils {
         json.addProperty("feedback_type",feedback_type);
         json.addProperty("authorization",authorization);
 
-        return SentinelUtils.feedback(json);
+        return SentinelUtils.feedback(json, sitename);
     }
 
-    public static void store(Room room, PingMessageEvent event, String type){
+    public static void store(Room room, PingMessageEvent event, String type, String sitename, String siteurl){
         long repliedTo = event.getParentMessageId();
         Message repliedToMessage = room.getMessage(repliedTo);
         String message = repliedToMessage.getPlainContent().trim();
-        String linkToPost = getPostIdFromMessage(message);
-        handleFeedback(event.getMessage().getUser(), type, linkToPost);
+        String linkToPost = getPostIdFromMessage(message, siteurl);
+        handleFeedback(event.getMessage().getUser(), type, linkToPost, sitename, siteurl);
     }
 
-    public static String getPostIdFromMessage(String message) {
-        message = message.split("//stackoverflow.com/a/")[1];
+    public static String getPostIdFromMessage(String message, String siteurl) {
+        message = message.split("//"+siteurl+"/a/")[1];
         return message.substring(0,message.indexOf(")"));
     }
 
 
-    public static void reply(Room room, PingMessageEvent event, boolean isReply){
+    public static void reply(Room room, PingMessageEvent event, String sitename, String siteurl, boolean isReply){
         Message message = event.getMessage();
 		System.out.println(message.getContent());
         if (CheckUtils.checkIfUserIsBlacklisted(event.getUserId())){
@@ -296,48 +310,59 @@ public class PostUtils {
         }
         if (CommandUtils.checkForCommand(message.getContent(),"tp") ||
                 CommandUtils.checkForCommand(message.getContent(),"t")){
-            store(room, event, "tp");
+            store(room, event, "tp", sitename, siteurl);
         }
         if (CommandUtils.checkForCommand(message.getContent(),"ne") ||
                 CommandUtils.checkForCommand(message.getContent(),"n")){
-            store(room, event, "ne");
+            store(room, event, "ne", sitename, siteurl);
         }
         if (CommandUtils.checkForCommand(message.getContent(),"fp") ||
                 CommandUtils.checkForCommand(message.getContent(),"f")){
-            store(room, event, "fp");
+            store(room, event, "fp", sitename, siteurl);
+        }
+        if (CommandUtils.checkForCommand(message.getContent(),"why")){
+            long repliedTo = event.getParentMessageId();
+            Message repliedToMessage = room.getMessage(repliedTo);
+            String linkToPost = getPostIdFromMessage(repliedToMessage.getPlainContent().trim(), siteurl);
+
+            try {
+                String returnParams[] = new Check(message, sitename, siteurl).getCheckData(linkToPost, 2);
+                room.replyTo(message.getId(), returnParams[0]);
+                if (!returnParams[1].equals(""))
+                    room.send(returnParams[1]);
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
     
-    public static String autoFlag(Post post) {
-    	return autoFlag(post, null);
-    }
-    
-    
-    public static String autoFlag(Post post, AutoComment comment){
-        ApiService apiService = new ApiService("stackoverflow");
-        try{
-            JsonObject flagOptions = apiService.getAnswerFlagOptions(post.getAnswerID());
-            JsonArray options = flagOptions.getAsJsonArray("items");
-            for(JsonElement e: options){
-                if(e.getAsJsonObject().get("title").getAsString().equals("not an answer")){
-                    JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(),e.getAsJsonObject().get("option_id").getAsInt());
-                    
-                    //If a comment was passed, post it
-                    if (comment != null && comment.length() > 0) {
-                        JsonObject commentJson = apiService.addComment(comment.getText(),post.getAnswerID());
-                        Integer commentId = commentJson.get("items").getAsJsonArray().get(0).getAsJsonObject().get("comment_id").getAsInt();
-                        return "Post Flagged Automatically - Added [comment](//stackoverflow.com/posts/comments/"+commentId+"): "+comment.getIdentifier();
-                        //return "Post Flagged Automatically - would add comment: "+comment.getIdentifier();
+    public static String autoFlag(Post post, AutoComment comment, String sitename, String siteurl){
+        if(sitename.equals("stackoverflow")) {
+            ApiService apiService = new ApiService(sitename);
+            try {
+                JsonObject flagOptions = apiService.getAnswerFlagOptions(post.getAnswerID());
+                JsonArray options = flagOptions.getAsJsonArray("items");
+                for (JsonElement e : options) {
+                    if (e.getAsJsonObject().get("title").getAsString().equals("not an answer")) {
+                        JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(), e.getAsJsonObject().get("option_id").getAsInt());
+
+                        //If a comment was passed, post it
+                        if (comment != null && comment.length() > 0) {
+                            JsonObject commentJson = apiService.addComment(comment.getText(), post.getAnswerID());
+                            Integer commentId = commentJson.get("items").getAsJsonArray().get(0).getAsJsonObject().get("comment_id").getAsInt();
+                            return "Post Flagged Automatically - Added [comment](//stackoverflow.com/posts/comments/" + commentId + "): " + comment.getIdentifier();
+                            //return "Post Flagged Automatically - would add comment: "+comment.getIdentifier();
+                        }
+
+                        return "Post Flagged Automatically";
                     }
-                    
-                    return "Post Flagged Automatically";
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Some Error Occured";
             }
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            return "Some Error Occured";
         }
         return "Some Error Occured";
     }

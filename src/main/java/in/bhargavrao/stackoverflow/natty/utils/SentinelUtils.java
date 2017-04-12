@@ -12,9 +12,6 @@ import java.net.URL;
  * Partly taken from Tunaki, with changes made.
  */
 public class SentinelUtils {
-    public static final String sentinelMainUrl = "https://sentinel.erwaysoftware.com";
-    private static final String sentinelPostUrl = sentinelMainUrl+"/posts/new";
-    private static final String sentinelFeedbackUrl = sentinelMainUrl+"/feedbacks/new";
 
     private static HttpURLConnection getConnection(String url) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
@@ -25,6 +22,23 @@ public class SentinelUtils {
         conn.setRequestProperty("Content-Type", "application/json");
         return conn;
     }
+
+    public static String getSentinelPostUrl(String sitename){
+        return getSentinelMainUrl(sitename)+"/posts/new";
+    }
+
+    public static String getSentinelFeedbackUrl(String sitename){
+        return getSentinelMainUrl(sitename)+"/feedbacks/new";
+    }
+    public static String getSentinelMainUrl(String sitename) {
+        String sentinelMainUrl ="";
+        switch (sitename) {
+            case "stackoverflow": sentinelMainUrl = "https://sentinel.erwaysoftware.com"; break;
+            case "askubuntu"    : sentinelMainUrl = "https://sentinel.charcoal-se.org"; break;
+        }
+        return sentinelMainUrl;
+    }
+
 
     private static String getString(InputStreamReader isr) throws IOException {
         BufferedReader br = new BufferedReader(isr);
@@ -62,14 +76,14 @@ public class SentinelUtils {
         }
     }
 
-    public static long post(JsonObject json) {
-        JsonObject rootResponse = postCall(json,sentinelPostUrl);
+    public static long post(JsonObject json, String sitename) {
+        JsonObject rootResponse = postCall(json, getSentinelPostUrl(sitename));
         if(rootResponse == null) return -1;
         return rootResponse.get("data").getAsJsonObject().get("post_id").getAsLong();
     }
 
-    public static long feedback(JsonObject json){
-        JsonObject rootResponse = postCall(json,sentinelFeedbackUrl);
+    public static long feedback(JsonObject json, String sitename){
+        JsonObject rootResponse = postCall(json, getSentinelFeedbackUrl(sitename));
         if(rootResponse == null) return -1;
         return rootResponse.get("data").getAsJsonObject().get("feedback_id").getAsLong();
     }

@@ -10,6 +10,7 @@ public class StatsService {
     private long trueReplies=0;
     private long falseReplies=0;
     private long editReplies=0;
+    private long totalAnswersScanned=0;
     private Instant startTime;
 
     public StatsService(Instant startTime){
@@ -18,6 +19,9 @@ public class StatsService {
 
     public void addReports(int number){
         totalReports+=number;
+    }
+    public void addScanned(int number){
+        totalAnswersScanned+=number;
     }
     public void addtp(){
         trueReplies++;
@@ -29,6 +33,11 @@ public class StatsService {
         editReplies++;
     }
     public String getStatus(){
-        return "running since: "+startTime+" tps: "+trueReplies+" nes: "+editReplies+" fps: "+falseReplies + " total: "+totalReports;
+        return "running since: "+startTime+
+                " tps: "+trueReplies+
+                " nes: "+editReplies+
+                " fps: "+falseReplies+
+                " total: "+totalReports+
+                " scanned: "+totalAnswersScanned;
     }
 }
