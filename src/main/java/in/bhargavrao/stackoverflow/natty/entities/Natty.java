@@ -28,10 +28,14 @@ public class Natty {
 
     private Instant previousAnswerTimestamp;
     private ApiService apiService;
+    private String siteName;
+    private String siteUrl;
 
-    public Natty() {
+    public Natty(String sitename, String siteurl) {
         previousAnswerTimestamp = Instant.now().minusSeconds(60);
-        apiService = new ApiService("stackoverflow");
+        apiService = new ApiService(sitename);
+        this.siteName = sitename;
+        this.siteUrl = siteurl;
     }
 
     public List<Post> getPosts(Validator validator) throws IOException{
@@ -60,6 +64,8 @@ public class Natty {
                     if(questionMap.containsKey(questionId))
                     {
                         Post np = PostUtils.getPost(answer, questionMap.get(questionId));
+                        np.setSiteName(siteName);
+                        np.setSiteUrl(siteUrl);
                         Instant answerCreationDate = np.getAnswerCreationDate();
                         if (previousAnswerTimestamp.isAfter(answerCreationDate) ||
                                 previousAnswerTimestamp.equals(answerCreationDate)) {
@@ -87,7 +93,10 @@ public class Natty {
             JsonObject questionApiJson = apiService.getQuestionDetailsById(questionId);
             if(questionApiJson.has("items")){
                 JsonObject question = questionApiJson.getAsJsonArray("items").get(0).getAsJsonObject();
-                return PostUtils.getPost(answer,question);
+                Post np =  PostUtils.getPost(answer,question);
+                np.setSiteName(siteName);
+                np.setSiteUrl(siteUrl);
+                return  np;
             }
         }
         return null;

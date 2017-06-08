@@ -41,6 +41,7 @@ public class RunNewNatty {
         	rooms.add(new HeadquartersChatRoom());
         	rooms.add(new RPublicChatRoom());
         	rooms.add(new GMTsChatRoom());
+            rooms.add(new TemporaryRoom());
         }
 
         RunnerService runner = new RunnerService(client,rooms);

@@ -18,9 +18,13 @@ import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 public class Send implements SpecialCommand {
 
     private Message message;
+    private String sitename;
+    private String siteurl;
 
-    public Send(Message message) {
+    public Send(Message message, String sitename, String siteurl) {
         this.message = message;
+        this.sitename = sitename;
+        this.siteurl = siteurl;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class Send implements SpecialCommand {
         String feedbacks[] = data.split(" ");
 
         try{
-            List<String> lines = FileUtils.readFile(FilePathUtils.outputCompleteLogFile);
+            List<String> lines = FileUtils.readFile(FilePathUtils.getOutputCompleteLogFile(sitename));
             if(feedbacks.length==0 || (feedbacks.length==1 && feedbacks[0].equals("reverse"))){
                 room.replyTo(message.getId(), "InputMismatchError, The code has been made Tuna Proof™");
                 return;
@@ -54,14 +58,16 @@ public class Send implements SpecialCommand {
                 if(feedback.equals("n")) feedback = "ne";
 
                 if(feedback.equals("ne")||feedback.equals("tp")||feedback.equals("fp")) {
-                    FileUtils.appendToFile(FilePathUtils.outputCSVLogFile, feedback + "," + line);
-                    FileUtils.removeFromFile(FilePathUtils.outputCompleteLogFile, line);
-                    FileUtils.removeFromFile(FilePathUtils.outputReportLogFile, line.split(",")[0]);
-                    String sentinel = FileUtils.readLineFromFileStartswith(FilePathUtils.outputSentinelIdLogFile,line.split(",")[0]);
-                    long postId = Long.parseLong(sentinel.split(",")[1]);
+                    FileUtils.appendToFile(FilePathUtils.getOutputCSVLogFile(sitename), feedback + "," + line);
+                    FileUtils.removeFromFile(FilePathUtils.getOutputCompleteLogFile(sitename), line);
+                    FileUtils.removeFromFile(FilePathUtils.getOutputReportLogFile(sitename), line.split(",")[0]);
+                    String sentinel = FileUtils.readLineFromFileStartswith(FilePathUtils.getOutputSentinelIdLogFile(sitename),line.split(",")[0]);
+                    long postId = -1;
+                    if(sentinel!=null)
+                        postId = Long.parseLong(sentinel.split(",")[1]);
                     if(postId!=-1) {
                     	User user = message.getUser();
-                        long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), feedback);
+                        long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), feedback, sitename, siteurl);
                     }
                 }
             }

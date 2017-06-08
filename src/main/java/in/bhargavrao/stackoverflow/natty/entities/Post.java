@@ -21,6 +21,8 @@ public class Post {
     private String[] tags;
     private SOUser asker;
     private SOUser answerer;
+    private String siteName;
+    private String siteUrl;
 
     public String getTitle() {
         return title;
@@ -108,6 +110,22 @@ public class Post {
 
     public void setAnswerer(SOUser answerer) {
         this.answerer = answerer;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
+    }
+
+    public String getSiteUrl() {
+        return siteUrl;
+    }
+
+    public void setSiteUrl(String siteUrl) {
+        this.siteUrl = siteUrl;
     }
 
     @Override

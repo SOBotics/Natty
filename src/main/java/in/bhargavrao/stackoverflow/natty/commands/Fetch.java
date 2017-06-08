@@ -23,9 +23,13 @@ import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
 public class Fetch implements SpecialCommand {
 
     private Message message;
+    private String sitename;
+    private String siteurl;
 
-    public Fetch(Message message) {
+    public Fetch(Message message, String sitename, String siteurl) {
         this.message = message;
+        this.sitename = sitename;
+        this.siteurl = siteurl;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class Fetch implements SpecialCommand {
     public void execute(Room room) {
 
         String data = CommandUtils.extractData(message.getPlainContent()).trim();
-        String filename = FilePathUtils.outputReportLogFile;
+        String filename = FilePathUtils.getOutputReportLogFile(sitename);
 
         try{
             List<String> lines = FileUtils.readFile(filename);
@@ -64,7 +68,7 @@ public class Fetch implements SpecialCommand {
                     String links = "";
                     int i = 0;
                     for(String line: lines) {
-                        links += "["+line.trim()+"](//stackoverflow.com/a/"+line.trim()+"); ";
+                        links += "["+line.trim()+"](//"+siteurl+"/a/"+line.trim()+"); ";
                         i++;
                         if(i==stopValue)
                             break;
@@ -81,14 +85,12 @@ public class Fetch implements SpecialCommand {
                 room.replyTo(message.getId(), links);
             }
             else if(data.split(" ")[0].equals("deleted") && lines.size()!=0) {
-
                 if(lines.size()>100)
                 {
                     room.send("There are more than 100 requests. Hence fetching deleted posts from the first 100 only");
                     lines = lines.subList(0,100);
                 }
-
-                ApiService apiService = new ApiService("stackoverflow");
+                ApiService apiService = new ApiService(siteurl);
                 List<Integer> answerIds = lines.stream().map(Integer::parseInt).collect(Collectors.toList());
                 JsonObject answersJson = apiService.getAnswerDetailsByIds(answerIds);
 
@@ -105,7 +107,7 @@ public class Fetch implements SpecialCommand {
                 }
                 String links = "";
                 for(String line: lines) {
-                    links += "["+line.trim()+"](//stackoverflow.com/a/"+line.trim()+"); ";
+                    links += "["+line.trim()+"](//"+siteurl+"/a/"+line.trim()+"); ";
                 }
 
                 if(links.trim().equals(""))
@@ -114,20 +116,19 @@ public class Fetch implements SpecialCommand {
             }
 
             else if(data.split(" ")[0].toLowerCase().equals("sentinel") && lines.size()!=0) {
-
                 String links = "";
                 for(String line: lines) {
                     String postId = line.trim();
-                    String sentinelId = FileUtils.readLineFromFileStartswith(FilePathUtils.outputSentinelIdLogFile,postId);
+                    String sentinelId = FileUtils.readLineFromFileStartswith(FilePathUtils.getOutputSentinelIdLogFile(sitename),postId);
                     sentinelId = sentinelId.replace(postId+",","");
                     if(sentinelId.equals("-1"))
                         links+= postId+"; ";
                     else
-                        links+= "["+postId+"]("+SentinelUtils.sentinelMainUrl+"/posts/"+sentinelId+"); ";
+                        links+= "["+postId+"]("+SentinelUtils.getSentinelMainUrl(sitename)+"/posts/"+sentinelId+"); ";
                 }
                 room.replyTo(message.getId(), links);
             }
-            else if(data.split(" ")[0].equals("amount") && lines.size()!=0) {
+            else if((data.split(" ")[0].equals("amount") || data.split(" ")[0].equals("count") || data.split(" ")[0].equals("number"))  && lines.size()!=0) {
                 room.replyTo(message.getId(), Integer.toString(lines.size()));
             }
             else {

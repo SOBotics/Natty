@@ -11,9 +11,13 @@ import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 public class Feedback implements SpecialCommand {
 
     private Message message;
+    private String sitename;
+    private String siteurl;
 
-    public Feedback(Message message) {
+    public Feedback(Message message, String sitename, String siteurl) {
         this.message = message;
+        this.sitename = sitename;
+        this.siteurl = siteurl;
     }
 
     @Override
@@ -39,7 +43,7 @@ public class Feedback implements SpecialCommand {
         }
 
         if(type.equals("tp")||type.equals("fp")||type.equals("ne")||type.equals("t")||type.equals("f")||type.equals("n")) {
-            PostUtils.handleFeedback(message.getUser(), type, word);
+            PostUtils.handleFeedback(message.getUser(), type, word, sitename, siteurl);
         }
         else{
             room.send("Wrong feedback type");

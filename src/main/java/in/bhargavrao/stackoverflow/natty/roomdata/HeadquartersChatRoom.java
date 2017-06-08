@@ -1,5 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.roomdata;
 
+import fr.tunaki.stackoverflow.chat.ChatHost;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.MessageReplyEvent;
 import fr.tunaki.stackoverflow.chat.event.UserMentionedEvent;
@@ -23,7 +24,7 @@ public class HeadquartersChatRoom implements BotRoom{
 
     @Override
     public Consumer<UserMentionedEvent> getMention(Room room, RunnerService service) {
-        return event->new HeadquartersCommandsList().mention(room, event,service, true);
+        return event->new HeadquartersCommandsList().mention(room, event,service, getSiteName(), getSiteUrl(), true);
     }
 
     @Override
@@ -51,5 +52,19 @@ public class HeadquartersChatRoom implements BotRoom{
         return false;
     }
 
+    @Override
+    public ChatHost getHost() {
+        return ChatHost.STACK_OVERFLOW;
+    }
+
+    @Override
+    public String getSiteName() {
+        return "stackoverflow";
+    }
+
+    @Override
+    public String getSiteUrl() {
+        return "stackoverflow.com";
+    }
 
 }

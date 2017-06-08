@@ -2,30 +2,32 @@ package in.bhargavrao.stackoverflow.natty.printers;
 
 import in.bhargavrao.stackoverflow.natty.entities.Post;
 import in.bhargavrao.stackoverflow.natty.entities.PostReport;
-import in.bhargavrao.stackoverflow.natty.utils.*;
+import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
+import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
+import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
 
 import java.util.List;
 
 /**
- * Created by bhargav.h on 20-Oct-16.
+ * Created by bhargav.h on 01-Apr-17.
  */
-public class SoBoticsPostPrinter implements PostPrinter {
+public class TemporaryRoomPostPrinter implements in.bhargavrao.stackoverflow.natty.printers.PostPrinter {
 
-    public final long roomId = 111347;
+    public final long roomId = 54445;
 
     @Override
     public String print(PostReport report) {
 
         Post np =report.getPost();
 
-
-        long SentinelId = PostUtils.addSentinel(report, "stackoverflow", "stackoverflow.com");
+        long SentinelId = PostUtils.addSentinel(report, "askubuntu", "askubuntu.com");
         String description;
         if(SentinelId==-1){
             description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
         }
         else {
-            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl("stackoverflow") + "/posts/" + SentinelId + ") ]");
+            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl("askubuntu") + "/posts/" + SentinelId + ") ]");
         }
         in.bhargavrao.stackoverflow.natty.utils.PostPrinter postPrinter = new in.bhargavrao.stackoverflow.natty.utils.PostPrinter(np,description).addMainTag().addQuesionLink().addBodyLength().addReputation();
 
@@ -41,5 +43,6 @@ public class SoBoticsPostPrinter implements PostPrinter {
         postPrinter.addMessage(" **"+naaValue+"**;");
 
         return postPrinter.print();
+
     }
 }

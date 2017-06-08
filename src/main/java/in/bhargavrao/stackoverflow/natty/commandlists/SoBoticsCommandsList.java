@@ -22,7 +22,7 @@ public class SoBoticsCommandsList {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SoBoticsCommandsList.class);
 
-    public void mention(Room room, PingMessageEvent event, RunnerService service, boolean isReply){
+    public void mention(Room room, PingMessageEvent event, RunnerService service, String sitename, String siteurl, boolean isReply){
 
         if(CheckUtils.checkIfUserIsBlacklisted(event.getUserId()))
             return;
@@ -33,10 +33,10 @@ public class SoBoticsCommandsList {
             new AddSalute(message),
             new Alive(message),
             new Blacklist(message),
-            new Check(message),
+            new Check(message, sitename, siteurl),
             new Delete(message),
-            new Feedback(message),
-            new Fetch(message),
+            new Feedback(message, sitename, siteurl),
+            new Fetch(message, sitename, siteurl),
             new Halp(message),
             new Help(message),
             new Hi(message, event.getUserId()),
@@ -50,9 +50,9 @@ public class SoBoticsCommandsList {
             new RemoveBlackList(message),
             new RemoveRequest(message),
             new RemoveWhitelist(message),
-            new Report(message, new AllowAllNewAnswersValidator(), 3.5),
+            new Report(message, new AllowAllNewAnswersValidator(), 3.5, sitename, siteurl),
             new Say(message),
-            new Send(message),
+            new Send(message, sitename, siteurl),
             new ShowRequests(message),
             new Status(message),
             new Whitelist(message),
