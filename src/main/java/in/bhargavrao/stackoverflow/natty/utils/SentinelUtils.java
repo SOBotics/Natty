@@ -31,12 +31,7 @@ public class SentinelUtils {
         return getSentinelMainUrl(sitename)+"/feedbacks/new";
     }
     public static String getSentinelMainUrl(String sitename) {
-        String sentinelMainUrl ="";
-        switch (sitename) {
-            case "stackoverflow": sentinelMainUrl = "https://sentinel.erwaysoftware.com"; break;
-            case "askubuntu"    : sentinelMainUrl = "https://sentinel.charcoal-se.org"; break;
-        }
-        return sentinelMainUrl;
+        return "https://sentinel.erwaysoftware.com";
     }
 
 
@@ -60,8 +55,8 @@ public class SentinelUtils {
             }
             int responseCode = connection.getResponseCode();
             if (responseCode != 200) {
-                System.out.println(responseCode);
-                System.out.println(connection.getResponseMessage());
+                System.out.println("Sentinel errored out with response code "+ responseCode +
+                        " and response message " + connection.getResponseMessage() + " on JSON "+json.toString());
                 return null;
             }
 

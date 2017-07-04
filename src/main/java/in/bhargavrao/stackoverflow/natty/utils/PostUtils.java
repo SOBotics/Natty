@@ -219,9 +219,9 @@ public class PostUtils {
 
         post.addProperty("title",report.getPost().getTitle());
         post.addProperty("body",report.getPost().getBody());
-        post.addProperty("link","http://www."+siteurl+"/a/"+report.getPost().getAnswerID());
+        post.addProperty("link","https://www."+siteurl+"/a/"+report.getPost().getAnswerID());
         post.addProperty("post_creation_date",report.getPost().getAnswerCreationDate().toString());
-        post.addProperty("user_link","http://"+siteurl+"/users/"+report.getPost().getAnswerer().getUserId());
+        post.addProperty("user_link","https://"+siteurl+"/users/"+report.getPost().getAnswerer().getUserId());
         post.addProperty("username",report.getPost().getAnswerer().getUsername());
         post.addProperty("user_reputation",report.getPost().getAnswerer().getReputation());
         post.addProperty("nato_score",report.getNaaValue());
@@ -245,6 +245,7 @@ public class PostUtils {
 
         json.add("post",post);
         json.add("reasons",reasons);
+        json.addProperty("site","https://"+siteurl);
         json.addProperty("authorization",authorization);
 
         long sentinelPostId = SentinelUtils.post(json, sitename);

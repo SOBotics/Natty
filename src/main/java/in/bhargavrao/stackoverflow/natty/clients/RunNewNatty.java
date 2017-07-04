@@ -51,7 +51,5 @@ public class RunNewNatty {
         StatusUtils.startupDate = Instant.now();
         System.out.println("LOADED  - "+Instant.now());
 
-
     }
-
 }

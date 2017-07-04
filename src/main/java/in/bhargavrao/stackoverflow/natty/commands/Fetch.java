@@ -114,7 +114,30 @@ public class Fetch implements SpecialCommand {
                     links = "There are no deleted posts";
                 room.replyTo(message.getId(), links);
             }
+            else if(data.split(" ")[0].equals("nondeleted") && lines.size()!=0) {
+                if(lines.size()>100)
+                {
+                    room.send("There are more than 100 requests. Hence fetching non deleted posts from the first 100 only");
+                    lines = lines.subList(0,100);
+                }
+                ApiService apiService = new ApiService(siteurl);
+                List<Integer> answerIds = lines.stream().map(Integer::parseInt).collect(Collectors.toList());
+                JsonObject answersJson = apiService.getAnswerDetailsByIds(answerIds);
+                String links = "";
 
+                if(answersJson.has("items")){
+                    JsonArray answers = answersJson.get("items").getAsJsonArray();
+                    for (JsonElement element: answers){
+                        JsonObject answer = element.getAsJsonObject();
+                        String answerId = answer.get("answer_id").getAsString();
+                        links += "["+answerId+"](//"+siteurl+"/a/"+answerId+"); ";
+                    }
+                }
+
+                if(links.trim().equals(""))
+                    links = "There are no non deleted posts";
+                room.replyTo(message.getId(), links);
+            }
             else if(data.split(" ")[0].toLowerCase().equals("sentinel") && lines.size()!=0) {
                 String links = "";
                 for(String line: lines) {
