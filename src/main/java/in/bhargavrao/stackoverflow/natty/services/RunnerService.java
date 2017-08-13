@@ -68,7 +68,7 @@ public class RunnerService {
             	
                 if (prop.getProperty("location").equals("server")) {
                 	chatroom.send("Hiya o/ (SERVER VERSION)" );
-                    FeederService feederService = new FeederService("*Feeds @PetterFriberg*",chatroom,8);
+                    FeederService feederService = new FeederService("*Buys food, but feeds no one. I'm hungry too*",chatroom,8);
                     feederService.start();
                     SelfCheckService selfCheck = new SelfCheckService(this);
                     selfCheck.start();
