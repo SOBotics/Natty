@@ -4,12 +4,10 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.StackExchangeClient;
 import fr.tunaki.stackoverflow.chat.event.EventType;
 import in.bhargavrao.stackoverflow.natty.clients.Runner;
-import in.bhargavrao.stackoverflow.natty.entities.Natty;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
+import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.roomdata.BotRoom;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllAnswersValidator;
-import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,7 +26,7 @@ public class RunnerService {
     private StackExchangeClient client;
     private List<BotRoom> rooms;
     private List<Room> chatRooms;
-    private Map<String,Natty> bots;
+    private Map<String,NattyService> bots;
     private ScheduledExecutorService executorService;
     private ScheduledFuture<?> handle;
     private int presentInterval;
@@ -56,7 +54,7 @@ public class RunnerService {
             }
 
             if(room.getRoomId()==111347){
-            	//check if Natty is running on the server
+            	//check if NattyService is running on the server
             	Properties prop = new Properties();
 
                 try{
@@ -92,7 +90,7 @@ public class RunnerService {
             String site = room.getSiteName();
             String url = room.getSiteUrl();
             if (!bots.containsKey(site)){
-                bots.put(site, new Natty(site, url));
+                bots.put(site, new NattyService(site, url));
             }
 
         }

@@ -17,10 +17,10 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.commands.Check;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
-import in.bhargavrao.stackoverflow.natty.entities.SOUser;
-import in.bhargavrao.stackoverflow.natty.entities.autocomments.*;
+import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.model.PostReport;
+import in.bhargavrao.stackoverflow.natty.model.SOUser;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.*;
 import in.bhargavrao.stackoverflow.natty.filters.BlacklistedFilter;
 import in.bhargavrao.stackoverflow.natty.filters.ContainsQMFilter;
 import in.bhargavrao.stackoverflow.natty.filters.EndsWithQmFilter;
@@ -40,6 +40,7 @@ import in.bhargavrao.stackoverflow.natty.filters.UnregisteredUserFilter;
 import in.bhargavrao.stackoverflow.natty.filters.UserMentionedFilter;
 import in.bhargavrao.stackoverflow.natty.filters.VeryLongWordFilter;
 import in.bhargavrao.stackoverflow.natty.filters.WhitelistedFilter;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import org.jetbrains.annotations.NotNull;
 
@@ -191,16 +192,16 @@ public class PostUtils {
         }
         htmlString+="<p><a href='//stackoverflow.com/a/"+np.getAnswerID()+"'>Link to post</a></p></body></html>";
         try {
-            FileUtils.createNewFile("./../tomcat/webapps/ROOT/Natty/" + np.getAnswerID() + ".html", htmlString);
+            FMSUtils.createNewFile("./../tomcat/webapps/ROOT/NattyService/" + np.getAnswerID() + ".html", htmlString);
         }
         catch (IOException e){
             e.printStackTrace();
         }
-        return "http://51.254.218.90:8000/Natty/"+np.getAnswerID()+".html";
+        return "http://51.254.218.90:8000/NattyService/"+np.getAnswerID()+".html";
     }
 
     public static long addSentinel(PostReport report, String sitename, String siteurl){
-    	//check if Natty is running on the server
+    	//check if NattyService is running on the server
     	Properties prop = new Properties();
 
         try{
@@ -262,11 +263,11 @@ public class PostUtils {
 
     @NotNull
     private static String getSentinelAuth(String sitename) {
-        if (sitename.equals("stackoverflow"))
-            return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
-        else if (sitename.equals("askubuntu"))
-            return "3eddced9a0db7e1e8293c256a2887ef4bfd6c6a259233b18d4df24e12285de8b";
-        return "";
+//        if (sitename.equals("stackoverflow"))
+//            return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
+//        else if (sitename.equals("askubuntu"))
+//            return "3eddced9a0db7e1e8293c256a2887ef4bfd6c6a259233b18d4df24e12285de8b";
+        return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
     }
 
     public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type, String sitename, String siteurl){

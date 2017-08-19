@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
-import in.bhargavrao.stackoverflow.natty.entities.Natty;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.services.NattyService;
+import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.model.PostReport;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
@@ -78,7 +78,7 @@ public class Report implements SpecialCommand {
                     room.replyTo(message.getId(), "Post already registered as True Negative");
                 }
                 else {
-                    Natty cc = new Natty(siteName, siteUrl);
+                    NattyService cc = new NattyService(siteName, siteUrl);
                     Post np = cc.checkPost(Integer.parseInt(word));
 
 
@@ -97,9 +97,9 @@ public class Report implements SpecialCommand {
                         String description;
 
                         if (postId == -1) {
-                            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
+                            description = ("[ [NattyService](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
                         } else {
-                            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl(siteName) + "/posts/" + postId + ") ]");
+                            description = ("[ [NattyService](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl(siteName) + "/posts/" + postId + ") ]");
                         }
                         PostPrinter pp = new PostPrinter(np, description);
                         pp.addQuesionLink();

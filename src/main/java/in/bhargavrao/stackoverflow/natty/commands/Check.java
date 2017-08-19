@@ -5,17 +5,17 @@ import java.util.List;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import in.bhargavrao.stackoverflow.natty.entities.autocomments.*;
-import in.bhargavrao.stackoverflow.natty.entities.Natty;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.*;
+import in.bhargavrao.stackoverflow.natty.services.NattyService;
+import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.model.PostReport;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
 import in.bhargavrao.stackoverflow.natty.utils.AutoCommentUtils;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -92,7 +92,7 @@ public class Check implements SpecialCommand {
 
     public String[] getCheckData(String word, Integer returnValue) throws IOException {
         String[] returnParams;
-        Natty cc = new Natty(sitename, siteurl);
+        NattyService cc = new NattyService(sitename, siteurl);
         Post np = cc.checkPost(Integer.parseInt(word));
         PostPrinter pp = new PostPrinter(np);
         pp.addQuesionLink();

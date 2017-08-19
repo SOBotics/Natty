@@ -1,4 +1,4 @@
-package in.bhargavrao.stackoverflow.natty.entities;
+package in.bhargavrao.stackoverflow.natty.model;
 
 import com.google.gson.JsonObject;
 

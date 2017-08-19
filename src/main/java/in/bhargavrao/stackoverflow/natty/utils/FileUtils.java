@@ -86,7 +86,4 @@ public class FileUtils {
         Files.write(Paths.get(filename), newLines, StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE);
     }
 
-    public static void createNewFile(String filename, String data) throws IOException{
-        Files.write(Paths.get(filename), Arrays.asList(data), StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE);
-    }
 }

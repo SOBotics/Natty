@@ -17,7 +17,7 @@ import org.apache.tika.language.detect.LanguageWriter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import in.bhargavrao.stackoverflow.natty.entities.Post;
+import in.bhargavrao.stackoverflow.natty.model.Post;
 
 import java.io.*;
 import java.nio.file.Files;

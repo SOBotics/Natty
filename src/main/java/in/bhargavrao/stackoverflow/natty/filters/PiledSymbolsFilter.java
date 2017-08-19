@@ -1,6 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.filters;
 
-import in.bhargavrao.stackoverflow.natty.entities.Post;
+import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 
 /**

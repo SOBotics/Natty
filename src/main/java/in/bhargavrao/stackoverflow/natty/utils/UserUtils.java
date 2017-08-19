@@ -2,9 +2,9 @@ package in.bhargavrao.stackoverflow.natty.utils;
 
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
-import in.bhargavrao.stackoverflow.natty.entities.SOUser;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.entities.OptedInUser;
+import in.bhargavrao.stackoverflow.natty.model.SOUser;
+import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
 
 import java.io.IOException;
 import java.util.ArrayList;

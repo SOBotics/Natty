@@ -1,10 +1,10 @@
 package in.bhargavrao.stackoverflow.natty.clients;
 
 import fr.tunaki.stackoverflow.chat.Room;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
-import in.bhargavrao.stackoverflow.natty.entities.autocomments.AutoComment;
-import in.bhargavrao.stackoverflow.natty.entities.OptedInUser;
+import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.model.PostReport;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
+import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.utils.*;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
