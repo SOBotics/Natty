@@ -4,6 +4,7 @@ import in.bhargavrao.stackoverflow.natty.commands.Feedback;
 import in.bhargavrao.stackoverflow.natty.model.ListType;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
+import in.bhargavrao.stackoverflow.natty.utils.JsonUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -35,13 +36,7 @@ public class FileStorageService implements StorageService {
     @Override
     public String ListWord(String word, ListType type) {
 
-        String filename = null;
-        switch (type){
-
-            case BLACKLIST: filename = blacklistFile; break;
-            case WHITELIST: filename = whitelistFile; break;
-            case SALUTE: filename = salutationsFile; break;
-        }
+        String filename = getFilename(type);
 
         try {
             if (FileUtils.checkIfInFile(filename, word)) {
@@ -56,9 +51,39 @@ public class FileStorageService implements StorageService {
         }
     }
 
+
     @Override
     public String UnListWord(String word, ListType type) {
-        return null;
+
+        String filename = getFilename(type);
+
+        try{
+            if(FileUtils.checkIfInFile(filename,word)){
+                FileUtils.removeFromFile(filename,word);
+                return "Done";
+            }
+            else {
+                return ("It's not there in the file");
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return ("Some Error Occured");
+        }
+
+    }
+
+    @Override
+    public String AddCheckUsers(Integer userid, String message) {
+
+        try {
+            FileUtils.appendToFile(checkUsers,userid+","+ JsonUtils.escapeHtmlEncoding(message));
+            return "Added user successfully";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Some Error Occured";
+        }
+
     }
 
     @Override
@@ -72,7 +97,16 @@ public class FileStorageService implements StorageService {
     }
 
 
+    private String getFilename(ListType type) {
+        String filename = null;
+        switch (type){
 
+            case BLACKLIST: filename = blacklistFile; break;
+            case WHITELIST: filename = whitelistFile; break;
+            case SALUTE: filename = salutationsFile; break;
+        }
+        return filename;
+    }
 
     @NotNull
     private String getPath(String sitename) {

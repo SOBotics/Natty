@@ -10,6 +10,8 @@ import in.bhargavrao.stackoverflow.natty.model.PostReport;
 public interface StorageService {
     public String ListWord(String word, ListType type);
     public String UnListWord(String word, ListType type);
+    public String AddCheckUsers(Integer userid, String message);
     public String SaveFeedback(Feedback feedback);
     public String StoreReport(PostReport report);
+
 }

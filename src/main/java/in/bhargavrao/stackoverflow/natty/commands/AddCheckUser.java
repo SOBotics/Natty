@@ -1,16 +1,11 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-import org.apache.commons.lang.StringUtils;
-
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
-import in.bhargavrao.stackoverflow.natty.utils.JsonUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -30,22 +25,15 @@ public class AddCheckUser implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        try {
-            String filename = FilePathUtils.checkUsers;
-            String data = CommandUtils.extractData(message.getPlainContent());
-            String parts[] = data.split(" ");
-            if (StringUtils.isNumeric(parts[0])){
-                String snark = String.join(" ", Arrays.copyOfRange(parts,1,parts.length));
-                FileUtils.appendToFile(filename,parts[0]+","+ JsonUtils.escapeHtmlEncoding(snark));
-                room.replyTo(message.getId(),"SOUser Added");
-            }
-            else{
-                room.replyTo(message.getId(), "Must be SOUser ID");
-            }
+        StorageService service = new FileStorageService();
+        String data = CommandUtils.extractData(message.getPlainContent());
+        String parts[] = data.split(" ");
+        if (StringUtils.isNumeric(parts[0])){
+            String snark = data.replace(parts[0],"").trim();
+            room.replyTo(message.getId(),service.AddCheckUsers(Integer.parseInt(parts[0]),snark));
         }
-        catch (IOException e){
-            e.printStackTrace();
-            room.replyTo(message.getId(), "Error occured, Try again");
+        else{
+            room.replyTo(message.getId(), "Must be SOUser ID");
         }
     }
 

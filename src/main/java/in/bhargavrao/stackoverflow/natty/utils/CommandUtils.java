@@ -30,22 +30,6 @@ public class CommandUtils {
         String parts[] = message.split(" ");
         return String.join(" ", Arrays.copyOfRange(parts,2,parts.length));
     }
-    public static String checkAndRemoveMessage(String filename, String message){
-        try{
-            if(FileUtils.checkIfInFile(filename,message)){
-                FileUtils.removeFromFile(filename,message);
-                return "Done";
-            }
-            else {
-                return ("It's not there in the file");
-            }
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            return ("Failed");
-        }
-
-    }
     public static String getAnswerId(String word){
         String parts[]= word.split("//")[1].split("/");
         if(parts[1].equals("a") || parts[1].equals("answers")){
