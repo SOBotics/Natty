@@ -6,13 +6,17 @@ import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
 import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.services.UserService;
-import in.bhargavrao.stackoverflow.natty.utils.*;
+import in.bhargavrao.stackoverflow.natty.utils.AutoCommentUtils;
+import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
+import in.bhargavrao.stackoverflow.natty.utils.StatusUtils;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 /**
  * Created by bhargav.h on 20-Oct-16.
@@ -37,11 +41,9 @@ public class Runner {
                                 returnString+=(" @"+user.getUser().getUsername().replace(" ",""));
                             }
                         }
-
                         if(logging){
-                            FileUtils.appendToFile(FilePathUtils.getOutputReportLogFile(sitename),Integer.toString(np.getAnswerID()));
-                            String completeLog = np.getAnswerID()+","+np.getAnswerCreationDate()+","+report.getNaaValue()+","+np.getBodyMarkdown().length()+","+np.getAnswerer().getReputation()+","+report.getCaughtFor().stream().collect(Collectors.joining(";"))+";";
-                            FileUtils.appendToFile(FilePathUtils.getOutputCompleteLogFile(sitename),completeLog);
+                            StorageService service = new FileStorageService();
+                            service.storeReport(PostUtils.getReport(np, report),sitename);
                         }
                         room.send(returnString);
                         numOfAnswers++;
@@ -66,6 +68,8 @@ public class Runner {
         
         return numOfAnswers;
     }
+
+
 
 
 

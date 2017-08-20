@@ -1,11 +1,7 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
-import in.bhargavrao.stackoverflow.natty.commands.Feedback;
 import in.bhargavrao.stackoverflow.natty.exceptions.NoSuchUserFoundException;
-import in.bhargavrao.stackoverflow.natty.model.ListType;
-import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
-import in.bhargavrao.stackoverflow.natty.model.PostReport;
-import in.bhargavrao.stackoverflow.natty.model.SOUser;
+import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
 import in.bhargavrao.stackoverflow.natty.utils.JsonUtils;
 import org.jetbrains.annotations.NotNull;
@@ -267,14 +263,94 @@ public class FileStorageService implements StorageService {
         }
     }
 
+
     @Override
-    public String storeReport(PostReport report) {
+    public String storeReport(SavedReport report, String sitename) {
+
+        String completeLog = getReportLog(report);
+
+        try {
+            FileUtils.appendToFile(getPath(sitename)+outputReportLogFileName, String.valueOf(report.getAnswerId()));
+            FileUtils.appendToFile(getPath(sitename)+outputCompleteLogFileName, completeLog);
+            return "Successfully stored.";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Some Error Occured";
+        }
+    }
+
+    @NotNull
+    private String getReportLog(SavedReport report) {
+        return report.getAnswerId()+","+
+                    report.getTimestamp()+","+
+                    report.getNaaValue()+","+
+                    report.getBodyLength()+","+
+                    report.getReputation()+","+
+                    getReasonString(report.getReasons())+";";
+    }
+
+    @Override
+    public List<SavedReport> getFullReports(String sitename) {
         return null;
     }
 
     @Override
-    public String saveFeedback(Feedback feedback) {
-        return null;
+    public List<String> getReports(String sitename) {
+        try {
+            return FileUtils.readFile(getPath(sitename)+outputReportLogFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public boolean checkIfReported(String postId, String sitename) {
+        try {
+            return FileUtils.checkIfInFile(getPath(sitename)+outputReportLogFileName,sitename);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public String getSentinelId(String postId, String sitename) {
+        try {
+            return FileUtils.readLineFromFileStartswith(getPath(sitename)+outputSentinelIdLogFileName,postId);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "-1";
+        }
+    }
+
+    @Override
+    public String saveFeedback(Feedback feedback, SavedReport report, String sitename) {
+        String feedbackMessage = feedback.getFeedbackType().toString()+","+getReportLog(report);
+        try {
+            FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
+            return  "Feedback saved successfully";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Some Error Occurred";
+        }
+    }
+
+    @Override
+    public FeedbackType getFeedback(String word, String sitename) {
+
+        String outputCSVLogFile = getPath(sitename)+outputCSVLogFileName;
+        try {
+            for(FeedbackType type: FeedbackType.values()){
+                if(FileUtils.readLineFromFileStartswith(outputCSVLogFile,type.toString()+","+word)!=null)
+                    return type;
+            }
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     private String getOptMessageFromUser(OptedInUser user){
@@ -298,6 +374,18 @@ public class FileStorageService implements StorageService {
             case USER_BLACKLIST: filename = blacklistedUsers; break;
         }
         return filename;
+    }
+
+    private String getReasonString (List<Reason> reasons){
+        String retStr = "";
+        for (Reason reason: reasons){
+
+            if (reason.getSubReason().trim().equals(""))
+                retStr += reason.getReasonName() + ";";
+            else
+                retStr += reason.getReasonName() + " - " + reason.getSubReason() + ";";
+        }
+        return retStr;
     }
 
     @NotNull

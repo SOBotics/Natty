@@ -1,10 +1,7 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
-import in.bhargavrao.stackoverflow.natty.commands.Feedback;
 import in.bhargavrao.stackoverflow.natty.exceptions.NoSuchUserFoundException;
-import in.bhargavrao.stackoverflow.natty.model.ListType;
-import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
-import in.bhargavrao.stackoverflow.natty.model.PostReport;
+import in.bhargavrao.stackoverflow.natty.model.*;
 
 import java.util.List;
 
@@ -35,9 +32,17 @@ public interface StorageService {
     public String deleteReminder(int reminderIndex);
     public String deleteReminders(int[] reminderIndexes);
 
-    public String storeReport(PostReport report);
+    public String storeReport(SavedReport report, String sitename);
+    public List<SavedReport> getFullReports(String sitename);
+    public List<String> getReports(String sitename);
+    public boolean checkIfReported(String postId, String sitename);
 
 
-    public String saveFeedback(Feedback feedback);
+    public String saveFeedback(Feedback feedback, SavedReport report, String sitename);
+    public FeedbackType getFeedback(String postId, String sitename);
+
+    public String getSentinelId(String postId, String sitename);
+
+
 
 }

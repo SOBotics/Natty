@@ -9,9 +9,7 @@ import fr.tunaki.stackoverflow.chat.User;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.commands.Check;
 import in.bhargavrao.stackoverflow.natty.filters.*;
-import in.bhargavrao.stackoverflow.natty.model.Post;
-import in.bhargavrao.stackoverflow.natty.model.PostReport;
-import in.bhargavrao.stackoverflow.natty.model.SOUser;
+import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import in.bhargavrao.stackoverflow.natty.services.PropertyService;
@@ -313,6 +311,34 @@ public class PostUtils {
         }
     }
 
+    public static SavedReport getReport(Post np, PostReport report){
+
+        SavedReport savedReport = new SavedReport();
+
+        savedReport.setAnswerId(np.getAnswerID());
+        savedReport.setTimestamp(np.getAnswerCreationDate());
+        savedReport.setNaaValue(report.getNaaValue());
+        savedReport.setBodyLength(np.getBodyMarkdown().length());
+        savedReport.setReputation(np.getAnswerer().getReputation());
+
+        List<Reason> reasons = new ArrayList<>();
+
+        for (String caughtFor: report.getCaughtFor()){
+
+            Reason reason = new Reason();
+
+            if (caughtFor.contains("-")){
+                reason.setReasonName(caughtFor.split("-")[0].trim());
+                reason.setSubReason(caughtFor.split("-")[1].trim());
+            }
+            else {
+                reason.setReasonName(caughtFor);
+            }
+            reasons.add(reason);
+        }
+        savedReport.setReasons(reasons);
+        return savedReport;
+    }
     
     public static String autoFlag(Post post, AutoComment comment, String sitename, String siteurl){
         if(sitename.equals("stackoverflow")) {

@@ -3,15 +3,16 @@ package in.bhargavrao.stackoverflow.natty.commands;
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
-import in.bhargavrao.stackoverflow.natty.model.Post;
-import in.bhargavrao.stackoverflow.natty.model.PostReport;
+import in.bhargavrao.stackoverflow.natty.model.Feedback;
+import in.bhargavrao.stackoverflow.natty.model.*;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
 import in.bhargavrao.stackoverflow.natty.services.NattyService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.*;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by bhargav.h on 28-Oct-16.
@@ -53,24 +54,26 @@ public class Report implements SpecialCommand {
                 word = CommandUtils.getAnswerId(word);
             }
 
-            String outputReportLogFile = FilePathUtils.getOutputReportLogFile(siteName);
+            StorageService service = new FileStorageService();
+
             String outputCSVLogFile = FilePathUtils.getOutputCSVLogFile(siteName);
-            if(FileUtils.checkIfInFile(outputReportLogFile,word)){
+
+            if(service.checkIfReported(word, siteName)){
                 room.replyTo(message.getId(), "Post already reported");
             }
             else {
-                if(FileUtils.readLineFromFileStartswith(outputCSVLogFile,"tp,"+word)!=null) {
-                    room.replyTo(message.getId(), "Post already registered as True Positive");
+
+                FeedbackType feedback = service.getFeedback(word, siteName);
+
+                if (feedback!=null) {
+                    switch (feedback){
+                        case TRUE_POSITIVE: room.replyTo(message.getId(), "Post already registered as True Positive"); break;
+                        case FALSE_POSITIVE: room.replyTo(message.getId(), "Post already registered as False Positive"); break;
+                        case NEEDS_EDITING: room.replyTo(message.getId(), "Post already registered as Needs Editing"); break;
+                        case TRUE_NEGATIVE: room.replyTo(message.getId(), "Post already registered as True Negative"); break;
+                    }
                 }
-                else if(FileUtils.readLineFromFileStartswith(outputCSVLogFile,"fp,"+word)!=null) {
-                    room.replyTo(message.getId(), "Post already registered as False Positive");
-                }
-                else if(FileUtils.readLineFromFileStartswith(outputCSVLogFile,"ne,"+word)!=null) {
-                    room.replyTo(message.getId(), "Post already registered as Needs Edit");
-                }
-                else if(FileUtils.readLineFromFileStartswith(outputCSVLogFile,"tn,"+word)!=null) {
-                    room.replyTo(message.getId(), "Post already registered as True Negative");
-                }
+
                 else {
                     NattyService cc = new NattyService(siteName, siteUrl);
                     Post np = cc.checkPost(Integer.parseInt(word));
@@ -78,14 +81,16 @@ public class Report implements SpecialCommand {
 
                     if(validator.validate(np)) {
 
+                        User user = message.getUser();
                         PostReport report = PostUtils.getNaaValue(np);
-                        String feedback_type = "tn";
+                        FeedbackType feedback_type = FeedbackType.TRUE_NEGATIVE;
 
                         if (report.getNaaValue()>naaLimit)
-                            feedback_type = "tp";
+                            feedback_type = FeedbackType.TRUE_POSITIVE;
 
-                        String completeLog = feedback_type+"," + np.getAnswerID() + "," + np.getAnswerCreationDate() + "," + report.getNaaValue() + "," + np.getBodyMarkdown().length() + "," + np.getAnswerer().getReputation() + "," + report.getCaughtFor().stream().collect(Collectors.joining(";")) + ";";
-                        FileUtils.appendToFile(outputCSVLogFile, completeLog);
+                        SavedReport savedReport = PostUtils.getReport(np, report);
+                        Feedback fb = new Feedback(user.getName(), user.getId(), feedback_type);
+                        service.saveFeedback(fb, savedReport, siteName);
 
                         long postId = PostUtils.addSentinel(report, siteName, siteUrl);
                         String description;
@@ -107,9 +112,7 @@ public class Report implements SpecialCommand {
 
                         pp.addMessage(" **" + found + "**;");
 
-                        User user = message.getUser();
-                        PostUtils.addFeedback(postId, user.getId(), user.getName(), feedback_type, siteName, siteUrl);
-                        //FileUtils.appendToFile(FilePathUtils.outputSentinelIdLogFile,report.getPost().getAnswerID()+","+postId);
+                        PostUtils.addFeedback(postId, user.getId(), user.getName(), feedback_type.toString(), siteName, siteUrl);
 
                         room.send(pp.print());
                     }

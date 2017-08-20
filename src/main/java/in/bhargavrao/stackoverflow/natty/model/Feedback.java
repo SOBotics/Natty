@@ -5,17 +5,15 @@ package in.bhargavrao.stackoverflow.natty.model;
  */
 public class Feedback {
     private String username;
-    private Integer userId;
-    private Integer feedbackId;
+    private long userId;
     private FeedbackType feedbackType;
 
     public Feedback() {
     }
 
-    public Feedback(String username, Integer userId, Integer feedbackId, FeedbackType feedbackType) {
+    public Feedback(String username, long userId, FeedbackType feedbackType) {
         this.username = username;
         this.userId = userId;
-        this.feedbackId = feedbackId;
         this.feedbackType = feedbackType;
     }
 
@@ -27,20 +25,12 @@ public class Feedback {
         this.username = username;
     }
 
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
-    }
-
-    public Integer getFeedbackId() {
-        return feedbackId;
-    }
-
-    public void setFeedbackId(Integer feedbackId) {
-        this.feedbackId = feedbackId;
     }
 
     public FeedbackType getFeedbackType() {
@@ -56,7 +46,6 @@ public class Feedback {
         return "Feedback{" +
                 "username='" + username + '\'' +
                 ", userId=" + userId +
-                ", feedbackId=" + feedbackId +
                 ", feedbackType=" + feedbackType +
                 '}';
     }
