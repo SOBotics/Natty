@@ -56,8 +56,6 @@ public class Report implements SpecialCommand {
 
             StorageService service = new FileStorageService();
 
-            String outputCSVLogFile = FilePathUtils.getOutputCSVLogFile(siteName);
-
             if(service.checkIfReported(word, siteName)){
                 room.replyTo(message.getId(), "Post already reported");
             }

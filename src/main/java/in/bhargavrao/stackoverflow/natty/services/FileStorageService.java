@@ -315,6 +315,16 @@ public class FileStorageService implements StorageService {
     }
 
     @Override
+    public String retrieveReport(String postId, String sitename) {
+        try {
+            return FileUtils.readLineFromFileStartswith(getPath(sitename)+outputCompleteLogFileName,postId);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Some Error Occured";
+        }
+    }
+
+    @Override
     public String getSentinelId(String postId, String sitename) {
         try {
             return FileUtils.readLineFromFileStartswith(getPath(sitename)+outputSentinelIdLogFileName,postId);
@@ -329,11 +339,34 @@ public class FileStorageService implements StorageService {
         String feedbackMessage = feedback.getFeedbackType().toString()+","+getReportLog(report);
         try {
             FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
+            FileUtils.removeFromFileStartswith(getPath(sitename)+outputCompleteLogFileName, String.valueOf(report.getAnswerId()));
+            FileUtils.removeFromFile(getPath(sitename)+outputReportLogFileName, String.valueOf(report.getAnswerId()));
             return  "Feedback saved successfully";
         } catch (IOException e) {
             e.printStackTrace();
             return "Some Error Occurred";
         }
+
+    }
+
+    @Override
+    public String invalidateFeedback(Feedback feedback, SavedReport report, String sitename) {
+        String reportLog = getReportLog(report);
+        FeedbackType oldFeedback = getFeedback(String.valueOf(report.getAnswerId()), sitename);
+        String feedbackMessage = feedback.getFeedbackType().toString()+","+ reportLog;
+        String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
+
+
+        try {
+            FileUtils.removeFromFile(getPath(sitename)+outputCSVLogFileName, oldFeedbackMessage);
+            FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
+            return "Invalidated feedback on "+report.getAnswerId();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Some Error Occurred";
+        }
+
+
     }
 
     @Override
@@ -351,6 +384,18 @@ public class FileStorageService implements StorageService {
             return null;
         }
 
+    }
+
+    @Override
+    public String storeSentinelData(long postId, long sentinelId, String sitename) {
+        try{
+            FileUtils.appendToFile(getPath(sitename)+outputSentinelIdLogFileName,postId+","+sentinelId);
+            return "Stored Successfully";
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return "Some Error Occured";
+        }
     }
 
     private String getOptMessageFromUser(OptedInUser user){

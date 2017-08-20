@@ -36,13 +36,15 @@ public interface StorageService {
     public List<SavedReport> getFullReports(String sitename);
     public List<String> getReports(String sitename);
     public boolean checkIfReported(String postId, String sitename);
+    public String retrieveReport(String postId, String sitename);
 
 
     public String saveFeedback(Feedback feedback, SavedReport report, String sitename);
+    public String invalidateFeedback(Feedback feedback, SavedReport report, String sitename);
     public FeedbackType getFeedback(String postId, String sitename);
 
     public String getSentinelId(String postId, String sitename);
-
+    public String storeSentinelData(long postId, long sentinelId, String sitename);
 
 
 }
