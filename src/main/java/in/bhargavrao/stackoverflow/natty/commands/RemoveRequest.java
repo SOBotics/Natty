@@ -1,13 +1,12 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
+
+import java.util.Arrays;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -28,18 +27,10 @@ public class RemoveRequest implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-
-        String filename = FilePathUtils.featureRequests;
+        StorageService service = new FileStorageService();
         String data = CommandUtils.extractData(message.getPlainContent()).trim();
-        try{
-
-            int linenumbers[] = Arrays.stream(data.split(" ")).mapToInt(Integer::parseInt).toArray();
-            FileUtils.removeFromFileLines(filename,linenumbers);
-            room.replyTo(message.getId(), "Done");
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
+        int linenumbers[] = Arrays.stream(data.split(" ")).mapToInt(Integer::parseInt).toArray();
+        room.replyTo(message.getId(),(linenumbers.length==1) ? (service.deleteReminder(linenumbers[0])): service.deleteReminders(linenumbers));
     }
 
     @Override

@@ -1,11 +1,12 @@
 package in.bhargavrao.stackoverflow.natty.clients;
 
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
 import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
-import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.services.UserService;
 import in.bhargavrao.stackoverflow.natty.utils.*;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
@@ -19,12 +20,12 @@ import java.util.stream.Collectors;
 public class Runner {
     public int runOnce(Room room, Validator validator, List<Post> posts, double naaValueLimit, PostPrinter postPrinter, boolean logging, String sitename, String siteurl){
         Instant startDate = Instant.now();
-    	
+    	UserService userService = new UserService(room);
     	int numOfAnswers = 0;
         try{
             for (Post np : posts) {
 
-                List<OptedInUser> pingUsersList = UserUtils.pingUserIfApplicable(np,room.getRoomId());
+                List<OptedInUser> pingUsersList = userService.pingUserIfApplicable(np);
                 PostReport report = PostUtils.getNaaValue(np);
 
 
@@ -32,7 +33,7 @@ public class Runner {
                     if (report.getNaaValue()>naaValueLimit) {
                         String returnString = postPrinter.print(report);
                         for (OptedInUser user : pingUsersList) {
-                            if (!user.isWhenInRoom() || (user.isWhenInRoom() && UserUtils.checkIfUserInRoom(room, user.getUser().getUserId()))) {
+                            if (!user.isWhenInRoom() || (user.isWhenInRoom() && userService.checkIfUserInRoom(user.getUser().getUserId()))) {
                                 returnString+=(" @"+user.getUser().getUsername().replace(" ",""));
                             }
                         }
@@ -65,6 +66,7 @@ public class Runner {
         
         return numOfAnswers;
     }
+
 
 
 }

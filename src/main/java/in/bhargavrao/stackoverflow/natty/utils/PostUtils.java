@@ -1,48 +1,27 @@
 package in.bhargavrao.stackoverflow.natty.utils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.stream.StreamSupport;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.commands.Check;
+import in.bhargavrao.stackoverflow.natty.filters.*;
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
 import in.bhargavrao.stackoverflow.natty.model.SOUser;
-import in.bhargavrao.stackoverflow.natty.model.autocomments.*;
-import in.bhargavrao.stackoverflow.natty.filters.BlacklistedFilter;
-import in.bhargavrao.stackoverflow.natty.filters.ContainsQMFilter;
-import in.bhargavrao.stackoverflow.natty.filters.EndsWithQmFilter;
-import in.bhargavrao.stackoverflow.natty.filters.Filter;
-import in.bhargavrao.stackoverflow.natty.filters.LengthFilter;
-import in.bhargavrao.stackoverflow.natty.filters.LinkOnlyAnswerFilter;
-import in.bhargavrao.stackoverflow.natty.filters.NoCodeBlockFilter;
-import in.bhargavrao.stackoverflow.natty.filters.NonEnglishFilter;
-import in.bhargavrao.stackoverflow.natty.filters.OneLineFilter;
-import in.bhargavrao.stackoverflow.natty.filters.PiledSymbolsFilter;
-import in.bhargavrao.stackoverflow.natty.filters.ReputationFilter;
-import in.bhargavrao.stackoverflow.natty.filters.SalutationsFilter;
-import in.bhargavrao.stackoverflow.natty.filters.SelfAnswerFilter;
-import in.bhargavrao.stackoverflow.natty.filters.StartsWithKeywordFilter;
-import in.bhargavrao.stackoverflow.natty.filters.UnformattedCodeFilter;
-import in.bhargavrao.stackoverflow.natty.filters.UnregisteredUserFilter;
-import in.bhargavrao.stackoverflow.natty.filters.UserMentionedFilter;
-import in.bhargavrao.stackoverflow.natty.filters.VeryLongWordFilter;
-import in.bhargavrao.stackoverflow.natty.filters.WhitelistedFilter;
 import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
+import in.bhargavrao.stackoverflow.natty.services.PropertyService;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by bhargav.h on 29-Sep-16.
@@ -202,17 +181,9 @@ public class PostUtils {
 
     public static long addSentinel(PostReport report, String sitename, String siteurl){
     	//check if NattyService is running on the server
-    	Properties prop = new Properties();
-
-        try{
-            prop.load(new FileInputStream(FilePathUtils.loginPropertiesFile));
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            return -1;
-        }
+        PropertyService service = new PropertyService();
         
-        if (!prop.getProperty("location").equals("server")) return -1; //return -1 if it's not running on server
+        if (!service.getLocation().equals("server")) return -1; //return -1 if it's not running on server
         
         //continue...
         

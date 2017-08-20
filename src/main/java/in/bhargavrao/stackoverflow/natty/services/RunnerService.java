@@ -6,13 +6,14 @@ import fr.tunaki.stackoverflow.chat.event.EventType;
 import in.bhargavrao.stackoverflow.natty.clients.Runner;
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.roomdata.BotRoom;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllAnswersValidator;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -55,16 +56,9 @@ public class RunnerService {
 
             if(room.getRoomId()==111347){
             	//check if NattyService is running on the server
-            	Properties prop = new Properties();
-
-                try{
-                    prop.load(new FileInputStream(FilePathUtils.loginPropertiesFile));
-                }
-                catch (IOException e){
-                    e.printStackTrace();
-                }
+            	PropertyService service  = new PropertyService();
             	
-                if (prop.getProperty("location").equals("server")) {
+                if (service.getLocation().equals("server")) {
                 	chatroom.send("Hiya o/ (SERVER VERSION)" );
                     FeederService feederService = new FeederService("*Buys food, but feeds no one. I'm hungry too*",chatroom,8);
                     feederService.start();
@@ -76,7 +70,7 @@ public class RunnerService {
                     mentionService.start();
 
                 } else {
-                	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
+                	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+service.getLocation()+")" );
                 }
 
             }

@@ -9,37 +9,48 @@ import com.optimaize.langdetect.profiles.LanguageProfileReader;
 import com.optimaize.langdetect.text.CommonTextObjectFactories;
 import com.optimaize.langdetect.text.TextObject;
 import com.optimaize.langdetect.text.TextObjectFactory;
-
+import in.bhargavrao.stackoverflow.natty.model.ListType;
+import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import org.apache.tika.langdetect.OptimaizeLangDetector;
-
 import org.apache.tika.language.detect.LanguageResult;
 import org.apache.tika.language.detect.LanguageWriter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import in.bhargavrao.stackoverflow.natty.model.Post;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CheckUtils {
 
-	public static boolean checkIfBodyContainsKeyword(Post post, String keyword){
-        String spareBody = stripBody(post);
-		return spareBody.toLowerCase().contains(keyword.toLowerCase());
-	}
+    public static String checkForBlackListedWords(Post post){
+        return checkForListedWords(post, ListType.BLACKLIST);
+    }
+    public static String checkForWhiteListedWords(Post post){
+        return checkForListedWords(post, ListType.WHITELIST);
+    }
 
-	public static String checkIfBodyStartsWithMention(Post post){
-        String firstLine = post.getBodyMarkdown().split("\n")[0];
-        if(firstLine.startsWith("@") && firstLine.split(" ")[0].trim().matches("[@A-Za-z0-9]+")){
-            return firstLine.split(" ")[0].trim();
+
+    private static String checkForListedWords(Post post, ListType type){
+        StorageService service = new FileStorageService();
+        List<String> lines = service.getListWords(type);
+        for(String s: lines){
+            if(checkIfBodyContainsKeyword(post,s.trim()))
+                return s.trim();
         }
         return null;
     }
+
+    private static boolean checkIfBodyContainsKeyword(Post post, String keyword){
+        String spareBody = stripBody(post);
+		return spareBody.toLowerCase().contains(keyword.toLowerCase());
+	}
 
     private static String stripBody(Post post) {
         String body = post.getBody();
@@ -52,31 +63,19 @@ public class CheckUtils {
         return doc.outerHtml();
     }
 
-    private static String stripTags(String html) {
-        Document doc = Jsoup.parse(html);
-        return doc.text();
-    }
 
-    private static String stripBodyMarkdown(Post post){
-        // TO DO
-        return post.getBodyMarkdown();
-    }
-
-
-    private static String checkForListedWords(Post post, String file){
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(file));
-            for(String s: lines){
-                if(checkIfBodyContainsKeyword(post,s.trim()))
-                    return s.trim();
-            }
-        }
-        catch (IOException exception){
-            System.out.println(file+" not found.");
+	public static String checkIfBodyStartsWithMention(Post post){
+        String firstLine = post.getBodyMarkdown().split("\n")[0];
+        if(firstLine.startsWith("@") && firstLine.split(" ")[0].trim().matches("[@A-Za-z0-9]+")){
+            return firstLine.split(" ")[0].trim();
         }
         return null;
     }
 
+    private static String stripTags(String html) {
+        Document doc = Jsoup.parse(html);
+        return doc.text();
+    }
     public static String checkIfNonEnglish(Post post){
 
 
@@ -134,47 +133,20 @@ public class CheckUtils {
         return null;
     }
 
-	private static boolean checkIfWordIsListed(String file, String word){
-        try {
-            return FileUtils.checkIfInFile(file,word);
-        }
-        catch (IOException exception){
-            System.out.println(file+" not found.");
-        }
-        return false;
-    }
-
-
-	public static String checkForBlackListedWords(Post post){
-        return checkForListedWords(post, FilePathUtils.blacklistFile);
-    }
-	public static String checkForWhiteListedWords(Post post){
-        return checkForListedWords(post, FilePathUtils.whitelistFile);
-    }
-	public static boolean checkIfBlackListed(String word){
-        return checkIfWordIsListed(FilePathUtils.blacklistFile,word);
-    }
-	public static boolean checkIfWhiteListed(String word){
-        return checkIfWordIsListed(FilePathUtils.whitelistFile,word);
-    }
 	public static String checkForSalutation(Post post){
-        try {
-            List<String> keywords = Files.readAllLines(Paths.get(FilePathUtils.salutationsFile));
-            String [] lines = post.getBodyMarkdown().split("\n");
-            int len = lines.length;
-            if(len>3){
-                lines = Arrays.copyOfRange(lines,len-3,len);
-            }
-            for(String line:lines){
-                for (String word:keywords){
-                    if(line.toLowerCase().contains(word.toLowerCase())){
-                        return word;
-                    }
+        StorageService service = new FileStorageService();
+        List<String> keywords = service.getListWords(ListType.SALUTE);
+        String [] lines = post.getBodyMarkdown().split("\n");
+        int len = lines.length;
+        if(len>3){
+            lines = Arrays.copyOfRange(lines,len-3,len);
+        }
+        for(String line:lines){
+            for (String word:keywords){
+                if(line.toLowerCase().contains(word.toLowerCase())){
+                    return word;
                 }
             }
-        }
-        catch (IOException exception){
-            System.out.println("Salutations File not found.");
         }
         return null;
     }
