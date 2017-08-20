@@ -80,7 +80,7 @@ public class Fetch implements SpecialCommand {
 
                 String links = "";
                 for(String line: lines) {
-                    links += "["+line.trim()+"](http://51.254.218.90:8000/Natty/"+line.trim()+".html); ";
+                    links += "["+line.trim()+"](http://51.254.218.90:8000/NattyService/"+line.trim()+".html); ";
                 }
                 room.replyTo(message.getId(), links);
             }

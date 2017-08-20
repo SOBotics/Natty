@@ -1,8 +1,11 @@
 package in.bhargavrao.stackoverflow.natty.utils;
 
-import in.bhargavrao.stackoverflow.natty.entities.AutoCommentType;
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
-import in.bhargavrao.stackoverflow.natty.entities.autocomments.*;
+import in.bhargavrao.stackoverflow.natty.model.PostReport;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.*;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoCommentLinkOnly;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoCommentNAAHighRep;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoCommentNAALowRep;
 
 public class AutoCommentUtils {
 	
@@ -11,7 +14,7 @@ public class AutoCommentUtils {
 	 * @param report The PostReport to check
 	 * @return The comment that could be posted
 	 */
-	public static AutoComment commentForPostReport(PostReport report) {		
+	public static AutoComment commentForPostReport(PostReport report) {
 		Boolean isPossibleLinkOnly = false;
         Boolean hasNoCodeblock = false;
         Boolean containsBlacklistedWord = false;

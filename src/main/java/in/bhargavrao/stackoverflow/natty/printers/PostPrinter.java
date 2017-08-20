@@ -1,6 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.printers;
 
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.model.PostReport;
 
 /**
  * Created by bhargav.h on 20-Oct-16.

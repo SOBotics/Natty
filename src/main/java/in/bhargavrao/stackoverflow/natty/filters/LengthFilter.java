@@ -17,7 +17,7 @@ public class LengthFilter implements Filter {
 
     @Override
     public boolean filter() {
-        return post.getBodyMarkdown().length()<500;
+        return true;//post.getBodyMarkdown().length()<500;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class LengthFilter implements Filter {
             return 0.5;
         }
         else {
-            return 0.0;
+            return -0.5;
         }
     }
 

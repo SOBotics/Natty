@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.model.ListType;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
@@ -26,21 +29,9 @@ public class Blacklist implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        try {
-            String filename = FilePathUtils.blacklistFile;
-            String data = CommandUtils.extractData(message.getPlainContent());
-            if (FileUtils.checkIfInFile(filename, data)) {
-                room.replyTo(message.getId(), "Already Blacklisted");
-            }
-            else{
-                FileUtils.appendToFile(filename,data);
-                room.replyTo(message.getId(), "Added blacklist successfully");
-            }
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            room.replyTo(message.getId(), "Error occured, Try again");
-        }
+        String data = CommandUtils.extractData(message.getPlainContent());
+        StorageService service = new FileStorageService();
+        room.replyTo(message.getId(),service.ListWord(data, ListType.BLACKLIST));
     }
 
     @Override
