@@ -165,22 +165,25 @@ public class PostUtils {
 
         Post np = report.getPost();
 
-        String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+"</title></head><link href='style.css' rel='stylesheet' ><body><pre style='border:1px solid black;border-radius:5px'><code>"+np.getBody()+"</code></pre><p>Caught for</p>";
+        String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+
+                "</title></head><link href='style.css' rel='stylesheet' ><body><pre style='border:1px solid black;border-radius:5px'><code>"
+                +np.getBody()+"</code></pre><p>" + "<a href='"+np.getSiteUrl()+"/users/"+ np.getAnswerer().getUserId() + "'>"+np.getAnswerer().getUsername()+"</a>"+
+                "</p><p>Caught for</p>";
         for(String i:report.getCaughtFor()){
             htmlString+=i+"<br/>";
         }
-        htmlString+="<p><a href='//stackoverflow.com/a/"+np.getAnswerID()+"'>Link to post</a></p></body></html>";
+        htmlString+="<p><a href='"+np.getSiteUrl()+"/a/"+np.getAnswerID()+"'>Link to post</a></p></body></html>";
         try {
-            FMSUtils.createNewFile("./../tomcat/webapps/ROOT/NattyService/" + np.getAnswerID() + ".html", htmlString);
+            FMSUtils.createNewFile("./../tomcat/webapps/ROOT/Natty/" + np.getAnswerID() + ".html", htmlString);
         }
         catch (IOException e){
             e.printStackTrace();
         }
-        return "http://51.254.218.90:8000/NattyService/"+np.getAnswerID()+".html";
+        return "http://51.254.218.90:8000/Natty/"+np.getAnswerID()+".html";
     }
 
     public static long addSentinel(PostReport report, String sitename, String siteurl){
-    	//check if NattyService is running on the server
+    	//check if Natty is running on the server
         PropertyService service = new PropertyService();
         
         if (!service.getLocation().equals("server")) return -1; //return -1 if it's not running on server

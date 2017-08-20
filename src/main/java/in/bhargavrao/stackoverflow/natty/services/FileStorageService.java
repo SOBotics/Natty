@@ -148,7 +148,7 @@ public class FileStorageService implements StorageService {
                     optedInUser.setUser(SOUser);
                     optedInUser.setTagname(pieces[1]);
                     optedInUser.setPostType(pieces[4]);
-                    optedInUser.setRoomId(Long.valueOf(pieces[3]));
+                    optedInUser.setRoomId(Integer.valueOf(pieces[3]));
                     optedInUser.setWhenInRoom(Boolean.parseBoolean(pieces[5]));
 
 
@@ -160,6 +160,60 @@ public class FileStorageService implements StorageService {
             System.out.println("file not found");
         }
         return optedInUsers;
+    }
+
+    @Override
+    public String addOptedInUser(OptedInUser user) {
+        String optMessage = getOptMessageFromUser(user);
+        try
+        {
+            if(FileUtils.checkIfInFile(optedUsersFile,optMessage)){
+                return "You've already been added.";
+            }
+            else {
+                FileUtils.appendToFile(optedUsersFile, optMessage);
+                System.out.println("Added user");
+                return  "You've been added.";
+            }
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            return "Some Error Occurred";
+        }
+    }
+
+    @Override
+    public String removeOptedInUser(OptedInUser user) {
+        String optMessage = getOptMessageFromUser(user);
+        try
+        {
+            if(FileUtils.checkIfInFile(optedUsersFile,optMessage)) {
+                FileUtils.removeFromFile(optedUsersFile, optMessage);
+                System.out.println("Remove user");
+                return  "You've been removed.";
+            }
+            else{
+                return "You've already been removed.or you haven't yet opted-in.";
+            }
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            return "Some Error Occurred";
+        }
+    }
+
+    @Override
+    public String removeAllOptIn(long userId) {
+        try {
+            FileUtils.removeFromFileStartswith(optedUsersFile,userId+",");
+            return "Removed all the tags and rooms where you have opted in";
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return "Some Error Occurred";
+        }
     }
 
     @Override
@@ -214,13 +268,23 @@ public class FileStorageService implements StorageService {
     }
 
     @Override
-    public String saveFeedback(Feedback feedback) {
+    public String storeReport(PostReport report) {
         return null;
     }
 
     @Override
-    public String storeReport(PostReport report) {
+    public String saveFeedback(Feedback feedback) {
         return null;
+    }
+
+    private String getOptMessageFromUser(OptedInUser user){
+
+        return user.getUser().getUserId()+","+
+                user.getTagname()+",\""+
+                user.getUser().getUsername()+"\""+","+
+                user.getRoomId()+","+
+                user.getPostType()+","+user.isWhenInRoom();
+
     }
 
 
@@ -231,6 +295,7 @@ public class FileStorageService implements StorageService {
             case BLACKLIST: filename = blacklistFile; break;
             case WHITELIST: filename = whitelistFile; break;
             case SALUTE: filename = salutationsFile; break;
+            case USER_BLACKLIST: filename = blacklistedUsers; break;
         }
         return filename;
     }

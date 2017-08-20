@@ -25,13 +25,19 @@ public interface StorageService {
 
 
     public List<OptedInUser> getOptedInUsers(String tagname, long roomId);
+    public String addOptedInUser(OptedInUser user);
+    public String removeOptedInUser(OptedInUser user);
+    public String removeAllOptIn(long userid);
+
 
     public String storeReminders(String reminder);
     public List<String> retrieveReminders();
     public String deleteReminder(int reminderIndex);
     public String deleteReminders(int[] reminderIndexes);
 
-    public String saveFeedback(Feedback feedback);
     public String storeReport(PostReport report);
+
+
+    public String saveFeedback(Feedback feedback);
 
 }

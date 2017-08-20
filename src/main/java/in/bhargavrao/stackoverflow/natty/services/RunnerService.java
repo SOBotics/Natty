@@ -55,7 +55,7 @@ public class RunnerService {
             }
 
             if(room.getRoomId()==111347){
-            	//check if NattyService is running on the server
+            	//check if Natty is running on the server
             	PropertyService service  = new PropertyService();
             	
                 if (service.getLocation().equals("server")) {

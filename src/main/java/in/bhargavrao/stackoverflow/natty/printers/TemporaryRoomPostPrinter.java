@@ -23,10 +23,10 @@ public class TemporaryRoomPostPrinter implements in.bhargavrao.stackoverflow.nat
         long SentinelId = PostUtils.addSentinel(report, "askubuntu", "askubuntu.com");
         String description;
         if(SentinelId==-1){
-            description = ("[ [NattyService](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
+            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
         }
         else {
-            description = ("[ [NattyService](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl("askubuntu") + "/posts/" + SentinelId + ") ]");
+            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl("askubuntu") + "/posts/" + SentinelId + ") ]");
         }
         in.bhargavrao.stackoverflow.natty.utils.PostPrinter postPrinter = new in.bhargavrao.stackoverflow.natty.utils.PostPrinter(np,description).addMainTag().addQuesionLink().addBodyLength().addReputation();
 

@@ -1,7 +1,7 @@
 package in.bhargavrao.stackoverflow.natty.model.autocomments;
 
 /**
- * This represents a comment, that is automatically posted by NattyService.
+ * This represents a comment, that is automatically posted by Natty.
  * */
 public interface AutoComment {
 	/**

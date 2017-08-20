@@ -6,5 +6,6 @@ package in.bhargavrao.stackoverflow.natty.model;
 public enum ListType {
     BLACKLIST,
     WHITELIST,
-    SALUTE
+    SALUTE,
+    USER_BLACKLIST
 }

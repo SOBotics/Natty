@@ -43,7 +43,7 @@ public class UserService {
         return false;
     }
 
-    public boolean checkIfUserInRoom(int userId){
+    public boolean checkIfUserInRoom(long userId){
         User user = room.getUser(userId);
         return user.isCurrentlyInRoom();
     }

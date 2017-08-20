@@ -1,7 +1,5 @@
 package in.bhargavrao.stackoverflow.natty.model;
 
-import in.bhargavrao.stackoverflow.natty.model.SOUser;
-
 /**
  * Created by bhargav.h on 01-Oct-16.
  */
@@ -9,7 +7,7 @@ public class OptedInUser {
     SOUser user;
     String tagname;
     String postType;
-    Long roomId;
+    int roomId;
     boolean whenInRoom;
 
     public SOUser getUser() {
@@ -44,11 +42,11 @@ public class OptedInUser {
         this.whenInRoom = whenInRoom;
     }
 
-    public Long getRoomId() {
+    public int getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(Long roomId) {
+    public void setRoomId(int roomId) {
         this.roomId = roomId;
     }
 

@@ -9,7 +9,10 @@ import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
 import in.bhargavrao.stackoverflow.natty.services.NattyService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
-import in.bhargavrao.stackoverflow.natty.utils.*;
+import in.bhargavrao.stackoverflow.natty.utils.AutoCommentUtils;
+import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
+import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,8 +44,6 @@ public class Check implements SpecialCommand {
 
             StorageService service = new FileStorageService();
 
-
-            String filename = FilePathUtils.checkUsers;
             String word = CommandUtils.extractData(message.getPlainContent()).trim();
 
             // TO CHECK FOR OTHER OPTIONS

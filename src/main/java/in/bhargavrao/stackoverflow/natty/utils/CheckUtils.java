@@ -20,8 +20,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -121,14 +119,7 @@ public class CheckUtils {
             return lang.get().getLanguage();
         }
         catch (IOException e){
-            StringWriter sw = new StringWriter();
-            e.printStackTrace(new PrintWriter(sw));
-            try{
-                FileUtils.appendToFile(FilePathUtils.outputErrorLogFile,sw.toString());
-            }
-            catch (IOException e2){
-                System.out.println("File not found");
-            }
+            e.printStackTrace();
         }
         return null;
     }
@@ -184,13 +175,8 @@ public class CheckUtils {
         return post.getBodyMarkdown().trim().endsWith("?");
     }
     public static boolean checkIfUserIsBlacklisted(long userId){
-        try {
-            return FileUtils.checkIfInFile(FilePathUtils.blacklistedUsers, Long.toString(userId));
-        }
-        catch (IOException e){
-            System.out.println("File not found");
-            return false;
-        }
+        StorageService service = new FileStorageService();
+        return service.checkListWord(Long.toString(userId), ListType.USER_BLACKLIST);
     }
     public static boolean checkIfUnformatted(Post post){
         String strippedBody = stripTags(stripBody(post));

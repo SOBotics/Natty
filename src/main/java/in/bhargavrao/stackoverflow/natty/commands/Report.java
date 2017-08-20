@@ -1,23 +1,17 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
-import in.bhargavrao.stackoverflow.natty.services.NattyService;
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
-import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
-import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
-import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
-import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
-import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
+import in.bhargavrao.stackoverflow.natty.services.NattyService;
+import in.bhargavrao.stackoverflow.natty.utils.*;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by bhargav.h on 28-Oct-16.
@@ -97,9 +91,9 @@ public class Report implements SpecialCommand {
                         String description;
 
                         if (postId == -1) {
-                            description = ("[ [NattyService](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
+                            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
                         } else {
-                            description = ("[ [NattyService](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl(siteName) + "/posts/" + postId + ") ]");
+                            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl(siteName) + "/posts/" + postId + ") ]");
                         }
                         PostPrinter pp = new PostPrinter(np, description);
                         pp.addQuesionLink();

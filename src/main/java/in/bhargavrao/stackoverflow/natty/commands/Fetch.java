@@ -1,21 +1,16 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
-import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
-import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
-import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
+import in.bhargavrao.stackoverflow.natty.utils.*;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by bhargav.h on 20-Oct-16.
@@ -80,7 +75,7 @@ public class Fetch implements SpecialCommand {
 
                 String links = "";
                 for(String line: lines) {
-                    links += "["+line.trim()+"](http://51.254.218.90:8000/NattyService/"+line.trim()+".html); ";
+                    links += "["+line.trim()+"](http://51.254.218.90:8000/Natty/"+line.trim()+".html); ";
                 }
                 room.replyTo(message.getId(), links);
             }

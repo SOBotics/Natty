@@ -6,7 +6,7 @@ package in.bhargavrao.stackoverflow.natty.utils;
 public class PrintUtils {
 
     public static String printDescription(){
-        return " [ [NattyService](//stackapps.com/questions/7049) ] ";
+        return " [ [Natty](//stackapps.com/questions/7049) ] ";
     }
     public static String printStackAppsPost(){
         return "//stackapps.com/questions/7049";

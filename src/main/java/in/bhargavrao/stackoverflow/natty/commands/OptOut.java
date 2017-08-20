@@ -1,15 +1,14 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.io.IOException;
-
-import org.apache.commons.lang.StringUtils;
-
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
+import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
+import in.bhargavrao.stackoverflow.natty.model.SOUser;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -32,8 +31,8 @@ public class OptOut implements SpecialCommand {
     	User user = message.getUser();
         long userId = user.getId();
         String userName = user.getName();
-        String filename = FilePathUtils.optedUsersFile;
-
+        int reputation = user.getReputation();
+        StorageService service = new FileStorageService();
         String data = CommandUtils.extractData(message.getPlainContent()).trim();
 
         String pieces[] = data.split(" ");
@@ -50,35 +49,22 @@ public class OptOut implements SpecialCommand {
                 tag = StringUtils.substringBetween(message.getPlainContent(),"[","]");
             }
             if(postType.equals("all") || postType.equals("naa")){
-                String optMessage = userId+","+tag+",\""+userName+"\""+","+room.getRoomId()+","+postType+","+whenInRoom;
-                try
-                {
-                    if(FileUtils.checkIfInFile(filename,optMessage)) {
-                        FileUtils.removeFromFile(filename, optMessage);
-                        System.out.println("Remove user");
-                        room.replyTo(message.getId(), "You've been removed.");
-                    }
-                    else{
-                        room.replyTo(message.getId(), "You've already been removed.");
-                        room.replyTo(message.getId(), "Or did you not opt-in only? o_O");
-                    }
-                }
-                catch(IOException e)
-                {
-                    System.out.println("File not found");
-                }
+                OptedInUser optedInUser = new OptedInUser();
+                optedInUser.setPostType(postType);
+                optedInUser.setRoomId(room.getRoomId());
+                optedInUser.setUser(new SOUser(userName,userId,reputation,null));
+                optedInUser.setTagname(tag);
+                optedInUser.setWhenInRoom(whenInRoom);
+
+
+                service.removeOptedInUser(optedInUser);
             }
             else {
                 room.replyTo(message.getId(), "Type of post can be naa or all");
             }
         }
         else if(pieces[0].equals("everything")){
-            try {
-                FileUtils.removeFromFileStartswith(filename,userId+",");
-            }
-            catch (IOException e){
-                e.printStackTrace();
-            }
+            service.removeAllOptIn(userId);
         }
         else if(pieces.length==1){
             room.replyTo(message.getId(), "Please specify the type of post.");
