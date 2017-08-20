@@ -30,7 +30,8 @@ public class AddCheckUser implements SpecialCommand {
         String parts[] = data.split(" ");
         if (StringUtils.isNumeric(parts[0])){
             String snark = data.replace(parts[0],"").trim();
-            room.replyTo(message.getId(),service.AddCheckUsers(Integer.parseInt(parts[0]),snark));
+            room.replyTo(message.getId(),service.addCheckUsers(Integer.parseInt(parts[0]),snark, "stackoverflow"));
+            // TODO: Need to update for other sites
         }
         else{
             room.replyTo(message.getId(), "Must be SOUser ID");

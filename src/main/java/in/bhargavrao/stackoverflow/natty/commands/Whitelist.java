@@ -27,7 +27,7 @@ public class Whitelist implements SpecialCommand {
     public void execute(Room room) {
         String data = CommandUtils.extractData(message.getPlainContent());
         StorageService service = new FileStorageService();
-        room.replyTo(message.getId(),service.ListWord(data, ListType.WHITELIST));
+        room.replyTo(message.getId(),service.listWord(data, ListType.WHITELIST));
     }
 
     @Override

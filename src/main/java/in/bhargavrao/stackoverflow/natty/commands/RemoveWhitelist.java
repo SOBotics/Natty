@@ -6,7 +6,6 @@ import in.bhargavrao.stackoverflow.natty.model.ListType;
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -29,7 +28,7 @@ public class RemoveWhitelist implements SpecialCommand {
     public void execute(Room room) {
         String data = CommandUtils.extractData(message.getPlainContent());
         StorageService service = new FileStorageService();
-        room.replyTo(message.getId(),service.UnListWord(data, ListType.WHITELIST));
+        room.replyTo(message.getId(),service.unListWord(data, ListType.WHITELIST));
     }
 
     @Override

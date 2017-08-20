@@ -1,6 +1,7 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
 import in.bhargavrao.stackoverflow.natty.commands.Feedback;
+import in.bhargavrao.stackoverflow.natty.exceptions.NoSuchUserFoundException;
 import in.bhargavrao.stackoverflow.natty.model.ListType;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
@@ -34,7 +35,7 @@ public class FileStorageService implements StorageService {
 
 
     @Override
-    public String ListWord(String word, ListType type) {
+    public String listWord(String word, ListType type) {
 
         String filename = getFilename(type);
 
@@ -53,7 +54,7 @@ public class FileStorageService implements StorageService {
 
 
     @Override
-    public String UnListWord(String word, ListType type) {
+    public String unListWord(String word, ListType type) {
 
         String filename = getFilename(type);
 
@@ -74,25 +75,61 @@ public class FileStorageService implements StorageService {
     }
 
     @Override
-    public String AddCheckUsers(Integer userid, String message) {
-
+    public String addCheckUsers(Integer userid, String message, String sitename) {
         try {
-            FileUtils.appendToFile(checkUsers,userid+","+ JsonUtils.escapeHtmlEncoding(message));
+            FileUtils.appendToFile(checkUsers,userid+","+sitename+","+ JsonUtils.escapeHtmlEncoding(message));
             return "Added user successfully";
         } catch (IOException e) {
             e.printStackTrace();
             return "Some Error Occured";
         }
+    }
 
+
+    @Override
+    public String checkUsers(Integer userid, String sitename) throws NoSuchUserFoundException {
+
+        String filename = checkUsers;
+
+        try {
+            for(String line: FileUtils.readFile(filename)){
+                String users[] = line.split(",");
+                if(users[0].equals(Integer.toString(userid))  && users[1].equals(sitename) ){
+                    return users[2];
+                }
+            }
+        } catch (IOException e) {
+            return "Some Error Occured.";
+        }
+
+        throw new NoSuchUserFoundException();
     }
 
     @Override
-    public String SaveFeedback(Feedback feedback) {
+    public String storeReminders(String reminder) {
+        try {
+            String filename = featureRequests;
+            if (FileUtils.checkIfInFile(filename, reminder)) {
+                return  "Already present as FR";
+            }
+            else{
+                FileUtils.appendToFile(filename, reminder);
+                return  "Added request successfully";
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return "Some Error Occured";
+        }
+    }
+
+    @Override
+    public String saveFeedback(Feedback feedback) {
         return null;
     }
 
     @Override
-    public String StoreReport(PostReport report) {
+    public String storeReport(PostReport report) {
         return null;
     }
 
