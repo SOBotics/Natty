@@ -23,15 +23,12 @@ public class FileStorageService implements StorageService {
     private String checkUsers = "./data/CheckUsers.txt";
     private String blacklistedUsers = "./data/BlackListedUsers.txt";
 
-    private String outputErrorLogFile = "./logs/error.txt";
-
-    private String loginPropertiesFile = "./properties/login.properties";
-
     private String outputCSVLogFileName = "output.csv";
     private String outputReportLogFileName = "reports.txt";
     private String outputCompleteLogFileName = "fullReports.txt";
     private String outputSentinelIdLogFileName = "sentinelReports.txt";
     private String outputFeedbackLogFileName = "feedback.txt";
+    private String outputBotUsersLogFileName = "botUsers.txt";
 
 
     @Override
@@ -110,7 +107,6 @@ public class FileStorageService implements StorageService {
     public String checkUsers(Integer userid, String sitename) throws NoSuchUserFoundException {
 
         String filename = checkUsers;
-
         try {
             for(String line: FileUtils.readFile(filename)){
                 String users[] = line.split(",");
@@ -337,9 +333,13 @@ public class FileStorageService implements StorageService {
 
     @Override
     public String saveFeedback(Feedback feedback, SavedReport report, String sitename) {
-        String feedbackMessage = feedback.getFeedbackType().toString()+","+getReportLog(report);
-        String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
+
         try {
+            if(FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())) == null)
+                FileUtils.appendToFile(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())+",0");
+
+            String feedbackMessage = feedback.getFeedbackType().toString()+","+getReportLog(report);
+            String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
             FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
             FileUtils.appendToFile(getPath(sitename)+outputFeedbackLogFileName, feedbackLog);
             FileUtils.removeFromFileStartswith(getPath(sitename)+outputCompleteLogFileName, String.valueOf(report.getAnswerId()));
@@ -358,11 +358,16 @@ public class FileStorageService implements StorageService {
         FeedbackType oldFeedback = getFeedback(String.valueOf(report.getAnswerId()), sitename);
         String feedbackMessage = feedback.getFeedbackType().toString()+","+ reportLog;
         String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
+        String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
 
         try {
+            if(FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())) == null)
+                FileUtils.appendToFile(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())+",0");
+
             FileUtils.removeFromFile(getPath(sitename)+outputCSVLogFileName, oldFeedbackMessage);
             FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
             FileUtils.removeFromFile(getPath(sitename)+outputReportLogFileName, String.valueOf(report.getAnswerId()));
+            FileUtils.appendToFile(getPath(sitename)+outputFeedbackLogFileName, feedbackLog);
             return "Added feedback on "+report.getAnswerId();
         } catch (IOException e) {
             e.printStackTrace();
@@ -373,11 +378,26 @@ public class FileStorageService implements StorageService {
     public String invalidateFeedback(Feedback feedback, SavedReport report, String sitename) {
         String reportLog = getReportLog(report);
         FeedbackType oldFeedback = getFeedback(String.valueOf(report.getAnswerId()), sitename);
-        String feedbackMessage = feedback.getFeedbackType().toString()+","+ reportLog;
-        String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
-        String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
-
         try {
+            if(FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())) == null)
+                FileUtils.appendToFile(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())+",0");
+
+            String oldFeedbackLog = FileUtils.readLineFromFileStartswith(getPath(sitename)+outputFeedbackLogFileName,Integer.toString(report.getAnswerId()));
+            long oldUserId = Long.parseLong(oldFeedbackLog.split(",")[2]);
+
+            String feedbackMessage = feedback.getFeedbackType().toString()+","+ reportLog;
+            String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
+            String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
+
+            if (feedback.getUserId()!=oldUserId)  {
+                String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName, Long.toString(oldUserId));
+                int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) + 1;
+                FileUtils.removeFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName, Long.toString(oldUserId));
+                FileUtils.appendToFile(getPath(sitename)+outputBotUsersLogFileName, oldUserId+","+invalidateValue);
+                if (invalidateValue==6)
+                    FileUtils.appendToFile(blacklistedUsers, Long.toString(oldUserId));
+            }
+
             FileUtils.removeFromFile(getPath(sitename)+outputCSVLogFileName, oldFeedbackMessage);
             FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
             FileUtils.appendToFile(getPath(sitename)+outputFeedbackLogFileName, feedbackLog);
