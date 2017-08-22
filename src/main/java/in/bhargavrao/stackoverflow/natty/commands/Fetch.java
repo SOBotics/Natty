@@ -46,10 +46,7 @@ public class Fetch implements SpecialCommand {
     public void execute(Room room) {
 
         String data = CommandUtils.extractData(message.getPlainContent()).trim();
-
         StorageService service = new FileStorageService();
-
-
         try{
             List<String> lines = service.getReports(sitename);
             String returnString = String.join("; ", lines);

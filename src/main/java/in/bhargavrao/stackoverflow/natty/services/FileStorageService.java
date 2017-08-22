@@ -387,6 +387,17 @@ public class FileStorageService implements StorageService {
     }
 
     @Override
+    public String retrieveFeedback(String postId, String sitename) {
+        FeedbackType ft = getFeedback(postId, sitename);
+        try {
+            return FileUtils.readLineFromFileStartswith(getPath(sitename)+outputCSVLogFileName,ft.toString()+","+postId);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Some Error Occured";
+        }
+    }
+
+    @Override
     public String storeSentinelData(long postId, long sentinelId, String sitename) {
         try{
             FileUtils.appendToFile(getPath(sitename)+outputSentinelIdLogFileName,postId+","+sentinelId);
@@ -425,7 +436,7 @@ public class FileStorageService implements StorageService {
         String retStr = "";
         for (Reason reason: reasons){
 
-            if (reason.getSubReason().trim().equals(""))
+            if (reason.getSubReason()==null || reason.getSubReason().trim().equals(""))
                 retStr += reason.getReasonName() + ";";
             else
                 retStr += reason.getReasonName() + " - " + reason.getSubReason() + ";";

@@ -50,7 +50,7 @@ public class Send implements SpecialCommand {
             room.replyTo(message.getId(), feedbacks.length+" feedbacks, "+lines.size()+" reports");
             return;
         }
-        for(int i  =0 ;i<=feedbacks.length;i++){
+        for(int i  =0 ;i<feedbacks.length;i++){
             String feedback = feedbacks[i].toLowerCase();
             String line = lines.get(i);
             if(feedback.equals("t")) feedback = "tp";

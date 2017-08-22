@@ -89,14 +89,17 @@ public class PostUtils {
         if(postId!=-1) {
             long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
         }
-        String loggedLine = service.retrieveReport(answerId, sitename);
         FeedbackType feedbackType = service.getFeedback(answerId, sitename);
         Feedback feedback = new Feedback(user.getName(), user.getId(), getFeedbackTypeFromFeedback(type));
-        SavedReport report = getSavedReportFromLog(loggedLine);
-        if(feedbackType!=null) {
+
+        if(feedbackType==null) {
+            String loggedLine = service.retrieveReport(answerId, sitename);
+            SavedReport report = getSavedReportFromLog(loggedLine);
             service.saveFeedback(feedback, report, sitename);
         }
         else{
+            String loggedLine = service.retrieveFeedback(answerId, sitename);
+            SavedReport report = getSavedReportFromLog(loggedLine.replace(feedbackType.toString()+",",""));
             service.invalidateFeedback(feedback, report, sitename);
         }
     }
