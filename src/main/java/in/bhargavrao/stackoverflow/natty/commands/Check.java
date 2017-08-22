@@ -89,7 +89,6 @@ public class Check implements SpecialCommand {
             }
 
             String returnParams[] = getCheckData(word, returnValue);
-
             room.replyTo(message.getId(), returnParams[0]);
             if (!returnParams[1].equals(""))
                 room.send(returnParams[1]);
@@ -105,6 +104,10 @@ public class Check implements SpecialCommand {
         String[] returnParams;
         NattyService cc = new NattyService(sitename, siteurl);
         Post np = cc.checkPost(Integer.parseInt(word));
+
+        if (np==null)
+            return new String[]{"The post is either deleted or not retrievable from the IP.", ""};
+
         PostPrinter pp = new PostPrinter(np);
         pp.addQuesionLink();
 

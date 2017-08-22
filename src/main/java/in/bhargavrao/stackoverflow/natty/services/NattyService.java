@@ -4,15 +4,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import in.bhargavrao.stackoverflow.natty.model.Post;
-import in.bhargavrao.stackoverflow.natty.services.ApiService;
-import in.bhargavrao.stackoverflow.natty.utils.*;
+import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -86,7 +85,7 @@ public class NattyService {
 
     public Post checkPost(int answerId) throws IOException{
         JsonObject answerApiJson = apiService.getAnswerDetailsById(answerId);
-        if(answerApiJson.has("items")) {
+        if(answerApiJson.has("items") && answerApiJson.getAsJsonArray("items").size()!=0) {
             JsonObject answer = answerApiJson.getAsJsonArray("items").get(0).getAsJsonObject();
             int questionId = answer.get("question_id").getAsInt();
             JsonObject questionApiJson = apiService.getQuestionDetailsById(questionId);

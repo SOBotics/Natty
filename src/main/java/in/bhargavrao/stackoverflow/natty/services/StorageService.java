@@ -40,9 +40,11 @@ public interface StorageService {
 
 
     public String saveFeedback(Feedback feedback, SavedReport report, String sitename);
+    public String addFeedback(Feedback feedback, SavedReport report, String sitename);
     public String invalidateFeedback(Feedback feedback, SavedReport report, String sitename);
     public FeedbackType getFeedback(String postId, String sitename);
     public String retrieveFeedback(String postId, String sitename);
+    public String retrieveFeedbackUserLog(String postId, String sitename);
 
     public String getSentinelId(String postId, String sitename);
     public String storeSentinelData(long postId, long sentinelId, String sitename);

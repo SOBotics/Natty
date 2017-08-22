@@ -31,6 +31,7 @@ public class FileStorageService implements StorageService {
     private String outputReportLogFileName = "reports.txt";
     private String outputCompleteLogFileName = "fullReports.txt";
     private String outputSentinelIdLogFileName = "sentinelReports.txt";
+    private String outputFeedbackLogFileName = "feedback.txt";
 
 
     @Override
@@ -133,7 +134,7 @@ public class FileStorageService implements StorageService {
             List<String> lines = FileUtils.readFile(filename);
             for(String e:lines){
                 String pieces[] = e.split(",");
-                if((pieces[1].equals(tagname)||pieces[1].equals("all")) && Long.valueOf(pieces[3]).equals(Long.valueOf(roomId))){
+                if((pieces[1].equals(tagname)||pieces[1].equals("all")) && Long.valueOf(pieces[3]).equals(roomId)){
 
                     OptedInUser optedInUser = new OptedInUser();
 
@@ -320,7 +321,7 @@ public class FileStorageService implements StorageService {
             return FileUtils.readLineFromFileStartswith(getPath(sitename)+outputCompleteLogFileName,postId);
         } catch (IOException e) {
             e.printStackTrace();
-            return "Some Error Occured";
+            return null;
         }
     }
 
@@ -337,8 +338,10 @@ public class FileStorageService implements StorageService {
     @Override
     public String saveFeedback(Feedback feedback, SavedReport report, String sitename) {
         String feedbackMessage = feedback.getFeedbackType().toString()+","+getReportLog(report);
+        String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
         try {
             FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
+            FileUtils.appendToFile(getPath(sitename)+outputFeedbackLogFileName, feedbackLog);
             FileUtils.removeFromFileStartswith(getPath(sitename)+outputCompleteLogFileName, String.valueOf(report.getAnswerId()));
             FileUtils.removeFromFile(getPath(sitename)+outputReportLogFileName, String.valueOf(report.getAnswerId()));
             return  "Feedback saved successfully";
@@ -350,28 +353,43 @@ public class FileStorageService implements StorageService {
     }
 
     @Override
-    public String invalidateFeedback(Feedback feedback, SavedReport report, String sitename) {
+    public String addFeedback(Feedback feedback, SavedReport report, String sitename) {
         String reportLog = getReportLog(report);
         FeedbackType oldFeedback = getFeedback(String.valueOf(report.getAnswerId()), sitename);
         String feedbackMessage = feedback.getFeedbackType().toString()+","+ reportLog;
         String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
 
+        try {
+            FileUtils.removeFromFile(getPath(sitename)+outputCSVLogFileName, oldFeedbackMessage);
+            FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
+            FileUtils.removeFromFile(getPath(sitename)+outputReportLogFileName, String.valueOf(report.getAnswerId()));
+            return "Added feedback on "+report.getAnswerId();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Some Error Occurred";
+        }
+    }
+    @Override
+    public String invalidateFeedback(Feedback feedback, SavedReport report, String sitename) {
+        String reportLog = getReportLog(report);
+        FeedbackType oldFeedback = getFeedback(String.valueOf(report.getAnswerId()), sitename);
+        String feedbackMessage = feedback.getFeedbackType().toString()+","+ reportLog;
+        String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
+        String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
 
         try {
             FileUtils.removeFromFile(getPath(sitename)+outputCSVLogFileName, oldFeedbackMessage);
             FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
+            FileUtils.appendToFile(getPath(sitename)+outputFeedbackLogFileName, feedbackLog);
             return "Invalidated feedback on "+report.getAnswerId();
         } catch (IOException e) {
             e.printStackTrace();
             return "Some Error Occurred";
         }
-
-
     }
 
     @Override
     public FeedbackType getFeedback(String word, String sitename) {
-
         String outputCSVLogFile = getPath(sitename)+outputCSVLogFileName;
         try {
             for(FeedbackType type: FeedbackType.values()){
@@ -383,7 +401,6 @@ public class FileStorageService implements StorageService {
             e.printStackTrace();
             return null;
         }
-
     }
 
     @Override
@@ -393,7 +410,18 @@ public class FileStorageService implements StorageService {
             return FileUtils.readLineFromFileStartswith(getPath(sitename)+outputCSVLogFileName,ft.toString()+","+postId);
         } catch (IOException e) {
             e.printStackTrace();
-            return "Some Error Occured";
+            return null;
+        }
+    }
+
+    @Override
+    public String retrieveFeedbackUserLog(String postId, String sitename) {
+        String logFile = getPath(sitename)+outputFeedbackLogFileName;
+        try {
+            return FileUtils.readLastOccuranceOfLine(logFile, postId);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -405,7 +433,7 @@ public class FileStorageService implements StorageService {
         }
         catch (IOException e){
             e.printStackTrace();
-            return "Some Error Occured";
+            return null;
         }
     }
 

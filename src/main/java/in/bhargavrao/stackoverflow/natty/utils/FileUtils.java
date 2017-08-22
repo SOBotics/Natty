@@ -59,6 +59,18 @@ public class FileUtils {
         }
         return null;
     }
+
+    public static String readLastOccuranceOfLine(String filename, String message) throws IOException {
+        String requiredLine = null;
+        List<String> lines = readFile(filename);
+        for (String line:lines){
+            if(line.trim().toLowerCase().startsWith(message.trim().toLowerCase())){
+                requiredLine =  line.trim();
+            }
+        }
+        return requiredLine;
+    }
+
     public static void removeFromFileLine(String filename, int lineNumber) throws IOException{
         List<String> lines = readFile(filename);
         List<String> newLines = new ArrayList<>();

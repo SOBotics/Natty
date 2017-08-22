@@ -8,6 +8,7 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.commands.Check;
+import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
 import in.bhargavrao.stackoverflow.natty.filters.*;
 import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
@@ -79,7 +80,7 @@ public class PostUtils {
 
     }
 
-    public static void handleFeedback(User user, String type, String answerId, String sitename, String siteurl) {
+    public static void handleFeedback(User user, String type, String answerId, String sitename, String siteurl) throws FeedbackInvalidatedException {
         StorageService service = new FileStorageService();
         String sentinel = service.getSentinelId(answerId, sitename);
         long postId = -1;
@@ -89,18 +90,27 @@ public class PostUtils {
         if(postId!=-1) {
             long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
         }
-        FeedbackType feedbackType = service.getFeedback(answerId, sitename);
+        FeedbackType previousFeedbackType = service.getFeedback(answerId, sitename);
         Feedback feedback = new Feedback(user.getName(), user.getId(), getFeedbackTypeFromFeedback(type));
 
-        if(feedbackType==null) {
+        if(previousFeedbackType==null) {
             String loggedLine = service.retrieveReport(answerId, sitename);
             SavedReport report = getSavedReportFromLog(loggedLine);
             service.saveFeedback(feedback, report, sitename);
         }
+        else if (previousFeedbackType.equals(feedback.getFeedbackType())){
+            String loggedLine = service.retrieveFeedback(answerId, sitename);
+            SavedReport report = getSavedReportFromLog(loggedLine.replace(previousFeedbackType.toString()+",",""));
+            service.addFeedback(feedback, report, sitename);
+        }
         else{
             String loggedLine = service.retrieveFeedback(answerId, sitename);
-            SavedReport report = getSavedReportFromLog(loggedLine.replace(feedbackType.toString()+",",""));
+            String feedbackUserLog = service.retrieveFeedbackUserLog(answerId, sitename);
+            String feedbackSplit[] = feedbackUserLog.split(",");
+            Feedback previousFeedback = new Feedback(feedbackSplit[3], Long.parseLong(feedbackSplit[2]), previousFeedbackType);
+            SavedReport report = getSavedReportFromLog(loggedLine.replace(previousFeedbackType.toString()+",",""));
             service.invalidateFeedback(feedback, report, sitename);
+            throw new FeedbackInvalidatedException(previousFeedback, feedback);
         }
     }
 
@@ -244,7 +254,12 @@ public class PostUtils {
         Message repliedToMessage = room.getMessage(repliedTo);
         String message = repliedToMessage.getPlainContent().trim();
         String linkToPost = getPostIdFromMessage(message, siteurl);
-        handleFeedback(event.getMessage().getUser(), type, linkToPost, sitename, siteurl);
+        try {
+            handleFeedback(event.getMessage().getUser(), type, linkToPost, sitename, siteurl);
+        } catch (FeedbackInvalidatedException e) {
+            e.printStackTrace();
+            room.send(e.getMessage());
+        }
     }
 
     public static String getPostIdFromMessage(String message, String siteurl) {
