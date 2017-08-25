@@ -58,6 +58,9 @@ public class Send implements SpecialCommand {
             if(feedback.equals("f")) feedback = "fp";
             if(feedback.equals("n")) feedback = "ne";
 
+            if (feedback.equals("fp") && service.checkAutoFlag(Long.parseLong(line),sitename)){
+                room.send("False positive feedback on Autoflag, please retract @BhargavRao");
+            }
             if(feedback.equals("ne")||feedback.equals("tp")||feedback.equals("fp")) {
                 try {
                     PostUtils.handleFeedback(message.getUser(), feedback, line, sitename, siteurl);

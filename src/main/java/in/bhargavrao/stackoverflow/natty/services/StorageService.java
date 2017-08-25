@@ -50,4 +50,7 @@ public interface StorageService {
     public String storeSentinelData(long postId, long sentinelId, String sitename);
 
 
+    String addAutoFlag(long postId, String sitename);
+
+    boolean checkAutoFlag(long postId, String sitename);
 }

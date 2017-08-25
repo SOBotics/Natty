@@ -29,6 +29,7 @@ public class FileStorageService implements StorageService {
     private String outputSentinelIdLogFileName = "sentinelReports.txt";
     private String outputFeedbackLogFileName = "feedback.txt";
     private String outputBotUsersLogFileName = "botUsers.txt";
+    private String outputAutoFlagFileName = "autoflagged.txt";
 
 
     @Override
@@ -456,6 +457,31 @@ public class FileStorageService implements StorageService {
             return null;
         }
     }
+
+    @Override
+    public String addAutoFlag(long postId, String sitename) {
+        try{
+            FileUtils.appendToFile(getPath(sitename)+outputAutoFlagFileName, String.valueOf(postId));
+            return "Stored Successfully";
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean checkAutoFlag(long postId, String sitename) {
+        try{
+            return FileUtils.checkIfInFile(getPath(sitename)+outputAutoFlagFileName, String.valueOf(postId));
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
     private String getOptMessageFromUser(OptedInUser user){
 

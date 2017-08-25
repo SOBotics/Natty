@@ -255,6 +255,10 @@ public class PostUtils {
         Message repliedToMessage = room.getMessage(repliedTo);
         String message = repliedToMessage.getPlainContent().trim();
         String linkToPost = getPostIdFromMessage(message, siteurl);
+        StorageService service = new FileStorageService();
+        if (type.equals("fp") && service.checkAutoFlag(Long.parseLong(linkToPost),sitename)){
+            room.send("False positive feedback on Autoflag, please retract @BhargavRao");
+        }
         try {
             handleFeedback(event.getMessage().getUser(), type, linkToPost, sitename, siteurl);
         } catch (FeedbackInvalidatedException e) {
@@ -399,7 +403,8 @@ public class PostUtils {
                             return "Post Flagged Automatically - Added [comment](//stackoverflow.com/posts/comments/" + commentId + "): " + comment.getIdentifier();
                             //return "Post Flagged Automatically - would add comment: "+comment.getIdentifier();
                         }
-
+                        StorageService service = new FileStorageService();
+                        service.addAutoFlag(post.getAnswerID(), sitename);
                         return "Post Flagged Automatically";
                     }
                 }
