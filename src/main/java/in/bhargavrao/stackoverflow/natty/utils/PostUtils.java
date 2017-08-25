@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
+import fr.tunaki.stackoverflow.chat.event.MessagePostedEvent;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.commands.Check;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
@@ -268,6 +269,17 @@ public class PostUtils {
     }
 
 
+    public static void newMessage(Room room, MessagePostedEvent event, boolean b) {
+        String message = event.getMessage().getPlainContent();
+        int cp = Character.codePointAt(message, 0);
+        if(message.trim().startsWith("@bots alive")){
+            room.send("Whadya think?");
+        }
+        else if (cp == 128642 || (cp>=128644 && cp<=128650)){
+            room.send("\uD83D\uDE83");
+        }
+    }
+
     public static void reply(Room room, PingMessageEvent event, String sitename, String siteurl, boolean isReply){
         Message message = event.getMessage();
 		System.out.println(message.getContent());
@@ -286,6 +298,11 @@ public class PostUtils {
         if (CommandUtils.checkForCommand(message.getContent(),"fp") ||
                 CommandUtils.checkForCommand(message.getContent(),"f")){
             store(room, event, "fp", sitename, siteurl);
+        }
+        if (CommandUtils.checkForCommand(message.getContent(),"delete") ||
+                CommandUtils.checkForCommand(message.getContent(),"remove")){
+            long repliedTo = event.getParentMessageId();
+            room.delete(repliedTo);
         }
         if (CommandUtils.checkForCommand(message.getContent(),"why")){
             long repliedTo = event.getParentMessageId();

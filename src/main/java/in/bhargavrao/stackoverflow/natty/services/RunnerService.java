@@ -19,6 +19,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static in.bhargavrao.stackoverflow.natty.utils.PostUtils.newMessage;
+
 /**
  * Created by bhargav.h on 28-Dec-16.
  */
@@ -57,7 +59,9 @@ public class RunnerService {
             if(room.getRoomId()==111347){
             	//check if Natty is running on the server
             	PropertyService service  = new PropertyService();
-            	
+
+                Room finalChatroom = chatroom;
+                chatroom.addEventListener(EventType.MESSAGE_POSTED, event-> newMessage(finalChatroom, event, false));
                 if (service.getLocation().equals("server")) {
                 	chatroom.send("Hiya o/ (SERVER VERSION)" );
                     FeederService feederService = new FeederService("*Buys food, but feeds no one. I'm hungry too*",chatroom,8);
@@ -68,7 +72,6 @@ public class RunnerService {
                     cleanerService.start();
                     MentionService mentionService = new MentionService(chatroom);
                     mentionService.start();
-
                 } else {
                 	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+service.getLocation()+")" );
                 }
