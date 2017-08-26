@@ -96,7 +96,7 @@ public class NewBlacklistedFilter implements Filter {
 
     @Override
     public String description() {
-        return "IntelliBL - "+ (2.0 - value);
+        return "IntelliBL - "+ (value - 2.0);
     }
 
 }

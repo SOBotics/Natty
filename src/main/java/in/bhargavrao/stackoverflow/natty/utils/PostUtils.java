@@ -226,7 +226,7 @@ public class PostUtils {
     @NotNull
     private static String getSentinelAuth(String sitename) {
         PropertyService propertyService = new PropertyService();
-        return  propertyService.getSentinelApiKey();
+        return  propertyService.getSentinelKey();
     }
 
     public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type, String sitename, String siteurl){

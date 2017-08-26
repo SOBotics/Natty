@@ -57,6 +57,10 @@ public class PropertyService {
         return prop.getProperty("location");
     }
 
+    public String getSentinelKey(){
+        return prop.getProperty("sentinelKey");
+    }
+
     public String getSentinelApiKey(){
         return prop.getProperty("sentinelApiKey");
     }
