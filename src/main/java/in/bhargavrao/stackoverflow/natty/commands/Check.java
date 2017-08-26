@@ -111,7 +111,7 @@ public class Check implements SpecialCommand {
         PostPrinter pp = new PostPrinter(np);
         pp.addQuesionLink();
 
-        PostReport report = PostUtils.getNaaValue(np);
+        PostReport report = PostUtils.getNaaValue(np, sitename);
 
         Double found = report.getNaaValue();
         List<String> caughtFilters = report.getCaughtFor();

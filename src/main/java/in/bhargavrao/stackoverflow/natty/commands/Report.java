@@ -80,7 +80,7 @@ public class Report implements SpecialCommand {
                     if(validator.validate(np)) {
 
                         User user = message.getUser();
-                        PostReport report = PostUtils.getNaaValue(np);
+                        PostReport report = PostUtils.getNaaValue(np, siteName);
                         FeedbackType feedback_type = FeedbackType.TRUE_NEGATIVE;
 
                         if (report.getNaaValue()>naaLimit)

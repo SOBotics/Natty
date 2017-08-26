@@ -30,7 +30,7 @@ public class Runner {
             for (Post np : posts) {
 
                 List<OptedInUser> pingUsersList = userService.pingUserIfApplicable(np);
-                PostReport report = PostUtils.getNaaValue(np);
+                PostReport report = PostUtils.getNaaValue(np, sitename);
 
 
                 if (validator.validate(np)){

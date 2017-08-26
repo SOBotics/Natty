@@ -116,10 +116,29 @@ public class PostUtils {
     }
 
 
-    public static PostReport getNaaValue(Post np) {
+
+    public static PostReport getNaaValue(Post np, String sitename) {
         Double f = 0.0;
 
-        List<Filter> filters = new ArrayList<Filter>(){{
+        List<Filter> filters = getFiltersForSite(np, sitename);
+
+        List<String> caughtFor = new ArrayList<>();
+        List<Double> caughtNaa = new ArrayList<>();
+
+        for(Filter filter: filters){
+            if(filter.filter()){
+                f+=filter.getValue();
+                caughtFor.add(filter.description());
+                caughtNaa.add(filter.getValue());
+            }
+        }
+
+        return new PostReport(np,f,caughtFor,caughtNaa);
+    }
+
+    @NotNull
+    private static List<Filter> getFiltersForSite(Post np, String sitename) {
+        ArrayList<Filter> filters = new ArrayList<Filter>() {{
             add(new BlacklistedFilter(np));
             add(new ContainsQMFilter(np));
             add(new EndsWithQmFilter(np));
@@ -140,19 +159,7 @@ public class PostUtils {
             add(new WhitelistedFilter(np));
             add(new NewBlacklistedFilter(np));
         }};
-
-        List<String> caughtFor = new ArrayList<>();
-        List<Double> caughtNaa = new ArrayList<>();
-
-        for(Filter filter: filters){
-            if(filter.filter()){
-                f+=filter.getValue();
-                caughtFor.add(filter.description());
-                caughtNaa.add(filter.getValue());
-            }
-        }
-
-        return new PostReport(np,f,caughtFor,caughtNaa);
+        return filters;
     }
 
     public static String addFMS(PostReport report){
