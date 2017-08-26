@@ -4,7 +4,7 @@
 [Natty](http://stackapps.com/questions/7049/natty-bringing-10k-moderation-to-all) 
 ---
 
-#General
+# General
 
 **Background and History**
 
@@ -14,7 +14,7 @@ The [New Answers to Old Questions](http://stackoverflow.com/tools/new-answers-ol
 
 This project aims to not only overcome the *"not real time"* issue but also help those users below 10,000 reputation to take a look and moderate the answers.
 
-#Implementation
+# Implementation
 
 The Bot queries the [Stack Exchange API](https://api.stackexchange.com/docs/answers) once in every 30 seconds to get the list of the latest answers. The `question_id` from each of the answer is taken and the [Stack Exchange API](https://api.stackexchange.com/docs/questions-by-ids) is again queried for the list of posts with those IDs. Every answer that is posted after 30 days of the question is considered as a new answer to a old question and is returned by the Bot. 
 
@@ -60,4 +60,8 @@ The future works about this include
   The Project is running in the [SOBotics](http://chat.stackoverflow.com/rooms/111347/sobotics) room. A sample image of a report is 
   
   ![Sample Image](http://i.stack.imgur.com/gyfzD.png)
-  
+
+
+ -----------------------
+ 
+ More stuff to read - [Natty Docs](http://natty.sobotics.org) 
