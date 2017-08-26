@@ -6,17 +6,20 @@ import fr.tunaki.stackoverflow.chat.event.EventType;
 import in.bhargavrao.stackoverflow.natty.clients.Runner;
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.roomdata.BotRoom;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllAnswersValidator;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import static in.bhargavrao.stackoverflow.natty.utils.PostUtils.newMessage;
 
 /**
  * Created by bhargav.h on 28-Dec-16.
@@ -54,19 +57,18 @@ public class RunnerService {
             }
 
             if(room.getRoomId()==111347){
-            	//check if Natty is running on the server
-            	Properties prop = new Properties();
+                //check if Natty is running on the server
+                PropertyService service  = new PropertyService();
 
-                try{
-                    prop.load(new FileInputStream(FilePathUtils.loginPropertiesFile));
-                }
-                catch (IOException e){
-                    e.printStackTrace();
-                }
-            	
-                if (prop.getProperty("location").equals("server")) {
-                	  chatroom.send("Hiya o/ (SERVER VERSION)" );
-                    FeederService feederService = new FeederService("*Feeds Kyll*",chatroom,8);
+                Room finalChatroom = chatroom;
+                chatroom.addEventListener(EventType.MESSAGE_POSTED, event-> newMessage(finalChatroom, event, false));
+
+                BlacklistDataService blacklistDataService = new BlacklistDataService(finalChatroom);
+                blacklistDataService.start();
+
+                if (service.getLocation().equals("server")) {
+                    chatroom.send("Hiya o/ (SERVER VERSION)" );
+                    FeederService feederService = new FeederService("*Buys food, but feeds no one. I'm hungry too*",chatroom,8);
                     feederService.start();
                     SelfCheckService selfCheck = new SelfCheckService(this);
                     selfCheck.start();
@@ -75,12 +77,12 @@ public class RunnerService {
                     MentionService mentionService = new MentionService(chatroom);
                     mentionService.start();
                 } else {
-                	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
+                    chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+service.getLocation()+")" );
                 }
+
             }
 
-            BlacklistDataService blacklistService = new BlacklistDataService(chatroom);
-            blacklistService.start();
+
 
             chatRooms.add(chatroom);
             if(room.getMention(chatroom,this)!=null)
