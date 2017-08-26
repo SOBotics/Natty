@@ -138,6 +138,7 @@ public class PostUtils {
             add(new UserMentionedFilter(np));
             add(new VeryLongWordFilter(np));
             add(new WhitelistedFilter(np));
+            add(new NewBlacklistedFilter(np));
         }};
 
         List<String> caughtFor = new ArrayList<>();
@@ -224,11 +225,8 @@ public class PostUtils {
 
     @NotNull
     private static String getSentinelAuth(String sitename) {
-//        if (sitename.equals("stackoverflow"))
-//            return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
-//        else if (sitename.equals("askubuntu"))
-//            return "3eddced9a0db7e1e8293c256a2887ef4bfd6c6a259233b18d4df24e12285de8b";
-        return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
+        PropertyService propertyService = new PropertyService();
+        return  propertyService.getSentinelKey();
     }
 
     public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type, String sitename, String siteurl){

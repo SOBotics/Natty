@@ -57,13 +57,17 @@ public class RunnerService {
             }
 
             if(room.getRoomId()==111347){
-            	//check if Natty is running on the server
-            	PropertyService service  = new PropertyService();
+                //check if Natty is running on the server
+                PropertyService service  = new PropertyService();
 
                 Room finalChatroom = chatroom;
                 chatroom.addEventListener(EventType.MESSAGE_POSTED, event-> newMessage(finalChatroom, event, false));
+
+                BlacklistDataService blacklistDataService = new BlacklistDataService(finalChatroom);
+                blacklistDataService.start();
+
                 if (service.getLocation().equals("server")) {
-                	chatroom.send("Hiya o/ (SERVER VERSION)" );
+                    chatroom.send("Hiya o/ (SERVER VERSION)" );
                     FeederService feederService = new FeederService("*Buys food, but feeds no one. I'm hungry too*",chatroom,8);
                     feederService.start();
                     SelfCheckService selfCheck = new SelfCheckService(this);
@@ -73,10 +77,12 @@ public class RunnerService {
                     MentionService mentionService = new MentionService(chatroom);
                     mentionService.start();
                 } else {
-                	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+service.getLocation()+")" );
+                    chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+service.getLocation()+")" );
                 }
 
             }
+
+
 
             chatRooms.add(chatroom);
             if(room.getMention(chatroom,this)!=null)

@@ -49,8 +49,9 @@ public interface StorageService {
     public String getSentinelId(String postId, String sitename);
     public String storeSentinelData(long postId, long sentinelId, String sitename);
 
+    public String getIntelligentBlacklistJson();
+    public String addIntelligentBlacklistJson(String json);
 
     String addAutoFlag(long postId, String sitename);
-
     boolean checkAutoFlag(long postId, String sitename);
 }
