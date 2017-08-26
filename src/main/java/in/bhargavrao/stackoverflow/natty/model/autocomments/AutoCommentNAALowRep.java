@@ -1,4 +1,4 @@
-package in.bhargavrao.stackoverflow.natty.entities.autocomments;
+package in.bhargavrao.stackoverflow.natty.model.autocomments;
 
 public class AutoCommentNAALowRep implements AutoComment {
 

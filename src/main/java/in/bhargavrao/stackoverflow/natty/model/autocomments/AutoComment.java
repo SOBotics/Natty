@@ -1,4 +1,4 @@
-package in.bhargavrao.stackoverflow.natty.entities.autocomments;
+package in.bhargavrao.stackoverflow.natty.model.autocomments;
 
 /**
  * This represents a comment, that is automatically posted by Natty.

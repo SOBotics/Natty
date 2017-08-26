@@ -1,4 +1,4 @@
-package in.bhargavrao.stackoverflow.natty.entities;
+package in.bhargavrao.stackoverflow.natty.model;
 
 import com.google.gson.JsonObject;
 
@@ -7,9 +7,19 @@ import com.google.gson.JsonObject;
  */
 public class SOUser {
     private String username;
-    private int userId;
+    private long userId;
     private long reputation;
     private String userType;
+
+    public SOUser(String username, long userId, long reputation, String userType) {
+        this.username = username;
+        this.userId = userId;
+        this.reputation = reputation;
+        this.userType = userType;
+    }
+
+    public SOUser() {
+    }
 
     public String getUsername() {
         return username;
@@ -19,11 +29,11 @@ public class SOUser {
         this.username = username;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

@@ -2,6 +2,9 @@ package in.bhargavrao.stackoverflow.natty.commands;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 
@@ -42,8 +45,18 @@ public class Feedback implements SpecialCommand {
             word = CommandUtils.getAnswerId(word);
         }
 
+
+        StorageService service = new FileStorageService();
+        if (type.equals("fp") && service.checkAutoFlag(Long.parseLong(word),sitename)){
+            room.send("False positive feedback on Autoflag, please retract @BhargavRao");
+        }
+
         if(type.equals("tp")||type.equals("fp")||type.equals("ne")||type.equals("t")||type.equals("f")||type.equals("n")) {
-            PostUtils.handleFeedback(message.getUser(), type, word, sitename, siteurl);
+            try {
+                PostUtils.handleFeedback(message.getUser(), type, word, sitename, siteurl);
+            } catch (FeedbackInvalidatedException e) {
+                room.send(e.getMessage());
+            }
         }
         else{
             room.send("Wrong feedback type");

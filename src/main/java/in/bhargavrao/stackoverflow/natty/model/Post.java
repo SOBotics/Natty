@@ -1,6 +1,7 @@
-package in.bhargavrao.stackoverflow.natty.entities;
+package in.bhargavrao.stackoverflow.natty.model;
 
 import com.google.gson.JsonObject;
+import in.bhargavrao.stackoverflow.natty.model.SOUser;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;

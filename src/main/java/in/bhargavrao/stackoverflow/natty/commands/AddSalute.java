@@ -1,12 +1,11 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.io.IOException;
-
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.model.ListType;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -26,18 +25,9 @@ public class AddSalute implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        try {
-            String filename = FilePathUtils.salutationsFile;
-            String data = CommandUtils.extractData(message.getPlainContent());
-            if (FileUtils.checkIfInFile(filename, data))
-                room.replyTo(message.getId(), "Already added as Salute");
-            FileUtils.appendToFile(filename,data);
-            room.replyTo(message.getId(),"Added Salute successfully");
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            room.replyTo(message.getId(), "Error occured, Try again");
-        }
+        String data = CommandUtils.extractData(message.getPlainContent());
+        StorageService service = new FileStorageService();
+        room.replyTo(message.getId(),service.listWord(data, ListType.SALUTE));
     }
 
     @Override

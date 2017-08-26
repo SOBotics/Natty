@@ -36,7 +36,7 @@ public class JsonUtils {
     public static void handleBackoff(JsonObject root) {
         if (root.has("backoff")) {
             int backoff = root.get("backoff").getAsInt();
-            System.out.println("Backing off " + backoff);
+            System.out.println("Backing off for " + backoff+ " seconds. Quota left "+root.get("quota_remaining").getAsString());
             try {
                 Thread.sleep(1000 * backoff);
             } catch (InterruptedException e) {

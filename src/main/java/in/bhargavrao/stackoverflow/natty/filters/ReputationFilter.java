@@ -1,7 +1,7 @@
 package in.bhargavrao.stackoverflow.natty.filters;
 
 
-import in.bhargavrao.stackoverflow.natty.entities.Post;
+import in.bhargavrao.stackoverflow.natty.model.Post;
 
 /**
  * Created by bhargav.h on 12-Oct-16.

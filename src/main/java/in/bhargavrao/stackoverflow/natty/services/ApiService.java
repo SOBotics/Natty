@@ -1,16 +1,12 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
-import java.io.FileInputStream;
+import com.google.gson.JsonObject;
+import in.bhargavrao.stackoverflow.natty.utils.ApiUtils;
+import in.bhargavrao.stackoverflow.natty.utils.JsonUtils;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
-import java.util.Properties;
-
-import com.google.gson.JsonObject;
-
-import in.bhargavrao.stackoverflow.natty.utils.ApiUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.JsonUtils;
 
 /**
  * Created by bhargav.h on 29-Sep-16.
@@ -26,21 +22,14 @@ public class ApiService {
     private static int quota=0;
 
     public ApiService(String site){
-        Properties prop = new Properties();
 
-        try{
-            prop.load(new FileInputStream(FilePathUtils.loginPropertiesFile));
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
+        PropertyService service = new PropertyService();
 
         this.site = site;
-        this.apiKey = prop.getProperty("apikey");
-        this.autoflagKey = prop.getProperty("autoflagkey");
-        this.autoflagToken = prop.getProperty("autoflagtoken");
-        this.userId = prop.getProperty("userid");
-
+        this.apiKey = service.getApiKey();
+        this.autoflagKey = service.getAutoFlagKey();
+        this.autoflagToken = service.getAutoFlagToken();
+        this.userId = service.getUserId();
 
     }
 

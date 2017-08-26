@@ -1,19 +1,17 @@
-package in.bhargavrao.stackoverflow.natty.entities;
+package in.bhargavrao.stackoverflow.natty.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import in.bhargavrao.stackoverflow.natty.services.ApiService;
-import in.bhargavrao.stackoverflow.natty.utils.*;
+import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -23,7 +21,7 @@ import java.util.stream.StreamSupport;
 /**
  * Created by bhargav.h on 10-Sep-16.
  */
-public class Natty {
+public class NattyService {
 
 
     private Instant previousAnswerTimestamp;
@@ -31,7 +29,7 @@ public class Natty {
     private String siteName;
     private String siteUrl;
 
-    public Natty(String sitename, String siteurl) {
+    public NattyService(String sitename, String siteurl) {
         previousAnswerTimestamp = Instant.now().minusSeconds(60);
         apiService = new ApiService(sitename);
         this.siteName = sitename;
@@ -87,7 +85,7 @@ public class Natty {
 
     public Post checkPost(int answerId) throws IOException{
         JsonObject answerApiJson = apiService.getAnswerDetailsById(answerId);
-        if(answerApiJson.has("items")) {
+        if(answerApiJson.has("items") && answerApiJson.getAsJsonArray("items").size()!=0) {
             JsonObject answer = answerApiJson.getAsJsonArray("items").get(0).getAsJsonObject();
             int questionId = answer.get("question_id").getAsInt();
             JsonObject questionApiJson = apiService.getQuestionDetailsById(questionId);

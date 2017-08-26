@@ -1,15 +1,14 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.io.IOException;
-
-import org.apache.commons.lang.StringUtils;
-
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
+import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
+import in.bhargavrao.stackoverflow.natty.model.SOUser;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -32,7 +31,7 @@ public class OptIn implements SpecialCommand {
     	User user = message.getUser();
         long userId = user.getId();
         String userName = user.getName();
-        String filename = FilePathUtils.optedUsersFile;
+        int reputation = user.getReputation();
 
         String data = CommandUtils.extractData(message.getPlainContent()).trim();
 
@@ -50,22 +49,17 @@ public class OptIn implements SpecialCommand {
                 tag = StringUtils.substringBetween(message.getPlainContent(),"[","]");
             }
             if(postType.equals("all") || postType.equals("naa")){
-                String optMessage = userId+","+tag+",\""+userName+"\""+","+room.getRoomId()+","+postType+","+whenInRoom;
-                try
-                {
-                    if(FileUtils.checkIfInFile(filename,optMessage)){
-                        room.replyTo(message.getId(), "You've already been added.");
-                    }
-                    else {
-                        FileUtils.appendToFile(filename, optMessage);
-                        System.out.println("Added user");
-                        room.replyTo(message.getId(), "You've been added.");
-                    }
-                }
-                catch(IOException e)
-                {
-                    System.out.println("File not found");
-                }
+
+                OptedInUser optedInUser = new OptedInUser();
+                optedInUser.setPostType(postType);
+                optedInUser.setRoomId(room.getRoomId());
+                optedInUser.setUser(new SOUser(userName,userId,reputation,null));
+                optedInUser.setTagname(tag);
+                optedInUser.setWhenInRoom(whenInRoom);
+
+                StorageService service = new FileStorageService();
+                service.addOptedInUser(optedInUser);
+
             }
             else {
                 room.replyTo(message.getId(), "Type of post can be naa or all");

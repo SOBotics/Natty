@@ -1,4 +1,6 @@
-package in.bhargavrao.stackoverflow.natty.entities;
+package in.bhargavrao.stackoverflow.natty.model;
+
+import in.bhargavrao.stackoverflow.natty.model.Post;
 
 import java.util.List;
 

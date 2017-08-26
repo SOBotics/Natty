@@ -1,21 +1,21 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.io.IOException;
-import java.util.List;
-
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import in.bhargavrao.stackoverflow.natty.entities.autocomments.*;
-import in.bhargavrao.stackoverflow.natty.entities.Natty;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
+import in.bhargavrao.stackoverflow.natty.exceptions.NoSuchUserFoundException;
+import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.model.PostReport;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.NattyService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.AutoCommentUtils;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
-import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -41,10 +41,15 @@ public class Check implements SpecialCommand {
     public void execute(Room room) {
         try {
 
-            String filename = FilePathUtils.checkUsers;
+
+            StorageService service = new FileStorageService();
+
             String word = CommandUtils.extractData(message.getPlainContent()).trim();
+
+            // TO CHECK FOR OTHER OPTIONS
+
             Integer returnValue = 0;
-            
+
             if(word.contains(" ")){
                 String parts[] = word.split(" ");
                 if(parts[0].toLowerCase().equals("value")){
@@ -56,15 +61,21 @@ public class Check implements SpecialCommand {
                     word = parts[1];
                 }
             }
+
+
+
             if(word.contains("/"))
-            {            	
+            {
                 String parts[]= word.split("//")[1].split("/");
+
+                // FOR USERS
+
                 if(parts[1].equals("users")){
-                    for(String line: FileUtils.readFile(filename)){
-                        String users[] = line.split(",");
-                        if(parts[2].equals(users[0])){
-                            room.replyTo(message.getId(), users[1]);
-                        }
+                    try {
+                        room.replyTo(message.getId(), service.checkUsers(Integer.parseInt(parts[2]),"stackoverflow"));
+                        // TODO: Implement for other sites.
+                    } catch (NoSuchUserFoundException e) {
+                        room.replyTo(message.getId(), "Sorry, you ain't *that* famous.");
                     }
                 }
                 else {
@@ -78,7 +89,6 @@ public class Check implements SpecialCommand {
             }
 
             String returnParams[] = getCheckData(word, returnValue);
-
             room.replyTo(message.getId(), returnParams[0]);
             if (!returnParams[1].equals(""))
                 room.send(returnParams[1]);
@@ -92,8 +102,12 @@ public class Check implements SpecialCommand {
 
     public String[] getCheckData(String word, Integer returnValue) throws IOException {
         String[] returnParams;
-        Natty cc = new Natty(sitename, siteurl);
+        NattyService cc = new NattyService(sitename, siteurl);
         Post np = cc.checkPost(Integer.parseInt(word));
+
+        if (np==null)
+            return new String[]{"The post is either deleted or not retrievable from the IP.", ""};
+
         PostPrinter pp = new PostPrinter(np);
         pp.addQuesionLink();
 

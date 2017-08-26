@@ -2,7 +2,9 @@ package in.bhargavrao.stackoverflow.natty.commands;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
-import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
+import in.bhargavrao.stackoverflow.natty.model.ListType;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 
 /**
@@ -23,7 +25,8 @@ public class IsWhitelisted implements SpecialCommand {
     @Override
     public void execute(Room room) {
         String word = CommandUtils.extractData(message.getPlainContent());
-        room.replyTo(message.getId(), CheckUtils.checkIfWhiteListed(word)?"The word is whitelisted":"The word is not whitelisted");
+        StorageService service = new FileStorageService();
+        room.replyTo(message.getId(), service.checkListWord(word, ListType.WHITELIST)?"The word is whitelisted":"The word is not whitelisted");
     }
 
     @Override

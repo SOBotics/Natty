@@ -2,8 +2,10 @@ package in.bhargavrao.stackoverflow.natty.commands;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.model.ListType;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
@@ -23,11 +25,9 @@ public class RemoveBlackList implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-
-        String filename = FilePathUtils.blacklistFile;
-        String data = CommandUtils.extractData(message.getPlainContent()).trim();
-        room.replyTo(message.getId(), CommandUtils.checkAndRemoveMessage(filename,data));
-
+        String data = CommandUtils.extractData(message.getPlainContent());
+        StorageService service = new FileStorageService();
+        room.replyTo(message.getId(),service.unListWord(data, ListType.BLACKLIST));
     }
 
     @Override
