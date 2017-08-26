@@ -1,19 +1,18 @@
 package in.bhargavrao.stackoverflow.natty.commandlists;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import in.bhargavrao.stackoverflow.natty.commands.*;
-import in.bhargavrao.stackoverflow.natty.services.RunnerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import in.bhargavrao.stackoverflow.natty.commands.*;
+import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by bhargav.h on 28-Oct-16.
@@ -54,7 +53,7 @@ public class SoBoticsCommandsList {
             new Say(message),
             new Send(message, sitename, siteurl),
             new ShowRequests(message),
-            new Status(message),
+            new Status(message, sitename, siteurl),
             new Whitelist(message),
             new WishBirthday(message)
         ));
