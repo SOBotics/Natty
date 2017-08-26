@@ -8,7 +8,6 @@ import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.roomdata.BotRoom;
 import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllAnswersValidator;
-import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -75,12 +74,13 @@ public class RunnerService {
                     cleanerService.start();
                     MentionService mentionService = new MentionService(chatroom);
                     mentionService.start();
-                    BlacklistDataService blacklistService = new BlacklistDataService(chatroom);
-                    blacklistService.start();
                 } else {
                 	chatroom.send("Hiya o/ (DEVELOPMENT VERSION; "+prop.getProperty("location")+")" );
                 }
             }
+
+            BlacklistDataService blacklistService = new BlacklistDataService(chatroom);
+            blacklistService.start();
 
             chatRooms.add(chatroom);
             if(room.getMention(chatroom,this)!=null)

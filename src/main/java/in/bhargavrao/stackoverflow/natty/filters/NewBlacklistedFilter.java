@@ -1,18 +1,13 @@
 package in.bhargavrao.stackoverflow.natty.filters;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSerializer;
-
 import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 
 public class NewBlacklistedFilter implements Filter {
 
@@ -37,13 +32,8 @@ public class NewBlacklistedFilter implements Filter {
             //System.out.println(this.listedWord + " is blackisted");
             
             //calculate the value
-            String jsonString;
-            try {
-            	jsonString = new String(Files.readAllBytes(Paths.get(FilePathUtils.intelligentBlacklistFile)));
-            } catch (Throwable e) {
-            	e.printStackTrace();
-            	return false;
-            }
+            StorageService service = new FileStorageService();
+            String jsonString = service.getIntelligentBlacklistJson();
                         
             JsonParser parser = new JsonParser();
             
@@ -101,12 +91,12 @@ public class NewBlacklistedFilter implements Filter {
 
 	@Override
     public double getValue() {
-        return value;
+        return 0;
     }
 
     @Override
     public String description() {
-        return "Contains Blacklisted Word - "+listedWord;
+        return "IntelliBL - "+ (2.0 - value);
     }
 
 }

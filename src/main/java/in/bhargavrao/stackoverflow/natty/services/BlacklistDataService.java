@@ -1,24 +1,15 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
+import fr.tunaki.stackoverflow.chat.Room;
+import fr.tunaki.stackoverflow.chat.StackExchangeClient;
+
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.StackExchangeClient;
-import in.bhargavrao.stackoverflow.natty.roomdata.BotRoom;
-import in.bhargavrao.stackoverflow.natty.utils.FilePathUtils;
 
 public class BlacklistDataService {
 	private StackExchangeClient client;
@@ -46,16 +37,10 @@ public class BlacklistDataService {
     }
     
     private void execute() throws Throwable {
-    	Properties prop = new Properties();
 
-        try{
-            prop.load(new FileInputStream(FilePathUtils.loginPropertiesFile));
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
+        PropertyService propertyService = new PropertyService();
         
-        String apiKey = prop.getProperty("sentinel_apikey", "");
+        String apiKey = propertyService.getSentinelApiKey();
         if (apiKey.length() == 0)
         	return;
         
@@ -76,7 +61,8 @@ public class BlacklistDataService {
         
         String responseString = response.toString();
         
-        Files.write(Paths.get(FilePathUtils.intelligentBlacklistFile), responseString.getBytes());
+        StorageService service = new FileStorageService();
+        service.addIntelligentBlacklistJson(responseString);
         
     }
     

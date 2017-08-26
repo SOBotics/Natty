@@ -22,6 +22,7 @@ public class FileStorageService implements StorageService {
     private String featureRequests = "./data/FeatureRequests.txt";
     private String checkUsers = "./data/CheckUsers.txt";
     private String blacklistedUsers = "./data/BlackListedUsers.txt";
+    private String intelligentBlacklist = "./data/IntelligentBlacklist.json";
 
     private String outputCSVLogFileName = "output.csv";
     private String outputReportLogFileName = "reports.txt";
@@ -30,6 +31,7 @@ public class FileStorageService implements StorageService {
     private String outputFeedbackLogFileName = "feedback.txt";
     private String outputBotUsersLogFileName = "botUsers.txt";
     private String outputAutoFlagFileName = "autoflagged.txt";
+
 
 
     @Override
@@ -481,7 +483,27 @@ public class FileStorageService implements StorageService {
         }
     }
 
+    @Override
+    public String getIntelligentBlacklistJson() {
+        try {
+            return String.join(" ",FileUtils.readFile(intelligentBlacklist));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    @Override
+    public String addIntelligentBlacklistJson(String json) {
+        try {
+            FileUtils.removeFromFile(intelligentBlacklist, getIntelligentBlacklistJson());
+            FileUtils.appendToFile(intelligentBlacklist, json);
+            return "Stored successfully";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Some error occurred";
+        }
+    }
 
     private String getOptMessageFromUser(OptedInUser user){
 

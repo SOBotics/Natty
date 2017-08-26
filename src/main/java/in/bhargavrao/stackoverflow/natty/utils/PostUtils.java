@@ -25,38 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import fr.tunaki.stackoverflow.chat.Message;
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.User;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
-import in.bhargavrao.stackoverflow.natty.commands.Check;
-import in.bhargavrao.stackoverflow.natty.filters.BlacklistedFilter;
-import in.bhargavrao.stackoverflow.natty.filters.ContainsQMFilter;
-import in.bhargavrao.stackoverflow.natty.filters.EndsWithQmFilter;
-import in.bhargavrao.stackoverflow.natty.filters.Filter;
-import in.bhargavrao.stackoverflow.natty.filters.LengthFilter;
-import in.bhargavrao.stackoverflow.natty.filters.LinkOnlyAnswerFilter;
-import in.bhargavrao.stackoverflow.natty.filters.NewBlacklistedFilter;
-import in.bhargavrao.stackoverflow.natty.filters.NoCodeBlockFilter;
-import in.bhargavrao.stackoverflow.natty.filters.NonEnglishFilter;
-import in.bhargavrao.stackoverflow.natty.filters.OneLineFilter;
-import in.bhargavrao.stackoverflow.natty.filters.PiledSymbolsFilter;
-import in.bhargavrao.stackoverflow.natty.filters.ReputationFilter;
-import in.bhargavrao.stackoverflow.natty.filters.SalutationsFilter;
-import in.bhargavrao.stackoverflow.natty.filters.SelfAnswerFilter;
-import in.bhargavrao.stackoverflow.natty.filters.StartsWithKeywordFilter;
-import in.bhargavrao.stackoverflow.natty.filters.UnformattedCodeFilter;
-import in.bhargavrao.stackoverflow.natty.filters.UnregisteredUserFilter;
-import in.bhargavrao.stackoverflow.natty.filters.UserMentionedFilter;
-import in.bhargavrao.stackoverflow.natty.filters.VeryLongWordFilter;
-import in.bhargavrao.stackoverflow.natty.filters.WhitelistedFilter;
-import in.bhargavrao.stackoverflow.natty.services.ApiService;
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by bhargav.h on 29-Sep-16.
  */
@@ -152,8 +120,7 @@ public class PostUtils {
         Double f = 0.0;
 
         List<Filter> filters = new ArrayList<Filter>(){{
-            //add(new BlacklistedFilter(np));
-            add(new NewBlacklistedFilter(np));
+            add(new BlacklistedFilter(np));
             add(new ContainsQMFilter(np));
             add(new EndsWithQmFilter(np));
             add(new LengthFilter(np));
@@ -171,6 +138,7 @@ public class PostUtils {
             add(new UserMentionedFilter(np));
             add(new VeryLongWordFilter(np));
             add(new WhitelistedFilter(np));
+            add(new NewBlacklistedFilter(np));
         }};
 
         List<String> caughtFor = new ArrayList<>();
@@ -257,11 +225,8 @@ public class PostUtils {
 
     @NotNull
     private static String getSentinelAuth(String sitename) {
-//        if (sitename.equals("stackoverflow"))
-//            return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
-//        else if (sitename.equals("askubuntu"))
-//            return "3eddced9a0db7e1e8293c256a2887ef4bfd6c6a259233b18d4df24e12285de8b";
-        return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
+        PropertyService propertyService = new PropertyService();
+        return  propertyService.getSentinelApiKey();
     }
 
     public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type, String sitename, String siteurl){
