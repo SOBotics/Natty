@@ -1,11 +1,28 @@
 package in.bhargavrao.stackoverflow.natty.utils;
 
-import java.io.FileInputStream;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import fr.tunaki.stackoverflow.chat.Message;
+import fr.tunaki.stackoverflow.chat.Room;
+import fr.tunaki.stackoverflow.chat.User;
+import fr.tunaki.stackoverflow.chat.event.MessagePostedEvent;
+import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
+import in.bhargavrao.stackoverflow.natty.commands.Check;
+import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
+import in.bhargavrao.stackoverflow.natty.filters.*;
+import in.bhargavrao.stackoverflow.natty.model.*;
+import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
+import in.bhargavrao.stackoverflow.natty.services.ApiService;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.PropertyService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.StreamSupport;
 
 import com.google.gson.JsonArray;
@@ -17,10 +34,6 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.commands.Check;
-import in.bhargavrao.stackoverflow.natty.entities.Post;
-import in.bhargavrao.stackoverflow.natty.entities.PostReport;
-import in.bhargavrao.stackoverflow.natty.entities.SOUser;
-import in.bhargavrao.stackoverflow.natty.entities.autocomments.*;
 import in.bhargavrao.stackoverflow.natty.filters.BlacklistedFilter;
 import in.bhargavrao.stackoverflow.natty.filters.ContainsQMFilter;
 import in.bhargavrao.stackoverflow.natty.filters.EndsWithQmFilter;
@@ -41,10 +54,6 @@ import in.bhargavrao.stackoverflow.natty.filters.UnregisteredUserFilter;
 import in.bhargavrao.stackoverflow.natty.filters.UserMentionedFilter;
 import in.bhargavrao.stackoverflow.natty.filters.VeryLongWordFilter;
 import in.bhargavrao.stackoverflow.natty.filters.WhitelistedFilter;
-import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
-import in.bhargavrao.stackoverflow.natty.filters.*;
-import in.bhargavrao.stackoverflow.natty.model.*;
-import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import org.jetbrains.annotations.NotNull;
 
@@ -104,46 +113,37 @@ public class PostUtils {
 
     }
 
-    public static void handleFeedback(User user, String type, String linkToPost, String sitename, String siteurl) {
-        String outputCSVLogFile = FilePathUtils.getOutputCSVLogFile(sitename);
-        String outputReportLogFile = FilePathUtils.getOutputReportLogFile(sitename);
-        String outputCompleteLogFile = FilePathUtils.getOutputCompleteLogFile(sitename);
-        try {
-            String outputSentinelIdLogFile = FilePathUtils.getOutputSentinelIdLogFile(sitename);
-            String sentinel = FileUtils.readLineFromFileStartswith(outputSentinelIdLogFile,linkToPost);
-            long postId = -1;
-            if (sentinel!=null) {
-                postId = Long.parseLong(sentinel.split(",")[1]);
-            }
-            if(postId!=-1) {
-                long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
-            }
-            String loggedLine = FileUtils.readLineFromFileStartswith(outputCompleteLogFile,linkToPost);
-            String loggedAsTp = FileUtils.readLineFromFileStartswith(outputCSVLogFile,"tp,"+linkToPost);
-            String loggedAsTn = FileUtils.readLineFromFileStartswith(outputCSVLogFile,"tn,"+linkToPost);
-            String loggedAsFp = FileUtils.readLineFromFileStartswith(outputCSVLogFile,"fp,"+linkToPost);
-            String loggedAsNe = FileUtils.readLineFromFileStartswith(outputCSVLogFile,"ne,"+linkToPost);
-
-            if((loggedAsTp==null||loggedAsTn==null||loggedAsFp==null||loggedAsNe==null)&&loggedLine!=null) {
-                FileUtils.appendToFile(outputCSVLogFile, type + "," +loggedLine);
-                FileUtils.removeFromFile(outputReportLogFile,linkToPost);
-                FileUtils.removeFromFileStartswith(outputCompleteLogFile,linkToPost);
-            }
-            else if(loggedAsTp!=null){
-                FileUtils.removeFromFile(outputCSVLogFile,loggedAsTp);
-                FileUtils.appendToFile(outputCSVLogFile,loggedAsTp.replace("tp,",type+","));
-            }
-            else if(loggedAsFp!=null){
-                FileUtils.removeFromFile(outputCSVLogFile,loggedAsFp);
-                FileUtils.appendToFile(outputCSVLogFile,loggedAsFp.replace("fp,",type+","));
-            }
-            else if(loggedAsNe!=null){
-                FileUtils.removeFromFile(outputCSVLogFile,loggedAsNe);
-                FileUtils.appendToFile(outputCSVLogFile,loggedAsNe.replace("ne,",type+","));
-            }
+    public static void handleFeedback(User user, String type, String answerId, String sitename, String siteurl) throws FeedbackInvalidatedException {
+        StorageService service = new FileStorageService();
+        String sentinel = service.getSentinelId(answerId, sitename);
+        long postId = -1;
+        if (sentinel!=null) {
+            postId = Long.parseLong(sentinel.split(",")[1]);
         }
-        catch (IOException e){
-            System.out.println("Error");
+        if(postId!=-1) {
+            long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
+        }
+        FeedbackType previousFeedbackType = service.getFeedback(answerId, sitename);
+        Feedback feedback = new Feedback(user.getName(), user.getId(), getFeedbackTypeFromFeedback(type));
+
+        if(previousFeedbackType==null) {
+            String loggedLine = service.retrieveReport(answerId, sitename);
+            SavedReport report = getSavedReportFromLog(loggedLine);
+            service.saveFeedback(feedback, report, sitename);
+        }
+        else if (previousFeedbackType.equals(feedback.getFeedbackType())){
+            String loggedLine = service.retrieveFeedback(answerId, sitename);
+            SavedReport report = getSavedReportFromLog(loggedLine.replace(previousFeedbackType.toString()+",",""));
+            service.addFeedback(feedback, report, sitename);
+        }
+        else{
+            String loggedLine = service.retrieveFeedback(answerId, sitename);
+            String feedbackUserLog = service.retrieveFeedbackUserLog(answerId, sitename);
+            String feedbackSplit[] = feedbackUserLog.split(",");
+            Feedback previousFeedback = new Feedback(feedbackSplit[3], Long.parseLong(feedbackSplit[2]), previousFeedbackType);
+            SavedReport report = getSavedReportFromLog(loggedLine.replace(previousFeedbackType.toString()+",",""));
+            service.invalidateFeedback(feedback, report, sitename);
+            throw new FeedbackInvalidatedException(previousFeedback, feedback);
         }
     }
 
@@ -191,13 +191,16 @@ public class PostUtils {
 
         Post np = report.getPost();
 
-        String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+"</title></head><link href='style.css' rel='stylesheet' ><body><pre style='border:1px solid black;border-radius:5px'><code>"+np.getBody()+"</code></pre><p>Caught for</p>";
+        String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+
+                "</title></head><link href='style.css' rel='stylesheet' ><body><pre style='border:1px solid black;border-radius:5px'><code>"
+                +np.getBody()+"</code></pre><p>" + "<a href='"+np.getSiteUrl()+"/users/"+ np.getAnswerer().getUserId() + "'>"+np.getAnswerer().getUsername()+"</a>"+
+                "</p><p>Caught for</p>";
         for(String i:report.getCaughtFor()){
             htmlString+=i+"<br/>";
         }
-        htmlString+="<p><a href='//stackoverflow.com/a/"+np.getAnswerID()+"'>Link to post</a></p></body></html>";
+        htmlString+="<p><a href='"+np.getSiteUrl()+"/a/"+np.getAnswerID()+"'>Link to post</a></p></body></html>";
         try {
-            FileUtils.createNewFile("./../tomcat/webapps/ROOT/Natty/" + np.getAnswerID() + ".html", htmlString);
+            FMSUtils.createNewFile("./../tomcat/webapps/ROOT/Natty/" + np.getAnswerID() + ".html", htmlString);
         }
         catch (IOException e){
             e.printStackTrace();
@@ -207,17 +210,9 @@ public class PostUtils {
 
     public static long addSentinel(PostReport report, String sitename, String siteurl){
     	//check if Natty is running on the server
-    	Properties prop = new Properties();
-
-        try{
-            prop.load(new FileInputStream(FilePathUtils.loginPropertiesFile));
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            return -1;
-        }
+        PropertyService service = new PropertyService();
         
-        if (!prop.getProperty("location").equals("server")) return -1; //return -1 if it's not running on server
+        if (!service.getLocation().equals("server")) return -1; //return -1 if it's not running on server
         
         //continue...
         
@@ -225,9 +220,9 @@ public class PostUtils {
 
         post.addProperty("title",report.getPost().getTitle());
         post.addProperty("body",report.getPost().getBody());
-        post.addProperty("link","http://www."+siteurl+"/a/"+report.getPost().getAnswerID());
+        post.addProperty("link","https://www."+siteurl+"/a/"+report.getPost().getAnswerID());
         post.addProperty("post_creation_date",report.getPost().getAnswerCreationDate().toString());
-        post.addProperty("user_link","http://"+siteurl+"/users/"+report.getPost().getAnswerer().getUserId());
+        post.addProperty("user_link","https://"+siteurl+"/users/"+report.getPost().getAnswerer().getUserId());
         post.addProperty("username",report.getPost().getAnswerer().getUsername());
         post.addProperty("user_reputation",report.getPost().getAnswerer().getReputation());
         post.addProperty("nato_score",report.getNaaValue());
@@ -251,27 +246,22 @@ public class PostUtils {
 
         json.add("post",post);
         json.add("reasons",reasons);
+        json.addProperty("site","https://"+siteurl);
         json.addProperty("authorization",authorization);
 
         long sentinelPostId = SentinelUtils.post(json, sitename);
-
-        try{
-           FileUtils.appendToFile(FilePathUtils.getOutputSentinelIdLogFile(sitename),report.getPost().getAnswerID()+","+sentinelPostId);
-        }
-        catch (IOException e){
-           e.printStackTrace();
-        }
-
+        StorageService storageService = new FileStorageService();
+        storageService.storeSentinelData(report.getPost().getAnswerID(), sentinelPostId, sitename);
         return sentinelPostId;
     }
 
     @NotNull
     private static String getSentinelAuth(String sitename) {
-        if (sitename.equals("stackoverflow"))
-            return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
-        else if (sitename.equals("askubuntu"))
-            return "3eddced9a0db7e1e8293c256a2887ef4bfd6c6a259233b18d4df24e12285de8b";
-        return "";
+//        if (sitename.equals("stackoverflow"))
+//            return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
+//        else if (sitename.equals("askubuntu"))
+//            return "3eddced9a0db7e1e8293c256a2887ef4bfd6c6a259233b18d4df24e12285de8b";
+        return "112a5090460102f758711ae2c51c74f59555fb773f4192af122f2a4407904bce";
     }
 
     public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type, String sitename, String siteurl){
@@ -298,7 +288,16 @@ public class PostUtils {
         Message repliedToMessage = room.getMessage(repliedTo);
         String message = repliedToMessage.getPlainContent().trim();
         String linkToPost = getPostIdFromMessage(message, siteurl);
-        handleFeedback(event.getMessage().getUser(), type, linkToPost, sitename, siteurl);
+        StorageService service = new FileStorageService();
+        if (type.equals("fp") && service.checkAutoFlag(Long.parseLong(linkToPost),sitename)){
+            room.send("False positive feedback on Autoflag, please retract @BhargavRao");
+        }
+        try {
+            handleFeedback(event.getMessage().getUser(), type, linkToPost, sitename, siteurl);
+        } catch (FeedbackInvalidatedException e) {
+            e.printStackTrace();
+            room.send(e.getMessage());
+        }
     }
 
     public static String getPostIdFromMessage(String message, String siteurl) {
@@ -306,6 +305,17 @@ public class PostUtils {
         return message.substring(0,message.indexOf(")"));
     }
 
+
+    public static void newMessage(Room room, MessagePostedEvent event, boolean b) {
+        String message = event.getMessage().getPlainContent();
+        int cp = Character.codePointAt(message, 0);
+        if(message.trim().startsWith("@bots alive")){
+            room.send("Whadya think?");
+        }
+        else if (cp == 128642 || (cp>=128644 && cp<=128650)){
+            room.send("\uD83D\uDE83");
+        }
+    }
 
     public static void reply(Room room, PingMessageEvent event, String sitename, String siteurl, boolean isReply){
         Message message = event.getMessage();
@@ -326,6 +336,11 @@ public class PostUtils {
                 CommandUtils.checkForCommand(message.getContent(),"f")){
             store(room, event, "fp", sitename, siteurl);
         }
+        if (CommandUtils.checkForCommand(message.getContent(),"delete") ||
+                CommandUtils.checkForCommand(message.getContent(),"remove")){
+            long repliedTo = event.getParentMessageId();
+            room.delete(repliedTo);
+        }
         if (CommandUtils.checkForCommand(message.getContent(),"why")){
             long repliedTo = event.getParentMessageId();
             Message repliedToMessage = room.getMessage(repliedTo);
@@ -343,7 +358,67 @@ public class PostUtils {
         }
     }
 
-    
+    public static SavedReport getReport(Post np, PostReport report){
+
+        SavedReport savedReport = new SavedReport();
+
+        savedReport.setAnswerId(np.getAnswerID());
+        savedReport.setTimestamp(np.getAnswerCreationDate());
+        savedReport.setNaaValue(report.getNaaValue());
+        savedReport.setBodyLength(np.getBodyMarkdown().length());
+        savedReport.setReputation(np.getAnswerer().getReputation());
+
+        List<Reason> reasons = new ArrayList<>();
+
+        for (String caughtFor: report.getCaughtFor()){
+
+            Reason reason = new Reason();
+
+            if (caughtFor.contains("-")){
+                reason.setReasonName(caughtFor.split("-")[0].trim());
+                reason.setSubReason(caughtFor.split("-")[1].trim());
+            }
+            else {
+                reason.setReasonName(caughtFor);
+            }
+            reasons.add(reason);
+        }
+        savedReport.setReasons(reasons);
+        return savedReport;
+    }
+
+    public static SavedReport getSavedReportFromLog(String logline){
+        SavedReport report = new SavedReport();
+        String parts[] = logline.split(",");
+        if (parts.length!=6)
+            return null;
+        report.setAnswerId(Integer.valueOf(parts[0]));
+        report.setTimestamp(Instant.parse(parts[1]));
+        report.setNaaValue(Double.parseDouble(parts[2]));
+        report.setBodyLength(Integer.parseInt(parts[3]));
+        report.setReputation(Integer.parseInt(parts[4]));
+        List<Reason> reasons = getReasons(parts[5]);
+        report.setReasons(reasons);
+        return report;
+    }
+
+    private static List<Reason> getReasons(String part) {
+        List<Reason> reasons = new ArrayList<>();
+        String reasonStrings[] = part.split(";");
+        for (String reasonString: reasonStrings){
+            Reason reason = new Reason();
+            if (reasonString.contains("-")){
+                reason.setReasonName(reasonString.split(" - ")[0]);
+                reason.setSubReason(reasonString.split(" - ")[1]);
+            }
+            else {
+                reason.setReasonName(reasonString);
+            }
+            reasons.add(reason);
+        }
+        return reasons;
+    }
+
     public static String autoFlag(Post post, AutoComment comment, String sitename, String siteurl){
         if(sitename.equals("stackoverflow")) {
             ApiService apiService = new ApiService(sitename);
@@ -361,7 +436,8 @@ public class PostUtils {
                             return "Post Flagged Automatically - Added [comment](//stackoverflow.com/posts/comments/" + commentId + "): " + comment.getIdentifier();
                             //return "Post Flagged Automatically - would add comment: "+comment.getIdentifier();
                         }
-
+                        StorageService service = new FileStorageService();
+                        service.addAutoFlag(post.getAnswerID(), sitename);
                         return "Post Flagged Automatically";
                     }
                 }
@@ -371,5 +447,18 @@ public class PostUtils {
             }
         }
         return "Some Error Occured";
+    }
+
+    public static FeedbackType getFeedbackTypeFromFeedback(String feedback){
+        switch (feedback){
+            case "t": return FeedbackType.TRUE_POSITIVE;
+            case "tp": return FeedbackType.TRUE_POSITIVE;
+            case "f": return FeedbackType.FALSE_POSITIVE;
+            case "fp": return FeedbackType.FALSE_POSITIVE;
+            case "n": return FeedbackType.NEEDS_EDITING;
+            case "ne": return FeedbackType.NEEDS_EDITING;
+            case "tn": return FeedbackType.TRUE_NEGATIVE;
+        }
+        return null;
     }
 }
