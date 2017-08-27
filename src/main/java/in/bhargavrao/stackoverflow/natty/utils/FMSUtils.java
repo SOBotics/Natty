@@ -12,6 +12,8 @@ import java.util.Arrays;
 public class FMSUtils {
 
 
+    public static String FMSFilePath = "./../tomcat/webapps/ROOT/Natty/";
+
     public static void createNewFile(String filename, String data) throws IOException {
         Files.write(Paths.get(filename), Arrays.asList(data), StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE);
     }

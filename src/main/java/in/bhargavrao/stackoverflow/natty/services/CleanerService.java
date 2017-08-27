@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natty.services;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.tunaki.stackoverflow.chat.Room;
+import in.bhargavrao.stackoverflow.natty.utils.FMSUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,11 +55,11 @@ public class CleanerService {
     }
     
     /**
-     * Deletes all files in ./logs that are older than 28 days
+     * Deletes all FMS files that are older than 14 days
      * */
     private void cleanOldLogfiles() {
-    	int keepLogsForDays = 28;
-        File logsDir = new File("./logs");
+    	int keepLogsForDays = 14;
+        File logsDir = new File(FMSUtils.FMSFilePath);
         
         for (File file : logsDir.listFiles()) {
         	long diff = new Date().getTime() - file.lastModified();

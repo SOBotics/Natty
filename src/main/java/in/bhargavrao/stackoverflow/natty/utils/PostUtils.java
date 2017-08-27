@@ -168,14 +168,18 @@ public class PostUtils {
 
         String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+
                 "</title></head><link href='style.css' rel='stylesheet' ><body><pre style='border:1px solid black;border-radius:5px'><code>"
-                +np.getBody()+"</code></pre><p>" + "<a href='"+np.getSiteUrl()+"/users/"+ np.getAnswerer().getUserId() + "'>"+np.getAnswerer().getUsername()+"</a>"+
-                "</p><p>Caught for</p>";
+                +np.getBody()+"</code></pre>" +
+                "<p>Posted by <a href='"+np.getSiteUrl()+"/users/"+ np.getAnswerer().getUserId() + "'>"
+                +np.getAnswerer().getUsername()+"</a> ("+ np.getAnswerer().getReputation()+") at "+
+                np.getAnswerCreationDate()+"</p>"+
+                "<p>Caught for</p>";
         for(String i:report.getCaughtFor()){
             htmlString+=i+"<br/>";
         }
         htmlString+="<p><a href='"+np.getSiteUrl()+"/a/"+np.getAnswerID()+"'>Link to post</a></p></body></html>";
         try {
-            FMSUtils.createNewFile("./../tomcat/webapps/ROOT/Natty/" + np.getAnswerID() + ".html", htmlString);
+
+            FMSUtils.createNewFile(FMSUtils.FMSFilePath + np.getAnswerID() + ".html", htmlString);
         }
         catch (IOException e){
             e.printStackTrace();
