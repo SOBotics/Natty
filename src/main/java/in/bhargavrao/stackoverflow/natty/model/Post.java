@@ -1,7 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.model;
 
 import com.google.gson.JsonObject;
-import in.bhargavrao.stackoverflow.natty.model.SOUser;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
@@ -24,6 +23,27 @@ public class Post {
     private SOUser answerer;
     private String siteName;
     private String siteUrl;
+
+    public Post() {
+    }
+
+    public Post(String title, String mainTag, Instant answerCreationDate, Instant questionCreationDate,
+                Integer answerID, Integer questionID, String body, String bodyMarkdown,
+                String[] tags, SOUser asker, SOUser answerer, String siteName, String siteUrl) {
+        this.title = title;
+        this.mainTag = mainTag;
+        this.answerCreationDate = answerCreationDate;
+        this.questionCreationDate = questionCreationDate;
+        this.answerID = answerID;
+        this.questionID = questionID;
+        this.body = body;
+        this.bodyMarkdown = bodyMarkdown;
+        this.tags = tags;
+        this.asker = asker;
+        this.answerer = answerer;
+        this.siteName = siteName;
+        this.siteUrl = siteUrl;
+    }
 
     public String getTitle() {
         return title;

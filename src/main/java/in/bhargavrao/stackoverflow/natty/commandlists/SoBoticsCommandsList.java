@@ -54,6 +54,7 @@ public class SoBoticsCommandsList {
             new Send(message, sitename, siteurl),
             new ShowRequests(message),
             new Status(message, sitename, siteurl),
+            new Test(message),
             new Whitelist(message),
             new WishBirthday(message)
         ));
@@ -67,6 +68,6 @@ public class SoBoticsCommandsList {
             }
         }
         
-        LOGGER.info(event.getMessage().getContent());
+        LOGGER.info(event.getMessage().getPlainContent());
     }
 }

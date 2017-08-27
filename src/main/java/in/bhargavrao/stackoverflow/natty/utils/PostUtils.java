@@ -145,17 +145,24 @@ public class PostUtils {
             add(new NonEnglishFilter(np));
             add(new OneLineFilter(np));
             add(new PiledSymbolsFilter(np));
-            add(new ReputationFilter(np));
             add(new SalutationsFilter(np));
-            add(new SelfAnswerFilter(np));
             add(new StartsWithKeywordFilter(np));
             add(new UnformattedCodeFilter(np));
-            add(new UnregisteredUserFilter(np));
             add(new UserMentionedFilter(np));
             add(new VeryLongWordFilter(np));
             add(new WhitelistedFilter(np));
             add(new NewBlacklistedFilter(np));
         }};
+
+
+        if(sitename.equals("testBody")){
+            return filters;
+        }
+
+        filters.add(new ReputationFilter(np));
+        filters.add(new SelfAnswerFilter(np));
+        filters.add(new UnregisteredUserFilter(np));
+
         return filters;
     }
 
