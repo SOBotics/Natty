@@ -7,11 +7,12 @@ import in.bhargavrao.stackoverflow.natty.model.Feedback;
  */
 public class FeedbackInvalidatedException extends Exception {
 
+    private String postLink;
     private Feedback previousFeedback;
     private Feedback presentFeedback;
 
-    public FeedbackInvalidatedException(){
-
+    public FeedbackInvalidatedException(String postLink){
+        this.postLink = postLink;
     }
 
     public FeedbackInvalidatedException(Feedback a, Feedback b){
@@ -38,7 +39,7 @@ public class FeedbackInvalidatedException extends Exception {
     @Override
     public String getMessage() {
         if (presentFeedback!=null && previousFeedback!=null)
-            return "Invalidated "+previousFeedback.getFeedbackType().toString()+ " from " + previousFeedback.getUsername();
-        return "Invalidated the previous feedback";
+            return "Invalidated "+previousFeedback.getFeedbackType().toString()+ " from " + previousFeedback.getUsername() + " on "+postLink;
+        return "Invalidated the previous feedback on "+postLink;
     }
 }

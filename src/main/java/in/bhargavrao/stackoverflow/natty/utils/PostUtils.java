@@ -108,7 +108,7 @@ public class PostUtils {
             String loggedLine = service.retrieveFeedback(answerId, sitename);
             SavedReport report = getSavedReportFromLog(loggedLine.replace(previousFeedbackType.toString()+",",""));
             service.invalidateFeedback(feedback, report, sitename);
-            throw new FeedbackInvalidatedException();
+            throw new FeedbackInvalidatedException("https://"+siteurl+"/a/"+report.getAnswerId());
         }
     }
 
