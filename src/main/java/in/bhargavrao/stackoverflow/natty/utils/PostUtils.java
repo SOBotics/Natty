@@ -168,7 +168,7 @@ public class PostUtils {
 
         String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+
                 "</title></head><link href='style.css' rel='stylesheet' ><body>" +
-                "<h2>"+np.getTitle()+"</h2><br />"+
+                "<h2><a href='"+np.getSiteUrl()+"/a/"+np.getAnswerID()+"'>"+np.getTitle()+"</a></h2><br />"+
                 "<pre style='border:1px solid black;border-radius:5px'><code>"
                 +np.getBody()+"</code></pre>" +
                 "<p>Posted by <a href='"+np.getSiteUrl()+"/users/"+ np.getAnswerer().getUserId() + "'>"
@@ -178,7 +178,7 @@ public class PostUtils {
         for(String i:report.getCaughtFor()){
             htmlString+=i+"<br/>";
         }
-        htmlString+="<p><a href='"+np.getSiteUrl()+"/a/"+np.getAnswerID()+"'>Link to post</a></p></body></html>";
+        htmlString+="</body></html>";
         try {
 
             FMSUtils.createNewFile(FMSUtils.FMSFilePath + np.getAnswerID() + ".html", htmlString);
