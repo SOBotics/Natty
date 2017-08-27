@@ -4,9 +4,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.tunaki.stackoverflow.chat.Room;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +24,16 @@ public class CleanerService {
         this.room = room;
         this.cleanerService = Executors.newSingleThreadScheduledExecutor();
     }
-    public void clean(){
+    
+    public void clean() {
+    	cleanAutoComments();
+    	cleanOldLogfiles();
+    }
+    
+    /**
+     * Deletes old auto-comments
+     * */
+    private void cleanAutoComments(){
         try
         {
             ApiService service = new ApiService("stackoverflow");
@@ -39,6 +50,26 @@ public class CleanerService {
         }
         catch (IOException e){
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Deletes all files in ./logs that are older than 28 days
+     * */
+    private void cleanOldLogfiles() {
+    	int keepLogsForDays = 28;
+        File logsDir = new File("./logs");
+        
+        for (File file : logsDir.listFiles()) {
+        	long diff = new Date().getTime() - file.lastModified();
+
+        	if (diff > keepLogsForDays * 24 * 60 * 60 * 1000) {
+        		try {
+        			file.delete();
+        		} catch (SecurityException e) {
+        			e.printStackTrace();
+        		}
+        	}
         }
     }
 
