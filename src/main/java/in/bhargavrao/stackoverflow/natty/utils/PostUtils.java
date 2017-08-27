@@ -396,8 +396,10 @@ public class PostUtils {
     }
 
     public static String autoFlag(Post post, AutoComment comment, String sitename, String siteurl){
-        if(sitename.equals("stackoverflow")) {
-            ApiService apiService = new ApiService(sitename);
+        ApiService apiService = new ApiService(sitename);
+        PropertyService propertyService = new PropertyService();
+
+        if(sitename.equals("stackoverflow") && propertyService.getLocation().equals("server")) {
             try {
                 JsonObject flagOptions = apiService.getAnswerFlagOptions(post.getAnswerID());
                 JsonArray options = flagOptions.getAsJsonArray("items");
@@ -419,13 +421,13 @@ public class PostUtils {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                return "Some Error Occured";
+                return "Some Error Occurred";
             }
         }
-        return "Some Error Occured";
+        return "Some Error Occurred";
     }
 
-    public static FeedbackType getFeedbackTypeFromFeedback(String feedback){
+    private static FeedbackType getFeedbackTypeFromFeedback(String feedback){
         switch (feedback){
             case "t": return FeedbackType.TRUE_POSITIVE;
             case "tp": return FeedbackType.TRUE_POSITIVE;
