@@ -199,7 +199,7 @@ public class PostUtils {
 
         post.addProperty("title",report.getPost().getTitle());
         post.addProperty("body",report.getPost().getBody());
-        post.addProperty("link","https://www."+siteurl+"/a/"+report.getPost().getAnswerID());
+        post.addProperty("link","https://"+siteurl+"/a/"+report.getPost().getAnswerID());
         post.addProperty("post_creation_date",report.getPost().getAnswerCreationDate().toString());
         post.addProperty("user_link","https://"+siteurl+"/users/"+report.getPost().getAnswerer().getUserId());
         post.addProperty("username",report.getPost().getAnswerer().getUsername());
