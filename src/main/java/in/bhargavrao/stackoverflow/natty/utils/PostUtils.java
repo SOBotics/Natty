@@ -106,12 +106,9 @@ public class PostUtils {
         }
         else{
             String loggedLine = service.retrieveFeedback(answerId, sitename);
-            String feedbackUserLog = service.retrieveFeedbackUserLog(answerId, sitename);
-            String feedbackSplit[] = feedbackUserLog.split(",");
-            Feedback previousFeedback = new Feedback(feedbackSplit[3], Long.parseLong(feedbackSplit[2]), previousFeedbackType);
             SavedReport report = getSavedReportFromLog(loggedLine.replace(previousFeedbackType.toString()+",",""));
             service.invalidateFeedback(feedback, report, sitename);
-            throw new FeedbackInvalidatedException(previousFeedback, feedback);
+            throw new FeedbackInvalidatedException();
         }
     }
 
@@ -429,7 +426,7 @@ public class PostUtils {
         return "Some Error Occurred";
     }
 
-    private static FeedbackType getFeedbackTypeFromFeedback(String feedback){
+    public static FeedbackType getFeedbackTypeFromFeedback(String feedback){
         switch (feedback){
             case "t": return FeedbackType.TRUE_POSITIVE;
             case "tp": return FeedbackType.TRUE_POSITIVE;

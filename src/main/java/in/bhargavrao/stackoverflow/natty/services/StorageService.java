@@ -43,7 +43,7 @@ public interface StorageService {
     String invalidateFeedback(Feedback feedback, SavedReport report, String sitename);
     FeedbackType getFeedback(String postId, String sitename);
     String retrieveFeedback(String postId, String sitename);
-    String retrieveFeedbackUserLog(String postId, String sitename);
+    List<String> retrieveFeedbackUserLogs(String postId, String sitename);
 
     String getSentinelId(String postId, String sitename);
     String storeSentinelData(long postId, long sentinelId, String sitename);

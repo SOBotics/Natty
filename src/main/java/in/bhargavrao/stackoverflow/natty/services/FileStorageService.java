@@ -4,20 +4,19 @@ import in.bhargavrao.stackoverflow.natty.exceptions.NoSuchUserFoundException;
 import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
 import in.bhargavrao.stackoverflow.natty.utils.JsonUtils;
+import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by bhargav.h on 20-Aug-17.
  */
 public class FileStorageService implements StorageService {
 
-    private String blacklistFile = "./data/BlackListedWords.txt";
-    private String whitelistFile = "./data/WhiteListedWords.txt";
-    private String salutationsFile = "./data/Salutations.txt";
     private String optedUsersFile = "./data/OptedInUsersList.txt";
     private String featureRequests = "./data/FeatureRequests.txt";
     private String checkUsers = "./data/CheckUsers.txt";
@@ -101,7 +100,7 @@ public class FileStorageService implements StorageService {
             return "Added user successfully";
         } catch (IOException e) {
             e.printStackTrace();
-            return "Some Error Occured";
+            return "Some Error Occurred";
         }
     }
 
@@ -118,7 +117,7 @@ public class FileStorageService implements StorageService {
                 }
             }
         } catch (IOException e) {
-            return "Some Error Occured.";
+            return "Some Error Occurred.";
         }
 
         throw new NoSuchUserFoundException();
@@ -286,7 +285,7 @@ public class FileStorageService implements StorageService {
                     report.getNaaValue()+","+
                     report.getBodyLength()+","+
                     report.getReputation()+","+
-                    getReasonString(report.getReasons())+";";
+                    getReasonString(report.getReasons());
     }
 
     @Override
@@ -363,9 +362,25 @@ public class FileStorageService implements StorageService {
         String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
         String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
 
+        List<String> feedbackUserLogsStr = retrieveFeedbackUserLogs(String.valueOf(report.getAnswerId()), sitename);
+        List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), PostUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
+
         try {
             if(FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())) == null)
                 FileUtils.appendToFile(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())+",0");
+
+            for (Feedback fb: feedbackUserLogs){
+                if (fb.getUserId()==feedback.getUserId() && !fb.getFeedbackType().equals(feedback.getFeedbackType())){
+                    String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName, Long.toString(fb.getUserId()));
+                    if(blackListData!=null) {
+                        int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) - 1;
+                        FileUtils.removeFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(fb.getUserId()));
+                        FileUtils.appendToFile(getPath(sitename) + outputBotUsersLogFileName, fb.getUserId() + "," + invalidateValue);
+                        if (invalidateValue == 5)
+                            FileUtils.removeFromFile(blacklistedUsers, Long.toString(fb.getUserId()));
+                    }
+                }
+            }
 
             FileUtils.removeFromFile(getPath(sitename)+outputCSVLogFileName, oldFeedbackMessage);
             FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
@@ -378,27 +393,44 @@ public class FileStorageService implements StorageService {
         }
     }
     @Override
-    public String invalidateFeedback(Feedback feedback, SavedReport report, String sitename) {
+    public String invalidateFeedback(Feedback finalFeedback, SavedReport report, String sitename) {
         String reportLog = getReportLog(report);
+        List<String> feedbackUserLogsStr = retrieveFeedbackUserLogs(String.valueOf(report.getAnswerId()), sitename);
+        List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), PostUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
         FeedbackType oldFeedback = getFeedback(String.valueOf(report.getAnswerId()), sitename);
+
+
         try {
-            if(FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())) == null)
-                FileUtils.appendToFile(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())+",0");
+            if(FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName,Long.toString(finalFeedback.getUserId())) == null)
+                FileUtils.appendToFile(getPath(sitename)+outputBotUsersLogFileName,Long.toString(finalFeedback.getUserId())+",0");
 
-            String oldFeedbackLog = FileUtils.readLineFromFileStartswith(getPath(sitename)+outputFeedbackLogFileName,Integer.toString(report.getAnswerId()));
-            long oldUserId = Long.parseLong(oldFeedbackLog.split(",")[2]);
 
-            String feedbackMessage = feedback.getFeedbackType().toString()+","+ reportLog;
+            String feedbackMessage = finalFeedback.getFeedbackType().toString()+","+ reportLog;
             String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
-            String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
+            String feedbackLog = report.getAnswerId()+ "," + finalFeedback.getFeedbackType().toString() + "," + finalFeedback.getUserId() + "," + finalFeedback.getUsername();
 
-            if (feedback.getUserId()!=oldUserId)  {
-                String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName, Long.toString(oldUserId));
-                int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) + 1;
-                FileUtils.removeFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName, Long.toString(oldUserId));
-                FileUtils.appendToFile(getPath(sitename)+outputBotUsersLogFileName, oldUserId+","+invalidateValue);
-                if (invalidateValue==6)
-                    FileUtils.appendToFile(blacklistedUsers, Long.toString(oldUserId));
+            for (Feedback fb: feedbackUserLogs) {
+                long oldUserId = fb.getUserId();
+                if (finalFeedback.getUserId() != oldUserId && !fb.getFeedbackType().equals(finalFeedback.getFeedbackType())) {
+                    String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
+                    if(blackListData!=null) {
+                        int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) + 1;
+                        FileUtils.removeFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
+                        FileUtils.appendToFile(getPath(sitename) + outputBotUsersLogFileName, oldUserId + "," + invalidateValue);
+                        if (invalidateValue == 6)
+                            FileUtils.appendToFile(blacklistedUsers, Long.toString(oldUserId));
+                    }
+                }
+                else if (finalFeedback.getUserId() != oldUserId && fb.getFeedbackType().equals(finalFeedback.getFeedbackType())) {
+                    String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
+                    if(blackListData!=null) {
+                        int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) - 1;
+                        FileUtils.removeFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
+                        FileUtils.appendToFile(getPath(sitename) + outputBotUsersLogFileName, oldUserId + "," + invalidateValue);
+                        if (invalidateValue == 5)
+                            FileUtils.appendToFile(blacklistedUsers, Long.toString(oldUserId));
+                    }
+                }
             }
 
             FileUtils.removeFromFile(getPath(sitename)+outputCSVLogFileName, oldFeedbackMessage);
@@ -438,10 +470,10 @@ public class FileStorageService implements StorageService {
     }
 
     @Override
-    public String retrieveFeedbackUserLog(String postId, String sitename) {
+    public List<String> retrieveFeedbackUserLogs(String postId, String sitename) {
         String logFile = getPath(sitename)+outputFeedbackLogFileName;
         try {
-            return FileUtils.readLastOccuranceOfLine(logFile, postId);
+            return FileUtils.readFile(logFile).stream().filter(fbLog -> fbLog.contains(postId)).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -520,9 +552,12 @@ public class FileStorageService implements StorageService {
         String filename = null;
         switch (type){
 
-            case BLACKLIST: filename = blacklistFile; break;
-            case WHITELIST: filename = whitelistFile; break;
-            case SALUTE: filename = salutationsFile; break;
+            case BLACKLIST:
+                filename = "./data/BlackListedWords.txt"; break;
+            case WHITELIST:
+                filename = "./data/WhiteListedWords.txt"; break;
+            case SALUTE:
+                filename = "./data/Salutations.txt"; break;
             case USER_BLACKLIST: filename = blacklistedUsers; break;
         }
         return filename;
