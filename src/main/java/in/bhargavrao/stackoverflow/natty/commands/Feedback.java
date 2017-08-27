@@ -48,7 +48,7 @@ public class Feedback implements SpecialCommand {
 
         StorageService service = new FileStorageService();
         if (type.equals("fp") && service.checkAutoFlag(Long.parseLong(word),sitename)){
-            room.send("False positive feedback on Autoflag, please retract @BhargavRao");
+            room.send("False positive feedback on Autoflag, please retract @Bhargav or @Petter");
         }
 
         if(type.equals("tp")||type.equals("fp")||type.equals("ne")||type.equals("t")||type.equals("f")||type.equals("n")) {

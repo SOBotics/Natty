@@ -266,7 +266,7 @@ public class PostUtils {
         String linkToPost = getPostIdFromMessage(message, siteurl);
         StorageService service = new FileStorageService();
         if (type.equals("fp") && service.checkAutoFlag(Long.parseLong(linkToPost),sitename)){
-            room.send("False positive feedback on Autoflag, please retract @BhargavRao");
+            room.send("False positive feedback on Autoflag, please retract @Bhargav or @Petter");
         }
         try {
             handleFeedback(event.getMessage().getUser(), type, linkToPost, sitename, siteurl);
