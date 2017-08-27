@@ -26,7 +26,7 @@ public class PostPrinter {
                 firstline = firstline.substring(0, firstline.lastIndexOf(' '));
             }
         }
-        this.printStr+=" **Body Starts With:** "+firstline.replace("[","\\[");
+        this.printStr+=" **Body Starts With:** "+JsonUtils.sanitizeChatMessage(firstline);
         return this;
     }
 
