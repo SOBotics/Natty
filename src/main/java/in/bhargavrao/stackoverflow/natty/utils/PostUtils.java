@@ -167,7 +167,9 @@ public class PostUtils {
         Post np = report.getPost();
 
         String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+
-                "</title></head><link href='style.css' rel='stylesheet' ><body><pre style='border:1px solid black;border-radius:5px'><code>"
+                "</title></head><link href='style.css' rel='stylesheet' ><body>" +
+                "<h2>"+np.getTitle()+"</h2><br />"+
+                "<pre style='border:1px solid black;border-radius:5px'><code>"
                 +np.getBody()+"</code></pre>" +
                 "<p>Posted by <a href='"+np.getSiteUrl()+"/users/"+ np.getAnswerer().getUserId() + "'>"
                 +np.getAnswerer().getUsername()+"</a> ("+ np.getAnswerer().getReputation()+") at "+
