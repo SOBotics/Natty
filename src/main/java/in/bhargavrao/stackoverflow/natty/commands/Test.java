@@ -28,7 +28,13 @@ public class Test implements SpecialCommand {
 
     @Override
     public void execute(Room room) {
-        String bodyMarkdown = CommandUtils.extractData(message.getPlainContent()).trim();
+
+        System.out.println("BODY:["+message.getContent()+"]");
+        System.out.println("PLAIN:["+message.getPlainContent()+"]");
+
+        String bodyMarkdown = getBM(message.getContent());
+
+        System.out.println("BM:["+bodyMarkdown+"]");
 
         Post mockPost = new MockBodyPost(bodyMarkdown);
 
@@ -44,6 +50,15 @@ public class Test implements SpecialCommand {
 
         room.replyTo(message.getId(), returnString);
         room.send(explanation);
+    }
+
+    private String getBM(String content) {
+
+        if (content.contains("<div class='partial'>") && content.contains("<br>")){
+            content = content.replace("<br>","\n");
+            content = content.substring(21, content.length()-6);
+        }
+        return CommandUtils.extractData(content);
     }
 
     @Override
