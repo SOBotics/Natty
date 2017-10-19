@@ -1,10 +1,16 @@
+# Maven
 /target/
+
+# Eclipse
 /.settings/
-/properties/
 /.classpath
 /.project
+
+# IntelliJ IDEA
+/.idea/
+
+# Application
+/properties/
 /logs/
 /aulogs/
-/properties/
-/.idea/
 /data/
