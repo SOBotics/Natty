@@ -8,7 +8,7 @@ import in.bhargavrao.stackoverflow.natty.model.SOUser;
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by bhargav.h on 30-Sep-16.
