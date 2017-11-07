@@ -7,10 +7,10 @@ Petter once told
 and thus Natty was born. 
 
 
-- [List of Commands](/Natty/commands). 
-- [Interacting with the bot and providing feedback](/Natty/interacting).
-- [Etiqutte while dealing with the bot](/Natty/etiquette). 
-- [Working of the bot](/Natty/working).
-- [Useful userscripts](/Natty/userscripts). 
-- [What is Sentinel](/Natty/sentinel).
-- [Autoflagging of bad posts](/Natty/autoflagging). 
+- [List of Commands](/commands). 
+- [Interacting with the bot and providing feedback](/interacting).
+- [Etiqutte while dealing with the bot](/etiquette). 
+- [Working of the bot](/working).
+- [Useful userscripts](/userscripts). 
+- [What is Sentinel](/sentinel).
+- [Autoflagging of bad posts](/autoflagging). 
