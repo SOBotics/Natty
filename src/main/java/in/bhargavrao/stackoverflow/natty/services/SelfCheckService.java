@@ -21,7 +21,7 @@ public class SelfCheckService {
 	}
 	
 	public void start() {
-		executorService.scheduleAtFixedRate(()->secureCheck(), 1, 5, TimeUnit.MINUTES);
+		executorService.scheduleAtFixedRate(()->secureCheck(), 15, 15, TimeUnit.MINUTES);
 	}
 	
 	
@@ -31,7 +31,7 @@ public class SelfCheckService {
 		
 		long difference = now.getEpochSecond() - lastSuccess.getEpochSecond();
 				
-		if (difference > 5*60) {
+		if (difference > 15*60) {
 			this.instance.reboot();
 		}
 	}

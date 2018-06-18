@@ -56,7 +56,7 @@ public class RunnerService {
                 e.printStackTrace();
             }
 
-            if(room.getRoomId()==111347){
+            if(room.getRoomId()==111347 || room.getRoomId()==167908){
                 //check if Natty is running on the server
                 PropertyService service  = new PropertyService();
 
@@ -106,7 +106,7 @@ public class RunnerService {
 
     private void execute() {
 
-        Map<String, List> postsMap = new HashMap<>();
+        Map<String, List<Post>> postsMap = new HashMap<>();
 
         for(String sitename: bots.keySet()){
             try {
@@ -118,11 +118,9 @@ public class RunnerService {
 
         for(int i=0;i<rooms.size();i++){
             BotRoom room = rooms.get(i);
-            if(room.getSiteName().equals("stackoverflow") || executionCount%5==0) {
-                Room chatroom = chatRooms.get(i);
-                List<Post> posts = postsMap.get(room.getSiteName());
-                new Runner().runOnce(chatroom, room.getValidator(), posts, room.getNaaValue(), room.getPostPrinter(), room.getIsLogged(), room.getSiteName(), room.getSiteUrl());
-            }
+            Room chatroom = chatRooms.get(i);
+            List<Post> posts = postsMap.get(room.getSiteName());
+            new Runner().runOnce(chatroom, room.getValidator(), posts, room.getNaaValue(), room.getPostPrinter(), room.getIsLogged(), room.getSiteName(), room.getSiteUrl());
         }
         executionCount++;
     }

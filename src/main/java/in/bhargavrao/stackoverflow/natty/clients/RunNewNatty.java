@@ -26,12 +26,16 @@ public class RunNewNatty {
         boolean isOnServer = service.getLocation() != null && service.getLocation().equals("server");
 
         List<BotRoom> rooms = new ArrayList<>();
-        rooms.add(new SOBoticsChatRoom());
-        if (isOnServer) {
+        if (!isOnServer){
+            rooms.add(new SOBoticsWorkshopChatRoom());
+        }
+        else  {
+            rooms.add(new SOBoticsChatRoom());
         	rooms.add(new HeadquartersChatRoom());
         	rooms.add(new RPublicChatRoom());
         	rooms.add(new GMTsChatRoom());
-            rooms.add(new TemporaryRoom());
+            rooms.add(new SeboticsRoom());
+            rooms.add(new RaidersRoom());
         }
 
         RunnerService runner = new RunnerService(client,rooms);

@@ -5,6 +5,7 @@ import in.bhargavrao.stackoverflow.natty.model.PostReport;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
 import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
+import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class TemporaryRoomPostPrinter implements in.bhargavrao.stackoverflow.nat
         else {
             description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl("askubuntu") + "/posts/" + SentinelId + ") ]");
         }
-        in.bhargavrao.stackoverflow.natty.utils.PostPrinter postPrinter = new in.bhargavrao.stackoverflow.natty.utils.PostPrinter(np,description).addMainTag().addQuesionLink().addBodyLength().addReputation();
+        PostPrinter postPrinter = new PostPrinter(np,description).addMainTag().addQuesionLink().addBodyLength().addReputation();
 
         Double naaValue = report.getNaaValue();
         List<String> caughtFilters = report.getCaughtFor();

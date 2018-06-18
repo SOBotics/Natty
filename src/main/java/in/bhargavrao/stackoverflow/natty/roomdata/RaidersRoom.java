@@ -4,15 +4,13 @@ import fr.tunaki.stackoverflow.chat.ChatHost;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.MessageReplyEvent;
 import fr.tunaki.stackoverflow.chat.event.UserMentionedEvent;
-import in.bhargavrao.stackoverflow.natty.commandlists.HeadquartersCommandsList;
 import in.bhargavrao.stackoverflow.natty.commandlists.TemporaryRoomCommandsList;
-import in.bhargavrao.stackoverflow.natty.printers.HeadquartersPostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.printers.RaidersRoomPostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.TemporaryRoomPostPrinter;
 import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllAnswersValidator;
-import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
 import java.util.function.Consumer;
@@ -20,10 +18,10 @@ import java.util.function.Consumer;
 /**
  * Created by bhargav.h on 28-Feb-17.
  */
-public class TemporaryRoom implements BotRoom{
+public class RaidersRoom implements BotRoom{
     @Override
     public int getRoomId() {
-        return 54445;
+        return 3877;
     }
 
     @Override
@@ -48,7 +46,7 @@ public class TemporaryRoom implements BotRoom{
 
     @Override
     public PostPrinter getPostPrinter() {
-        return new TemporaryRoomPostPrinter();
+        return new RaidersRoomPostPrinter();
     }
 
     @Override
