@@ -3,8 +3,10 @@ package in.bhargavrao.stackoverflow.natty.commands;
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
+import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
 import in.bhargavrao.stackoverflow.natty.model.Feedback;
 import in.bhargavrao.stackoverflow.natty.model.*;
+import in.bhargavrao.stackoverflow.natty.services.FeedbackHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
 import in.bhargavrao.stackoverflow.natty.services.NattyService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
@@ -110,7 +112,7 @@ public class Report implements SpecialCommand {
 
                         pp.addMessage(" **" + found + "**;");
 
-                        PostUtils.addFeedback(postId, user.getId(), user.getName(), feedback_type.toString(), siteName, siteUrl);
+                        new FeedbackHandlerService(siteName, siteUrl).handleFeedback(user, feedback_type.toString(), word);
 
                         room.send(pp.print());
                     }
@@ -123,6 +125,8 @@ public class Report implements SpecialCommand {
         catch (IOException e){
             e.printStackTrace();
             room.replyTo(message.getId(), "Error occurred, Try again");
+        } catch (FeedbackInvalidatedException e) {
+            room.send(e.getMessage());
         }
     }
 

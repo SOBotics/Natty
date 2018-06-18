@@ -2,6 +2,8 @@ package in.bhargavrao.stackoverflow.natty.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import in.bhargavrao.stackoverflow.natty.services.PropertyService;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -34,6 +36,10 @@ public class SentinelUtils {
         return "https://sentinel.erwaysoftware.com";
     }
 
+    public static String getSentinelAuth(String sitename) {
+        PropertyService propertyService = new PropertyService();
+        return  propertyService.getSentinelKey();
+    }
 
     private static String getString(InputStreamReader isr) throws IOException {
         BufferedReader br = new BufferedReader(isr);

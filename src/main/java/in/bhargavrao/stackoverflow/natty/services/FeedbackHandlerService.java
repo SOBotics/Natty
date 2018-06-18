@@ -1,5 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
+import com.google.gson.JsonObject;
 import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
 import in.bhargavrao.stackoverflow.natty.model.Feedback;
@@ -8,6 +9,7 @@ import in.bhargavrao.stackoverflow.natty.model.Reason;
 import in.bhargavrao.stackoverflow.natty.model.SavedReport;
 import in.bhargavrao.stackoverflow.natty.utils.FeedbackUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
+import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class FeedbackHandlerService {
             postId = Long.parseLong(sentinel.split(",")[1]);
         }
         if(postId!=-1) {
-            long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
+            long feedbackId = addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
         }
         FeedbackType previousFeedbackType = service.getFeedback(answerId, sitename);
         Feedback feedback = new Feedback(user.getName(), user.getId(), FeedbackUtils.getFeedbackTypeFromFeedback(type));
@@ -84,6 +86,26 @@ public class FeedbackHandlerService {
             reasons.add(reason);
         }
         return reasons;
+    }
+
+
+    private long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type, String sitename, String siteurl){
+
+        JsonObject feedback = new JsonObject();
+
+        feedback.addProperty("post_id",post_id);
+        feedback.addProperty("chat_id",chat_id);
+        feedback.addProperty("chat_username",chat_username);
+
+        String authorization = SentinelUtils.getSentinelAuth(sitename);
+
+        JsonObject json = new JsonObject();
+
+        json.add("feedback",feedback);
+        json.addProperty("feedback_type",feedback_type);
+        json.addProperty("authorization",authorization);
+
+        return SentinelUtils.feedback(json, sitename);
     }
 
 }

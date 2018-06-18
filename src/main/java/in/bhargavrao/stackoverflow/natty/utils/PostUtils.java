@@ -193,7 +193,7 @@ public class PostUtils {
             reasons.add(reason);
         }
 
-        String authorization = getSentinelAuth(sitename);
+        String authorization = SentinelUtils.getSentinelAuth(sitename);
 
         JsonObject json = new JsonObject();
 
@@ -208,30 +208,6 @@ public class PostUtils {
         return sentinelPostId;
     }
 
-    @NotNull
-    private static String getSentinelAuth(String sitename) {
-        PropertyService propertyService = new PropertyService();
-        return  propertyService.getSentinelKey();
-    }
-
-    public static long addFeedback(long post_id,long chat_id,String chat_username, String feedback_type, String sitename, String siteurl){
-
-        JsonObject feedback = new JsonObject();
-
-        feedback.addProperty("post_id",post_id);
-        feedback.addProperty("chat_id",chat_id);
-        feedback.addProperty("chat_username",chat_username);
-
-        String authorization = getSentinelAuth(sitename);
-
-        JsonObject json = new JsonObject();
-
-        json.add("feedback",feedback);
-        json.addProperty("feedback_type",feedback_type);
-        json.addProperty("authorization",authorization);
-
-        return SentinelUtils.feedback(json, sitename);
-    }
 
 
     public static void newMessage(Room room, MessagePostedEvent event, boolean b) {
