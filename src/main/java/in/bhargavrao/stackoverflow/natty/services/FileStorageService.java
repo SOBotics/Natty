@@ -31,7 +31,7 @@ public class FileStorageService implements StorageService {
     private String outputBotUsersLogFileName = "botUsers.txt";
     private String outputAutoFlagFileName = "autoflagged.txt";
 
-
+    private boolean autoBanUsers = false;
 
     @Override
     public String listWord(String word, ListType type) {
@@ -362,22 +362,25 @@ public class FileStorageService implements StorageService {
         String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
         String feedbackLog = report.getAnswerId()+ "," + feedback.getFeedbackType().toString() + "," + feedback.getUserId() + "," + feedback.getUsername();
 
-        List<String> feedbackUserLogsStr = retrieveFeedbackUserLogs(String.valueOf(report.getAnswerId()), sitename);
-        List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), PostUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
 
         try {
             if(FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())) == null)
                 FileUtils.appendToFile(getPath(sitename)+outputBotUsersLogFileName,Long.toString(feedback.getUserId())+",0");
 
-            for (Feedback fb: feedbackUserLogs){
-                if (fb.getUserId()==feedback.getUserId() && !fb.getFeedbackType().equals(feedback.getFeedbackType())){
-                    String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename)+outputBotUsersLogFileName, Long.toString(fb.getUserId()));
-                    if(blackListData!=null) {
-                        int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) - 1;
-                        FileUtils.removeFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(fb.getUserId()));
-                        FileUtils.appendToFile(getPath(sitename) + outputBotUsersLogFileName, fb.getUserId() + "," + invalidateValue);
-                        if (invalidateValue == 5)
-                            FileUtils.removeFromFile(blacklistedUsers, Long.toString(fb.getUserId()));
+
+            if (autoBanUsers) {
+                List<String> feedbackUserLogsStr = retrieveFeedbackUserLogs(String.valueOf(report.getAnswerId()), sitename);
+                List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), PostUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
+                for (Feedback fb : feedbackUserLogs) {
+                    if (fb.getUserId() == feedback.getUserId() && !fb.getFeedbackType().equals(feedback.getFeedbackType())) {
+                        String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(fb.getUserId()));
+                        if (blackListData != null) {
+                            int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) - 1;
+                            FileUtils.removeFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(fb.getUserId()));
+                            FileUtils.appendToFile(getPath(sitename) + outputBotUsersLogFileName, fb.getUserId() + "," + invalidateValue);
+                            if (invalidateValue == 5)
+                                FileUtils.removeFromFile(blacklistedUsers, Long.toString(fb.getUserId()));
+                        }
                     }
                 }
             }
@@ -395,8 +398,6 @@ public class FileStorageService implements StorageService {
     @Override
     public String invalidateFeedback(Feedback finalFeedback, SavedReport report, String sitename) {
         String reportLog = getReportLog(report);
-        List<String> feedbackUserLogsStr = retrieveFeedbackUserLogs(String.valueOf(report.getAnswerId()), sitename);
-        List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), PostUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
         FeedbackType oldFeedback = getFeedback(String.valueOf(report.getAnswerId()), sitename);
 
 
@@ -409,26 +410,31 @@ public class FileStorageService implements StorageService {
             String oldFeedbackMessage = oldFeedback.toString()+","+ reportLog;
             String feedbackLog = report.getAnswerId()+ "," + finalFeedback.getFeedbackType().toString() + "," + finalFeedback.getUserId() + "," + finalFeedback.getUsername();
 
-            for (Feedback fb: feedbackUserLogs) {
-                long oldUserId = fb.getUserId();
-                if (finalFeedback.getUserId() != oldUserId && !fb.getFeedbackType().equals(finalFeedback.getFeedbackType())) {
-                    String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
-                    if(blackListData!=null) {
-                        int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) + 1;
-                        FileUtils.removeFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
-                        FileUtils.appendToFile(getPath(sitename) + outputBotUsersLogFileName, oldUserId + "," + invalidateValue);
-                        if (invalidateValue == 6)
-                            FileUtils.appendToFile(blacklistedUsers, Long.toString(oldUserId));
-                    }
-                }
-                else if (finalFeedback.getUserId() != oldUserId && fb.getFeedbackType().equals(finalFeedback.getFeedbackType())) {
-                    String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
-                    if(blackListData!=null) {
-                        int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) - 1;
-                        FileUtils.removeFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
-                        FileUtils.appendToFile(getPath(sitename) + outputBotUsersLogFileName, oldUserId + "," + invalidateValue);
-                        if (invalidateValue == 5)
-                            FileUtils.appendToFile(blacklistedUsers, Long.toString(oldUserId));
+
+            if (autoBanUsers) {
+                List<String> feedbackUserLogsStr = retrieveFeedbackUserLogs(String.valueOf(report.getAnswerId()), sitename);
+                List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), PostUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
+
+                for (Feedback fb : feedbackUserLogs) {
+                    long oldUserId = fb.getUserId();
+                    if (finalFeedback.getUserId() != oldUserId && !fb.getFeedbackType().equals(finalFeedback.getFeedbackType())) {
+                        String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
+                        if (blackListData != null) {
+                            int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) + 1;
+                            FileUtils.removeFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
+                            FileUtils.appendToFile(getPath(sitename) + outputBotUsersLogFileName, oldUserId + "," + invalidateValue);
+                            if (invalidateValue == 6)
+                                FileUtils.appendToFile(blacklistedUsers, Long.toString(oldUserId));
+                        }
+                    } else if (finalFeedback.getUserId() != oldUserId && fb.getFeedbackType().equals(finalFeedback.getFeedbackType())) {
+                        String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
+                        if (blackListData != null) {
+                            int invalidateValue = Integer.parseInt(blackListData.split(",")[1]) - 1;
+                            FileUtils.removeFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(oldUserId));
+                            FileUtils.appendToFile(getPath(sitename) + outputBotUsersLogFileName, oldUserId + "," + invalidateValue);
+                            if (invalidateValue == 5)
+                                FileUtils.appendToFile(blacklistedUsers, Long.toString(oldUserId));
+                        }
                     }
                 }
             }
