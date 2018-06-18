@@ -9,6 +9,7 @@ import in.bhargavrao.stackoverflow.natty.commandlists.TemporaryRoomCommandsList;
 import in.bhargavrao.stackoverflow.natty.printers.HeadquartersPostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.TemporaryRoomPostPrinter;
+import in.bhargavrao.stackoverflow.natty.services.ReplyHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllAnswersValidator;
@@ -33,7 +34,7 @@ public class SeboticsRoom implements BotRoom{
 
     @Override
     public Consumer<MessageReplyEvent> getReply(Room room) {
-        return event->PostUtils.reply(room,event,getSiteName(),getSiteUrl(),true);
+        return event->new ReplyHandlerService().reply(room,event,getSiteName(),getSiteUrl(),true);
     }
 
     @Override

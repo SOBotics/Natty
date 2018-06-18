@@ -81,38 +81,6 @@ public class PostUtils {
 
     }
 
-    public static void handleFeedback(User user, String type, String answerId, String sitename, String siteurl) throws FeedbackInvalidatedException {
-        StorageService service = new FileStorageService();
-        String sentinel = service.getSentinelId(answerId, sitename);
-        long postId = -1;
-        if (sentinel!=null) {
-            postId = Long.parseLong(sentinel.split(",")[1]);
-        }
-        if(postId!=-1) {
-            long feedbackId = PostUtils.addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
-        }
-        FeedbackType previousFeedbackType = service.getFeedback(answerId, sitename);
-        Feedback feedback = new Feedback(user.getName(), user.getId(), getFeedbackTypeFromFeedback(type));
-
-        if(previousFeedbackType==null) {
-            String loggedLine = service.retrieveReport(answerId, sitename);
-            SavedReport report = getSavedReportFromLog(loggedLine);
-            service.saveFeedback(feedback, report, sitename);
-        }
-        else if (previousFeedbackType.equals(feedback.getFeedbackType())){
-            String loggedLine = service.retrieveFeedback(answerId, sitename);
-            SavedReport report = getSavedReportFromLog(loggedLine.replace(previousFeedbackType.toString()+",",""));
-            service.addFeedback(feedback, report, sitename);
-        }
-        else{
-            String loggedLine = service.retrieveFeedback(answerId, sitename);
-            SavedReport report = getSavedReportFromLog(loggedLine.replace(previousFeedbackType.toString()+",",""));
-            service.invalidateFeedback(feedback, report, sitename);
-            throw new FeedbackInvalidatedException("https://"+siteurl+"/a/"+report.getAnswerId());
-        }
-    }
-
-
 
     public static PostReport getNaaValue(Post np, String sitename) {
         Double f = 0.0;
@@ -265,28 +233,6 @@ public class PostUtils {
         return SentinelUtils.feedback(json, sitename);
     }
 
-    public static void store(Room room, PingMessageEvent event, String type, String sitename, String siteurl){
-        long repliedTo = event.getParentMessageId();
-        Message repliedToMessage = room.getMessage(repliedTo);
-        String message = repliedToMessage.getPlainContent().trim();
-        String linkToPost = getPostIdFromMessage(message, siteurl);
-        StorageService service = new FileStorageService();
-        if (!type.equals("tp") && service.checkAutoFlag(Long.parseLong(linkToPost),sitename)){
-            room.send("False positive feedback on Autoflag, please retract @Bhargav or @Petter");
-        }
-        try {
-            handleFeedback(event.getMessage().getUser(), type, linkToPost, sitename, siteurl);
-        } catch (FeedbackInvalidatedException e) {
-            e.printStackTrace();
-            room.send(e.getMessage());
-        }
-    }
-
-    public static String getPostIdFromMessage(String message, String siteurl) {
-        message = message.split("//"+siteurl+"/a/")[1];
-        return message.substring(0,message.indexOf(")"));
-    }
-
 
     public static void newMessage(Room room, MessagePostedEvent event, boolean b) {
         String message = event.getMessage().getPlainContent();
@@ -299,46 +245,6 @@ public class PostUtils {
         }
     }
 
-    public static void reply(Room room, PingMessageEvent event, String sitename, String siteurl, boolean isReply){
-        Message message = event.getMessage();
-		System.out.println(message.getContent());
-        if (CheckUtils.checkIfUserIsBlacklisted(event.getUserId())){
-            System.out.println("Blacklisted user");
-            return;
-        }
-        if (CommandUtils.checkForCommand(message.getContent(),"tp") ||
-                CommandUtils.checkForCommand(message.getContent(),"t")){
-            store(room, event, "tp", sitename, siteurl);
-        }
-        if (CommandUtils.checkForCommand(message.getContent(),"ne") ||
-                CommandUtils.checkForCommand(message.getContent(),"n")){
-            store(room, event, "ne", sitename, siteurl);
-        }
-        if (CommandUtils.checkForCommand(message.getContent(),"fp") ||
-                CommandUtils.checkForCommand(message.getContent(),"f")){
-            store(room, event, "fp", sitename, siteurl);
-        }
-        if (CommandUtils.checkForCommand(message.getContent(),"delete") ||
-                CommandUtils.checkForCommand(message.getContent(),"remove")){
-            long repliedTo = event.getParentMessageId();
-            room.delete(repliedTo);
-        }
-        if (CommandUtils.checkForCommand(message.getContent(),"why")){
-            long repliedTo = event.getParentMessageId();
-            Message repliedToMessage = room.getMessage(repliedTo);
-            String linkToPost = getPostIdFromMessage(repliedToMessage.getPlainContent().trim(), siteurl);
-
-            try {
-                String returnParams[] = new Check(message, sitename, siteurl).getCheckData(linkToPost, 2);
-                room.replyTo(message.getId(), returnParams[0]);
-                if (!returnParams[1].equals(""))
-                    room.send(returnParams[1]);
-            }
-            catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
 
     public static SavedReport getReport(Post np, PostReport report){
 
@@ -369,37 +275,6 @@ public class PostUtils {
         return savedReport;
     }
 
-    public static SavedReport getSavedReportFromLog(String logline){
-        SavedReport report = new SavedReport();
-        String parts[] = logline.split(",");
-        if (parts.length!=6)
-            return null;
-        report.setAnswerId(Integer.valueOf(parts[0]));
-        report.setTimestamp(Instant.parse(parts[1]));
-        report.setNaaValue(Double.parseDouble(parts[2]));
-        report.setBodyLength(Integer.parseInt(parts[3]));
-        report.setReputation(Integer.parseInt(parts[4]));
-        List<Reason> reasons = getReasons(parts[5]);
-        report.setReasons(reasons);
-        return report;
-    }
-
-    private static List<Reason> getReasons(String part) {
-        List<Reason> reasons = new ArrayList<>();
-        String reasonStrings[] = part.split(";");
-        for (String reasonString: reasonStrings){
-            Reason reason = new Reason();
-            if (reasonString.contains("-")){
-                reason.setReasonName(reasonString.split(" - ")[0]);
-                reason.setSubReason(reasonString.split(" - ")[1]);
-            }
-            else {
-                reason.setReasonName(reasonString);
-            }
-            reasons.add(reason);
-        }
-        return reasons;
-    }
 
     public static String autoFlag(Post post, AutoComment comment, String sitename, String siteurl){
         ApiService apiService = new ApiService(sitename);
@@ -433,16 +308,4 @@ public class PostUtils {
         return "Some Error Occurred";
     }
 
-    public static FeedbackType getFeedbackTypeFromFeedback(String feedback){
-        switch (feedback){
-            case "t": return FeedbackType.TRUE_POSITIVE;
-            case "tp": return FeedbackType.TRUE_POSITIVE;
-            case "f": return FeedbackType.FALSE_POSITIVE;
-            case "fp": return FeedbackType.FALSE_POSITIVE;
-            case "n": return FeedbackType.NEEDS_EDITING;
-            case "ne": return FeedbackType.NEEDS_EDITING;
-            case "tn": return FeedbackType.TRUE_NEGATIVE;
-        }
-        return null;
-    }
 }

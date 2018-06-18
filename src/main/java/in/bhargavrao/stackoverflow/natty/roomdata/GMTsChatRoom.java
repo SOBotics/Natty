@@ -7,6 +7,7 @@ import fr.tunaki.stackoverflow.chat.event.UserMentionedEvent;
 import in.bhargavrao.stackoverflow.natty.commandlists.GMTsCommandsList;
 import in.bhargavrao.stackoverflow.natty.printers.GmtsPostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
+import in.bhargavrao.stackoverflow.natty.services.ReplyHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowOnlyTagValidator;
@@ -31,7 +32,7 @@ public class GMTsChatRoom implements BotRoom{
 
     @Override
     public Consumer<MessageReplyEvent> getReply(Room room) {
-        return event-> PostUtils.reply(room, event, getSiteName(), getSiteUrl(), true);
+        return event-> new ReplyHandlerService().reply(room, event, getSiteName(), getSiteUrl(), true);
     }
 
     @Override

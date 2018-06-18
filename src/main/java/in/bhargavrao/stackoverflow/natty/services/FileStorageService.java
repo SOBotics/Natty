@@ -2,6 +2,7 @@ package in.bhargavrao.stackoverflow.natty.services;
 
 import in.bhargavrao.stackoverflow.natty.exceptions.NoSuchUserFoundException;
 import in.bhargavrao.stackoverflow.natty.model.*;
+import in.bhargavrao.stackoverflow.natty.utils.FeedbackUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
 import in.bhargavrao.stackoverflow.natty.utils.JsonUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
@@ -370,7 +371,7 @@ public class FileStorageService implements StorageService {
 
             if (autoBanUsers) {
                 List<String> feedbackUserLogsStr = retrieveFeedbackUserLogs(String.valueOf(report.getAnswerId()), sitename);
-                List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), PostUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
+                List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), FeedbackUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
                 for (Feedback fb : feedbackUserLogs) {
                     if (fb.getUserId() == feedback.getUserId() && !fb.getFeedbackType().equals(feedback.getFeedbackType())) {
                         String blackListData = FileUtils.readLineFromFileStartswith(getPath(sitename) + outputBotUsersLogFileName, Long.toString(fb.getUserId()));
@@ -413,7 +414,7 @@ public class FileStorageService implements StorageService {
 
             if (autoBanUsers) {
                 List<String> feedbackUserLogsStr = retrieveFeedbackUserLogs(String.valueOf(report.getAnswerId()), sitename);
-                List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), PostUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
+                List<Feedback> feedbackUserLogs = feedbackUserLogsStr.stream().map(log -> new Feedback(log.split(",")[3], Long.parseLong(log.split(",")[2]), FeedbackUtils.getFeedbackTypeFromFeedback(log.split(",")[1]))).collect(Collectors.toList());
 
                 for (Feedback fb : feedbackUserLogs) {
                     long oldUserId = fb.getUserId();

@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natty.commands;
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
+import in.bhargavrao.stackoverflow.natty.services.FeedbackHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
@@ -63,7 +64,7 @@ public class Send implements SpecialCommand {
             }
             if(feedback.equals("ne")||feedback.equals("tp")||feedback.equals("fp")) {
                 try {
-                    PostUtils.handleFeedback(message.getUser(), feedback, line, sitename, siteurl);
+                    new FeedbackHandlerService(sitename, siteurl).handleFeedback(message.getUser(), feedback, line);
                 } catch (FeedbackInvalidatedException e) {
                     room.send(e.getMessage());
                 }
