@@ -2,6 +2,8 @@ package in.bhargavrao.stackoverflow.natty.filters;
 
 
 import in.bhargavrao.stackoverflow.natty.model.Post;
+import in.bhargavrao.stackoverflow.natty.services.CheckerService;
+import in.bhargavrao.stackoverflow.natty.services.NonEnglishCheckerService;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 
 
@@ -12,17 +14,19 @@ public class NonEnglishFilter implements Filter {
     private Post post;
     private double value;
     private String language;
+    private CheckerService<String> nonEnglishCheckerService;
 
     public NonEnglishFilter(Post post) {
         this.post = post;
         value = 2;
         language = null;
-
+        nonEnglishCheckerService = new NonEnglishCheckerService();
     }
 
     @Override
     public boolean filter() {
-        String language = CheckUtils.checkIfNonEnglish(post);
+
+        String language = nonEnglishCheckerService.check(post);
         if(language!=null && !language.equalsIgnoreCase("en")){
             this.language = language;
             return true;
