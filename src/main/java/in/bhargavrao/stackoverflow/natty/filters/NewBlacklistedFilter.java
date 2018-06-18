@@ -18,9 +18,9 @@ public class NewBlacklistedFilter implements Filter {
 
     public NewBlacklistedFilter(Post post) {
         this.post = post;
-        value = 0;
-        maxValue = 2.5;
-        listedWord = null;
+        this.value = 0;
+        this.maxValue = 2.5;
+        this.listedWord = null;
     }
 	
 	@Override
@@ -76,8 +76,7 @@ public class NewBlacklistedFilter implements Filter {
             		//Score calculation: ((1−fps/postsMatchingThePhrase)^maxScore) * maxScore
             		this.value = Math.pow((1 - (fp / totalPosts)), this.maxValue) * this.maxValue;
             		
-            		//round value
-            		this.value = Math.round(this.value*10.0)/10.0;
+
             		
             		return true;
             		
@@ -96,7 +95,7 @@ public class NewBlacklistedFilter implements Filter {
 
     @Override
     public String description() {
-        return "IntelliBL - "+ (value - 2.0);
+        return "IntelliBL - "+ (Math.round((this.value - 2.0)*10.0)/10.0);
     }
 
 }
