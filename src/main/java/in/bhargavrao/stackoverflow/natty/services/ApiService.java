@@ -114,59 +114,59 @@ public class ApiService {
         return quota;
     }
 
-    private static JsonObject getQuestionDetailsByIds(List<Integer> questionIdList, String site, String apiKey) throws IOException {
+    private JsonObject getQuestionDetailsByIds(List<Integer> questionIdList, String site, String apiKey) throws IOException {
         String questionIds = questionIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
         String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionIds;
         return JsonUtils.get(questionIdUrl,"site",site,"pagesize",String.valueOf(questionIdList.size()),"key",apiKey);
     }
 
-    private static JsonObject getQuestionDetailsById(Integer questionId, String site, String apiKey) throws IOException{
+    private JsonObject getQuestionDetailsById(Integer questionId, String site, String apiKey) throws IOException{
         String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionId;
         return JsonUtils.get(questionIdUrl,"site",site,"key",apiKey);
     }
 
-    private static JsonObject getAnswerDetailsById(Integer answerId, String site, String apiKey) throws IOException{
+    private JsonObject getAnswerDetailsById(Integer answerId, String site, String apiKey) throws IOException{
         String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerId;
         return JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"key",apiKey,"sort","creation");
     }
 
-    private static JsonObject getAnswerDetailsByIds(List<Integer> answerIdList, String site, String apiKey) throws IOException{
+    private JsonObject getAnswerDetailsByIds(List<Integer> answerIdList, String site, String apiKey) throws IOException{
         String answerIds = answerIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
         String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerIds;
         return JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"pagesize",String.valueOf(answerIdList.size()),"key",apiKey,"sort","creation");
     }
 
-    private static JsonObject getFirstPageOfAnswers(Instant fromTimestamp, String site, String apiKey) throws IOException{
+    private JsonObject getFirstPageOfAnswers(Instant fromTimestamp, String site, String apiKey) throws IOException{
         String answersUrl = "https://api.stackexchange.com/2.2/answers";
         return JsonUtils.get(answersUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","fromdate",String.valueOf(fromTimestamp.minusSeconds(1).getEpochSecond()),"site",site,"key",apiKey,"sort","creation");
     }
 
-    private static JsonObject getAnswerFlagOptions(Integer answerId, String site, String apiKey, String token) throws IOException{
+    private JsonObject getAnswerFlagOptions(Integer answerId, String site, String apiKey, String token) throws IOException{
         String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerId+"/flags/options";
         return JsonUtils.get(answerIdUrl,"site",site,"key",apiKey,"access_token",token);
     }
 
-    private static JsonObject FlagAnswer(Integer answerId, Integer flagType, String site, String apiKey, String token) throws IOException{
+    private JsonObject FlagAnswer(Integer answerId, Integer flagType, String site, String apiKey, String token) throws IOException{
         String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerId+"/flags/add";
         return JsonUtils.post(answerIdUrl,"option_id",Integer.toString(flagType),"site",site,"key",apiKey,"access_token",token);
     }
 
-    private static JsonObject addComment(String comment, Integer postID, String site, String apiKey, String token) throws IOException{
+    private JsonObject addComment(String comment, Integer postID, String site, String apiKey, String token) throws IOException{
         String commentsUrl = "https://api.stackexchange.com/2.2/posts/"+postID+"/comments/add";
         return JsonUtils.post(commentsUrl,"body",comment,"site",site,"key",apiKey,"access_token",token);
     }
 
-    private static JsonObject deleteComment(Integer commentID, String site, String apiKey, String token) throws IOException{
+    private JsonObject deleteComment(Integer commentID, String site, String apiKey, String token) throws IOException{
         String commentsUrl = "https://api.stackexchange.com/2.2/comments/"+commentID+"/delete";
         return JsonUtils.post(commentsUrl,"site",site,"key",apiKey,"access_token",token);
     }
 
-    private static JsonObject getComments(Integer userId, String site, String apiKey) throws IOException{
+    private JsonObject getComments(Integer userId, String site, String apiKey) throws IOException{
         String commentsUrl = "https://api.stackexchange.com/2.2/users/"+userId+"/comments";
         return JsonUtils.get(commentsUrl,"site",site,"key",apiKey, "filter","!9YdnSOQH3");
     }
 
-    private static JsonObject getMentions(Instant fromTimestamp, Integer userId, String site, String apiKey) throws IOException{
+    private JsonObject getMentions(Instant fromTimestamp, Integer userId, String site, String apiKey) throws IOException{
         String mentionUrl = "https://api.stackexchange.com/2.2/users/"+userId+"/mentioned";
         return JsonUtils.get(mentionUrl,"site",site,"key",apiKey,"fromdate",String.valueOf(fromTimestamp.minusSeconds(1).getEpochSecond()),"filter","!bZA*iTYWJS8yRg");
     }
