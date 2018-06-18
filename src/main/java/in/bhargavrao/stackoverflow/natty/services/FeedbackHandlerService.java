@@ -58,7 +58,7 @@ public class FeedbackHandlerService {
         }
     }
 
-    public void handleReport(User user, SavedReport report, Long postId, FeedbackType feedbackType){
+    public void handleReportFeedback(User user, SavedReport report, Long postId, FeedbackType feedbackType){
         Feedback fb = new Feedback(user.getName(), user.getId(), feedbackType);
         service.saveFeedback(fb, report, sitename);
         long feedbackId = addFeedback(postId, user.getId(), user.getName(), feedbackType.toString(), sitename, siteurl);

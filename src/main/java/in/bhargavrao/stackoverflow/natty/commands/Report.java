@@ -5,10 +5,7 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
 import in.bhargavrao.stackoverflow.natty.model.*;
-import in.bhargavrao.stackoverflow.natty.services.FeedbackHandlerService;
-import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
-import in.bhargavrao.stackoverflow.natty.services.NattyService;
-import in.bhargavrao.stackoverflow.natty.services.StorageService;
+import in.bhargavrao.stackoverflow.natty.services.*;
 import in.bhargavrao.stackoverflow.natty.utils.*;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
@@ -45,7 +42,6 @@ public class Report implements SpecialCommand {
     public void execute(Room room) {
         try {
 
-
             String word = CommandUtils.extractData(message.getPlainContent()).trim();
             User user = message.getUser();
             if(word.contains("/"))
@@ -78,33 +74,9 @@ public class Report implements SpecialCommand {
                 }
 
                 else {
-                    NattyService nattyService = new NattyService(siteName, siteUrl);
-                    Post np = nattyService.checkPost(Integer.parseInt(word));
-
-                    if(validator.validate(np)) {
-
-
-                        PostReport report = PostUtils.getNaaValue(np, siteName);
-                        FeedbackType feedbackType = FeedbackType.TRUE_NEGATIVE;
-
-                        if (report.getNaaValue()>naaLimit)
-                            feedbackType = FeedbackType.TRUE_POSITIVE;
-
-                        SavedReport savedReport = PostUtils.getReport(np, report);
-
-                        long postId = PostUtils.addSentinel(report, siteName, siteUrl);
-                        room.send(getOutputMessage(np, report, postId));
-                        feedbackHandlerService.handleReport(user, savedReport, postId, feedbackType);
-                    }
-                    else {
-                        room.send("Post is not allowed to be reported in this room.");
-                    }
+                    room.send(new ReportHandlerService(siteName, siteUrl, validator, naaLimit, user).reportPost(word));
                 }
             }
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            room.replyTo(message.getId(), "Error occurred, Try again");
         } catch (FeedbackInvalidatedException e) {
             e.printStackTrace();
         }
