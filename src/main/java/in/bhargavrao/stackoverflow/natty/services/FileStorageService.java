@@ -386,8 +386,10 @@ public class FileStorageService implements StorageService {
                 }
             }
 
-            FileUtils.removeFromFile(getPath(sitename)+outputCSVLogFileName, oldFeedbackMessage);
-            FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
+            if (oldFeedback!=FeedbackType.TRUE_NEGATIVE) {
+                FileUtils.removeFromFile(getPath(sitename) + outputCSVLogFileName, oldFeedbackMessage);
+                FileUtils.appendToFile(getPath(sitename) + outputCSVLogFileName, feedbackMessage);
+            }
             FileUtils.removeFromFile(getPath(sitename)+outputReportLogFileName, String.valueOf(report.getAnswerId()));
             FileUtils.appendToFile(getPath(sitename)+outputFeedbackLogFileName, feedbackLog);
             return "Added feedback on "+report.getAnswerId();
@@ -440,8 +442,10 @@ public class FileStorageService implements StorageService {
                 }
             }
 
-            FileUtils.removeFromFile(getPath(sitename)+outputCSVLogFileName, oldFeedbackMessage);
-            FileUtils.appendToFile(getPath(sitename)+outputCSVLogFileName, feedbackMessage);
+            if (oldFeedback!=FeedbackType.TRUE_NEGATIVE) {
+                FileUtils.removeFromFile(getPath(sitename) + outputCSVLogFileName, oldFeedbackMessage);
+                FileUtils.appendToFile(getPath(sitename) + outputCSVLogFileName, feedbackMessage);
+            }
             FileUtils.appendToFile(getPath(sitename)+outputFeedbackLogFileName, feedbackLog);
             return "Invalidated feedback on "+report.getAnswerId();
         } catch (IOException e) {

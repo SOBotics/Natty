@@ -88,33 +88,9 @@ public class Report implements SpecialCommand {
                         if (report.getNaaValue()>naaLimit)
                             feedback_type = FeedbackType.TRUE_POSITIVE;
 
-                        SavedReport savedReport = PostUtils.getReport(np, report);
-                        Feedback fb = new Feedback(user.getName(), user.getId(), feedback_type);
-                        service.saveFeedback(fb, savedReport, siteName);
-
                         long postId = PostUtils.addSentinel(report, siteName, siteUrl);
-                        String description;
-
-                        if (postId == -1) {
-                            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
-                        } else {
-                            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl(siteName) + "/posts/" + postId + ") ]");
-                        }
-                        PostPrinter pp = new PostPrinter(np, description);
-                        pp.addQuesionLink();
-
-                        Double found = report.getNaaValue();
-                        List<String> caughtFilters = report.getCaughtFor();
-
-                        for (String filter : caughtFilters) {
-                            pp.addMessage(" **" + filter + "**; ");
-                        }
-
-                        pp.addMessage(" **" + found + "**;");
-
+                        room.send(getOutputMessage(np, report, postId));
                         new FeedbackHandlerService(siteName, siteUrl).handleFeedback(user, feedback_type.toString(), word);
-
-                        room.send(pp.print());
                     }
                     else {
                         room.send("Post is not allowed to be reported in this room.");
@@ -128,6 +104,28 @@ public class Report implements SpecialCommand {
         } catch (FeedbackInvalidatedException e) {
             room.send(e.getMessage());
         }
+    }
+
+    private String getOutputMessage(Post np, PostReport report, long postId) {
+        String description;
+
+        if (postId == -1) {
+            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
+        } else {
+            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl(siteName) + "/posts/" + postId + ") ]");
+        }
+        PostPrinter pp = new PostPrinter(np, description);
+        pp.addQuesionLink();
+
+        Double found = report.getNaaValue();
+        List<String> caughtFilters = report.getCaughtFor();
+
+        for (String filter : caughtFilters) {
+            pp.addMessage(" **" + filter + "**; ");
+        }
+        pp.addMessage(" **" + found + "**;");
+
+        return pp.print();
     }
 
     @Override
