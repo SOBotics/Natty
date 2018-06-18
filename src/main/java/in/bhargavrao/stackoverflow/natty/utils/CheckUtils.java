@@ -74,55 +74,7 @@ public class CheckUtils {
         Document doc = Jsoup.parse(html);
         return doc.text();
     }
-    public static String checkIfNonEnglish(Post post){
 
-
-        List<LanguageProfile> languageProfiles;
-        com.optimaize.langdetect.LanguageDetector optimaizeDetector;
-        org.apache.tika.language.detect.LanguageDetector tikaDetector;
-        TextObjectFactory textObjectFactory;
-
-        String dataToCheck = stripTags(stripBody(post)).replaceAll("\\p{Punct}+", "");
-        try {
-
-            languageProfiles = new LanguageProfileReader().readAllBuiltIn();
-            optimaizeDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
-                    .withProfiles(languageProfiles)
-                    .build();
-            textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
-            TextObject textObject = textObjectFactory.forText(dataToCheck);
-            Optional<LdLocale> lang = optimaizeDetector.detect(textObject);
-            if (!lang.isPresent()) {
-                if(dataToCheck.length()>50) {
-                   tikaDetector = new OptimaizeLangDetector().loadModels();
-                   LanguageWriter writer = new LanguageWriter(tikaDetector);
-                   writer.append(dataToCheck);
-                   LanguageResult result = writer.getLanguage();
-                   String tikaLang = result.getLanguage();
-                   writer.close();
-
-                   if (!tikaLang.toLowerCase().equals("")) {
-                       return tikaLang;
-                   }
-                   else{
-                       return null;
-                   }
-                }
-                else if(dataToCheck.length()<50){
-                    return null;
-                }
-                if(checkIfNoCodeBlock(post)){
-                    return "Gibberish";
-                }
-                return null;
-            }
-            return lang.get().getLanguage();
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-        return null;
-    }
 
 	public static String checkForSalutation(Post post){
         StorageService service = new FileStorageService();
@@ -200,24 +152,5 @@ public class CheckUtils {
         }
         return true;
     }
-    
-    /**
-     * Checks if the post contains piled symbols such as "???" or "!!!"
-     * @returns The matched symbols; null, if the post doesn't contain piled symbols
-     * */
-    public static String checkForPiledSymbols(Post post) {
-    	//RegEx to match all code-blocks: (<code>(?!:<\/code>).*|<\/code>)
-    	//Example: https://regex101.com/r/FEV4PJ/4
-    	
-    	//System.out.println(post.getBody());
-    	
-    	//Remove all code from the post
-      	//String cleanPost = post.getBody().replaceAll("(<code>(?!:<\\/code>).*|<\\/code>)", "");
-    	String cleanPost = CheckUtils.stripBody(post);
-    	//System.out.println(cleanPost);
-    	
-    	Pattern regex = Pattern.compile("(\\?{2,}|!{2,}|!,{2,})");
-    	Matcher matcher = regex.matcher(cleanPost);
-    	return matcher.find() ? matcher.group(1) : null;
-    }
+
 }
