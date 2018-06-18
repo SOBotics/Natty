@@ -64,4 +64,8 @@ public class PropertyService {
     public String getSentinelApiKey(){
         return prop.getProperty("sentinelApiKey");
     }
+
+    public String getFMSPath(){
+        return prop.getProperty("fmsPath");
+    }
 }

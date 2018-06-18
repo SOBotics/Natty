@@ -185,7 +185,7 @@ public class PostUtils {
         htmlString+="</body></html>";
         try {
 
-            FMSUtils.createNewFile(FMSUtils.FMSFilePath + np.getAnswerID() + ".html", htmlString);
+            FMSUtils.createNewFile(FMSUtils.FMSFilePath() + np.getAnswerID() + ".html", htmlString);
         }
         catch (IOException e){
             e.printStackTrace();

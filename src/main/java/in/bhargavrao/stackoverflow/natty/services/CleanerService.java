@@ -59,7 +59,7 @@ public class CleanerService {
      * */
     private void cleanOldLogfiles() {
     	int keepLogsForDays = 14;
-        File logsDir = new File(FMSUtils.FMSFilePath);
+        File logsDir = new File(FMSUtils.FMSFilePath());
         
         for (File file : logsDir.listFiles()) {
         	long diff = new Date().getTime() - file.lastModified();
