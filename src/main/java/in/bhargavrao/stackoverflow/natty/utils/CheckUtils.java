@@ -50,7 +50,7 @@ public class CheckUtils {
 		return spareBody.toLowerCase().contains(keyword.toLowerCase());
 	}
 
-    private static String stripBody(Post post) {
+    public static String stripBody(Post post) {
         String body = post.getBody();
         Document doc = Jsoup.parse("<body>"+body+"</body>");
         doc.getElementsByTag("a").remove();
@@ -70,7 +70,7 @@ public class CheckUtils {
         return null;
     }
 
-    private static String stripTags(String html) {
+    public static String stripTags(String html) {
         Document doc = Jsoup.parse(html);
         return doc.text();
     }
