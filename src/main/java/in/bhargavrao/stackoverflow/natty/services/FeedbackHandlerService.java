@@ -19,14 +19,16 @@ public class FeedbackHandlerService {
 
     private String sitename;
     private String siteurl;
+    private StorageService service;
 
     public FeedbackHandlerService(String sitename, String siteurl) {
         this.sitename = sitename;
         this.siteurl = siteurl;
+        this.service = new FileStorageService();
     }
 
     public void handleFeedback(User user, String type, String answerId) throws FeedbackInvalidatedException {
-        StorageService service = new FileStorageService();
+
         String sentinel = service.getSentinelId(answerId, sitename);
         long postId = -1;
         if (sentinel!=null) {
@@ -54,6 +56,12 @@ public class FeedbackHandlerService {
             service.invalidateFeedback(feedback, report, sitename);
             throw new FeedbackInvalidatedException("https://"+siteurl+"/a/"+report.getAnswerId());
         }
+    }
+
+    public void handleReport(User user, SavedReport report, Long postId, FeedbackType feedbackType){
+        Feedback fb = new Feedback(user.getName(), user.getId(), feedbackType);
+        service.saveFeedback(fb, report, sitename);
+        long feedbackId = addFeedback(postId, user.getId(), user.getName(), feedbackType.toString(), sitename, siteurl);
     }
 
     private SavedReport getSavedReportFromLog(String logline){

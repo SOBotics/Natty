@@ -88,9 +88,12 @@ public class Report implements SpecialCommand {
                         if (report.getNaaValue()>naaLimit)
                             feedback_type = FeedbackType.TRUE_POSITIVE;
 
+                        SavedReport savedReport = PostUtils.getReport(np, report);
+
+
                         long postId = PostUtils.addSentinel(report, siteName, siteUrl);
                         room.send(getOutputMessage(np, report, postId));
-                        new FeedbackHandlerService(siteName, siteUrl).handleFeedback(user, feedback_type.toString(), word);
+                        new FeedbackHandlerService(siteName, siteUrl).handleReport(user, savedReport, postId, feedback_type);
                     }
                     else {
                         room.send("Post is not allowed to be reported in this room.");
@@ -101,8 +104,6 @@ public class Report implements SpecialCommand {
         catch (IOException e){
             e.printStackTrace();
             room.replyTo(message.getId(), "Error occurred, Try again");
-        } catch (FeedbackInvalidatedException e) {
-            room.send(e.getMessage());
         }
     }
 
