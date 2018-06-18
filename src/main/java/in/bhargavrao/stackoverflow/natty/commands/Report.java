@@ -4,7 +4,6 @@ import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
-import in.bhargavrao.stackoverflow.natty.model.Feedback;
 import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.services.FeedbackHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
@@ -26,6 +25,7 @@ public class Report implements SpecialCommand {
     private Double naaLimit;
     private String siteName;
     private String siteUrl;
+    private FeedbackHandlerService feedbackHandlerService;
 
     public Report(Message message, Validator validator, Double naaLimit, String siteName, String siteUrl) {
         this.message = message;
@@ -33,6 +33,7 @@ public class Report implements SpecialCommand {
         this.naaLimit = naaLimit;
         this.siteName = siteName;
         this.siteUrl = siteUrl;
+        this.feedbackHandlerService = new FeedbackHandlerService(siteName, siteUrl);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class Report implements SpecialCommand {
 
 
             String word = CommandUtils.extractData(message.getPlainContent()).trim();
-
+            User user = message.getUser();
             if(word.contains("/"))
             {
                 if (!word.contains(siteUrl)){
@@ -60,6 +61,7 @@ public class Report implements SpecialCommand {
 
             if(service.checkIfReported(word, siteName)){
                 room.replyTo(message.getId(), "Post already reported");
+                feedbackHandlerService.handleFeedback(user, "tp", word);
             }
             else {
 
@@ -72,28 +74,27 @@ public class Report implements SpecialCommand {
                         case NEEDS_EDITING: room.replyTo(message.getId(), "Post already registered as Needs Editing"); break;
                         case TRUE_NEGATIVE: room.replyTo(message.getId(), "Post already registered as True Negative"); break;
                     }
+                    feedbackHandlerService.handleFeedback(user, "tp", word);
                 }
 
                 else {
-                    NattyService cc = new NattyService(siteName, siteUrl);
-                    Post np = cc.checkPost(Integer.parseInt(word));
-
+                    NattyService nattyService = new NattyService(siteName, siteUrl);
+                    Post np = nattyService.checkPost(Integer.parseInt(word));
 
                     if(validator.validate(np)) {
 
-                        User user = message.getUser();
+
                         PostReport report = PostUtils.getNaaValue(np, siteName);
-                        FeedbackType feedback_type = FeedbackType.TRUE_NEGATIVE;
+                        FeedbackType feedbackType = FeedbackType.TRUE_NEGATIVE;
 
                         if (report.getNaaValue()>naaLimit)
-                            feedback_type = FeedbackType.TRUE_POSITIVE;
+                            feedbackType = FeedbackType.TRUE_POSITIVE;
 
                         SavedReport savedReport = PostUtils.getReport(np, report);
 
-
                         long postId = PostUtils.addSentinel(report, siteName, siteUrl);
                         room.send(getOutputMessage(np, report, postId));
-                        new FeedbackHandlerService(siteName, siteUrl).handleReport(user, savedReport, postId, feedback_type);
+                        feedbackHandlerService.handleReport(user, savedReport, postId, feedbackType);
                     }
                     else {
                         room.send("Post is not allowed to be reported in this room.");
@@ -104,6 +105,8 @@ public class Report implements SpecialCommand {
         catch (IOException e){
             e.printStackTrace();
             room.replyTo(message.getId(), "Error occurred, Try again");
+        } catch (FeedbackInvalidatedException e) {
+            e.printStackTrace();
         }
     }
 
