@@ -2,12 +2,16 @@ package in.bhargavrao.stackoverflow.natty.commands;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
+import in.bhargavrao.stackoverflow.natty.exceptions.PostNotStoredException;
 import in.bhargavrao.stackoverflow.natty.services.FeedbackHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.ReportHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
+import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
 /**
  * Created by bhargav.h on 29-Nov-16.
@@ -15,11 +19,15 @@ import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 public class Feedback implements SpecialCommand {
 
     private Message message;
+    private Validator validator;
+    private Double naaLimit;
     private String sitename;
     private String siteurl;
 
-    public Feedback(Message message, String sitename, String siteurl) {
+    public Feedback(Message message, Validator validator, Double naaLimit, String sitename, String siteurl) {
         this.message = message;
+        this.validator = validator;
+        this.naaLimit = naaLimit;
         this.sitename = sitename;
         this.siteurl = siteurl;
     }
@@ -48,6 +56,7 @@ public class Feedback implements SpecialCommand {
 
 
         StorageService service = new FileStorageService();
+
         if (!type.equals("tp") && service.checkAutoFlag(Long.parseLong(word),sitename)){
             room.send("False positive feedback on Autoflag, please retract @Bhargav or @Petter");
         }
@@ -57,6 +66,11 @@ public class Feedback implements SpecialCommand {
                 new FeedbackHandlerService(sitename, siteurl).handleFeedback(message.getUser(), type, word);
             } catch (FeedbackInvalidatedException e) {
                 room.send(e.getMessage());
+            } catch (PostNotStoredException e) {
+                if (type.equals("tp") || type.equals("t")) {
+                    User user = message.getUser();
+                    room.send(new ReportHandlerService(sitename, siteurl, validator, naaLimit, user).reportPost(word));
+                }
             }
         }
         else{

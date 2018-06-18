@@ -25,11 +25,11 @@ public class TemporaryRoomCommandsList {
             new Alive(message),
             new Help(message),
             new Check(message, sitename, siteurl),
-            new Feedback(message, sitename, siteurl),
+            new Feedback(message, new AllowAllAnswersValidator(), 3.0,  sitename, siteurl),
             new Fetch(message, sitename, siteurl),
             new OptIn(message),
             new OptOut(message),
-            new Send(message, sitename, siteurl),
+            new Send(message, new AllowAllAnswersValidator(), 3.0, sitename, siteurl),
             new Report(message, new AllowAllAnswersValidator(), 3.0, sitename, siteurl)
         ));
         commands.add(new Commands(message,commands));

@@ -2,12 +2,16 @@ package in.bhargavrao.stackoverflow.natty.commands;
 
 import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
+import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
+import in.bhargavrao.stackoverflow.natty.exceptions.PostNotStoredException;
 import in.bhargavrao.stackoverflow.natty.services.FeedbackHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.ReportHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
+import in.bhargavrao.stackoverflow.natty.validators.Validator;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,11 +22,15 @@ import java.util.List;
 public class Send implements SpecialCommand {
 
     private Message message;
+    private Validator validator;
+    private Double naaLimit;
     private String sitename;
     private String siteurl;
 
-    public Send(Message message, String sitename, String siteurl) {
+    public Send(Message message, Validator validator, Double naaLimit, String sitename, String siteurl) {
         this.message = message;
+        this.validator = validator;
+        this.naaLimit = naaLimit;
         this.sitename = sitename;
         this.siteurl = siteurl;
     }
@@ -52,7 +60,7 @@ public class Send implements SpecialCommand {
             room.replyTo(message.getId(), feedbacks.length+" feedbacks, "+lines.size()+" reports");
             return;
         }
-        for(int i  =0 ;i<feedbacks.length;i++){
+        for(int i = 0 ;i<feedbacks.length;i++){
             String feedback = feedbacks[i].toLowerCase();
             String line = lines.get(i);
             if(feedback.equals("t")) feedback = "tp";
@@ -67,6 +75,11 @@ public class Send implements SpecialCommand {
                     new FeedbackHandlerService(sitename, siteurl).handleFeedback(message.getUser(), feedback, line);
                 } catch (FeedbackInvalidatedException e) {
                     room.send(e.getMessage());
+                } catch (PostNotStoredException e) {
+                    if (feedback.equals("tp")) {
+                        User user = message.getUser();
+                        room.send(new ReportHandlerService(sitename, siteurl, validator, naaLimit, user).reportPost(line));
+                    }
                 }
             }
         }

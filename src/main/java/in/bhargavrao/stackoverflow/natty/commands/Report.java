@@ -4,6 +4,7 @@ import fr.tunaki.stackoverflow.chat.Message;
 import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
+import in.bhargavrao.stackoverflow.natty.exceptions.PostNotStoredException;
 import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.services.*;
 import in.bhargavrao.stackoverflow.natty.utils.*;
@@ -77,8 +78,9 @@ public class Report implements SpecialCommand {
                     room.send(new ReportHandlerService(siteName, siteUrl, validator, naaLimit, user).reportPost(word));
                 }
             }
-        } catch (FeedbackInvalidatedException e) {
+        } catch (FeedbackInvalidatedException | PostNotStoredException e) {
             e.printStackTrace();
+            room.send(e.getMessage());
         }
     }
 

@@ -5,6 +5,7 @@ import fr.tunaki.stackoverflow.chat.Room;
 import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.commands.Check;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
+import in.bhargavrao.stackoverflow.natty.exceptions.PostNotStoredException;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 
@@ -64,7 +65,7 @@ public class ReplyHandlerService {
         }
         try {
             new FeedbackHandlerService(sitename, siteurl).handleFeedback(event.getMessage().getUser(), type, linkToPost);
-        } catch (FeedbackInvalidatedException e) {
+        } catch (FeedbackInvalidatedException | PostNotStoredException e) {
             e.printStackTrace();
             room.send(e.getMessage());
         }

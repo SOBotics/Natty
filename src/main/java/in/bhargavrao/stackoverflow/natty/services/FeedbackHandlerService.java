@@ -3,6 +3,7 @@ package in.bhargavrao.stackoverflow.natty.services;
 import com.google.gson.JsonObject;
 import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
+import in.bhargavrao.stackoverflow.natty.exceptions.PostNotStoredException;
 import in.bhargavrao.stackoverflow.natty.model.Feedback;
 import in.bhargavrao.stackoverflow.natty.model.FeedbackType;
 import in.bhargavrao.stackoverflow.natty.model.Reason;
@@ -27,7 +28,7 @@ public class FeedbackHandlerService {
         this.service = new FileStorageService();
     }
 
-    public void handleFeedback(User user, String type, String answerId) throws FeedbackInvalidatedException {
+    public void handleFeedback(User user, String type, String answerId) throws FeedbackInvalidatedException, PostNotStoredException {
 
         String sentinel = service.getSentinelId(answerId, sitename);
         long postId = -1;
@@ -42,6 +43,9 @@ public class FeedbackHandlerService {
 
         if(previousFeedbackType==null) {
             String loggedLine = service.retrieveReport(answerId, sitename);
+            if (loggedLine==null){
+                throw new PostNotStoredException("https://"+siteurl+"/a/"+answerId);
+            }
             SavedReport report = getSavedReportFromLog(loggedLine);
             service.saveFeedback(feedback, report, sitename);
         }
