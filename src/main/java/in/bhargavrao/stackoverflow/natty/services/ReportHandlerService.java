@@ -29,6 +29,7 @@ public class ReportHandlerService {
         this.validator = validator;
         this.naaLimit = naaLimit;
         this.user = user;
+        this.feedbackHandlerService = new FeedbackHandlerService(sitename, siteurl);
     }
 
     public String reportPost(String answerId){
