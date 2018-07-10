@@ -71,7 +71,10 @@ public class Report implements SpecialCommand {
                         case NEEDS_EDITING: room.replyTo(message.getId(), "Post already registered as Needs Editing"); break;
                         case TRUE_NEGATIVE: room.replyTo(message.getId(), "Post already registered as True Negative"); break;
                     }
-                    feedbackHandlerService.handleFeedback(user, "tp", word);
+                    List<String> users = service.retrieveFeedbackUserLogs(word, siteName);
+                    if(!users.contains(word+",tn,"+user.getId()+","+user.getName())) {
+                        feedbackHandlerService.handleFeedback(user, "tp", word);
+                    }
                 }
 
                 else {

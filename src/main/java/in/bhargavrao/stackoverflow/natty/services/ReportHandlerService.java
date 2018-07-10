@@ -51,6 +51,7 @@ public class ReportHandlerService {
                 feedbackType = FeedbackType.TRUE_POSITIVE;
 
             SavedReport savedReport = PostUtils.getReport(np, report);
+            savedReport.setFeedbackType(feedbackType);
 
             long postId = PostUtils.addSentinel(report, sitename, siteurl);
 
