@@ -51,4 +51,14 @@ public class PostReport {
     public void setCaughtForValues(List<Double> caughtForValues) {
         this.caughtForValues = caughtForValues;
     }
+
+    @Override
+    public String toString() {
+        return "PostReport{" +
+                "post=" + post +
+                ", naaValue=" + naaValue +
+                ", caughtFor=" + caughtFor +
+                ", caughtForValues=" + caughtForValues +
+                '}';
+    }
 }
