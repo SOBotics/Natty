@@ -10,6 +10,7 @@ import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ReplyHandlerService {
 
@@ -51,6 +52,21 @@ public class ReplyHandlerService {
             catch (IOException e){
                 e.printStackTrace();
             }
+        }
+        if (CommandUtils.checkForCommand(message.getContent(),"who")){
+            long repliedTo = event.getParentMessageId();
+            Message repliedToMessage = room.getMessage(repliedTo);
+            String linkToPost = getPostIdFromMessage(repliedToMessage.getPlainContent().trim(), siteurl);
+
+            StorageService service = new FileStorageService();
+            List<String> logs = service.retrieveFeedbackUserLogs(linkToPost, sitename);
+
+            String reply="";
+            for (String log:logs){
+                String [] splits = log.split(",");
+                reply+= splits[1]+" by "+splits[3]+"; ";
+            }
+            room.send(reply);
         }
     }
 
