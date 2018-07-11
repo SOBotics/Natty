@@ -64,7 +64,7 @@ public class ReportHandlerService {
             return getOutputMessage(np, report, desc);
         }
         else {
-            return "Post is not allowed to be reported in this room.";
+            return "Post is not allowed to be reported in this room: "+validator.descriptor();
         }
 
     }
