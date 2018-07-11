@@ -48,7 +48,7 @@ public class Report implements SpecialCommand {
             if(word.contains("/"))
             {
                 if (!word.contains(siteUrl)){
-                    room.send("Post is not allowed to be reported in this room.");
+                    room.send("Post is not allowed to be reported in this room: Wrong Site");
                     return;
                 }
                 word = CommandUtils.getAnswerId(word);
