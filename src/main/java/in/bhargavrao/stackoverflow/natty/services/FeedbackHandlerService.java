@@ -38,6 +38,9 @@ public class FeedbackHandlerService {
         if(postId!=-1) {
             long feedbackId = addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
         }
+        else {
+            new FMSService().storeFeedback(answerId, user.getName(), type, sitename);
+        }
         FeedbackType previousFeedbackType = service.getFeedback(answerId, sitename);
         Feedback feedback = new Feedback(user.getName(), user.getId(), FeedbackUtils.getFeedbackTypeFromFeedback(type));
 
@@ -65,7 +68,12 @@ public class FeedbackHandlerService {
     public void handleReportFeedback(User user, SavedReport report, Long postId, FeedbackType feedbackType){
         Feedback fb = new Feedback(user.getName(), user.getId(), feedbackType);
         service.saveFeedback(fb, report, sitename);
-        long feedbackId = addFeedback(postId, user.getId(), user.getName(), feedbackType.toString(), sitename, siteurl);
+        if(postId!=-1) {
+            long feedbackId = addFeedback(postId, user.getId(), user.getName(), feedbackType.toString(), sitename, siteurl);
+        }
+        else {
+            new FMSService().storeFeedback(report.getAnswerId().toString(), user.getName(), feedbackType.toString(), sitename);
+        }
     }
 
     private SavedReport getSavedReportFromLog(String logline){
