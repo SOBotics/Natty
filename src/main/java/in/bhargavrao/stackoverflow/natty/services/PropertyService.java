@@ -68,4 +68,7 @@ public class PropertyService {
     public String getFMSPath(){
         return prop.getProperty("fmsPath");
     }
+    public String getFMSUrl(){
+        return prop.getProperty("fmsUrl");
+    }
 }

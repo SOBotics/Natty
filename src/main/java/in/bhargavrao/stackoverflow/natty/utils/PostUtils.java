@@ -140,7 +140,7 @@ public class PostUtils {
 
         String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+
                 "</title></head><link href='style.css' rel='stylesheet' ><body>" +
-                "<h2><a href='"+np.getSiteUrl()+"/a/"+np.getAnswerID()+"'>"+np.getTitle()+"</a></h2><br />"+
+                "<h2><a href='//"+np.getSiteUrl()+"/a/"+np.getAnswerID()+"'>"+np.getTitle()+"</a></h2><br />"+
                 "<pre style='border:1px solid black;border-radius:5px'><code>"
                 +np.getBody()+"</code></pre>" +
                 "<p>Posted by <a href='"+np.getSiteUrl()+"/users/"+ np.getAnswerer().getUserId() + "'>"
@@ -158,7 +158,7 @@ public class PostUtils {
         catch (IOException e){
             e.printStackTrace();
         }
-        return "http://51.254.218.90:8000/Natty/"+np.getAnswerID()+".html";
+        return FMSUtils.FMSUrl()+"/"+np.getAnswerID()+".html";
     }
 
     public static long addSentinel(PostReport report, String sitename, String siteurl){

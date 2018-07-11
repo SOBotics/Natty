@@ -18,7 +18,13 @@ public class FMSUtils {
         PropertyService propertyService = new PropertyService();
         return propertyService.getFMSPath();
     }
-    public static void createNewFile(String filename, String data) throws IOException {
+    public static String FMSUrl(){
+        PropertyService propertyService = new PropertyService();
+        return propertyService.getFMSUrl();
+    }
+    public static String createNewFile(String filename, String data) throws IOException {
         Files.write(Paths.get(filename), Arrays.asList(data), StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE);
+        PropertyService propertyService = new PropertyService();
+        return propertyService.getFMSPath();
     }
 }
