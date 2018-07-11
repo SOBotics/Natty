@@ -3,7 +3,6 @@ package in.bhargavrao.stackoverflow.natty.services;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.tunaki.stackoverflow.chat.Room;
-import in.bhargavrao.stackoverflow.natty.utils.FMSUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +58,8 @@ public class CleanerService {
      * */
     private void cleanOldLogfiles() {
     	int keepLogsForDays = 14;
-        File logsDir = new File(FMSUtils.FMSFilePath());
+        PropertyService propertyService = new PropertyService();
+        File logsDir = new File(propertyService.getFMSPath());
         
         for (File file : logsDir.listFiles()) {
         	long diff = new Date().getTime() - file.lastModified();

@@ -13,10 +13,7 @@ import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException
 import in.bhargavrao.stackoverflow.natty.filters.*;
 import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
-import in.bhargavrao.stackoverflow.natty.services.ApiService;
-import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
-import in.bhargavrao.stackoverflow.natty.services.PropertyService;
-import in.bhargavrao.stackoverflow.natty.services.StorageService;
+import in.bhargavrao.stackoverflow.natty.services.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -135,30 +132,7 @@ public class PostUtils {
     }
 
     public static String addFMS(PostReport report){
-
-        Post np = report.getPost();
-
-        String htmlString="<!DOCTYPE html><html><head><title>"+np.getTitle()+
-                "</title></head><link href='style.css' rel='stylesheet' ><body>" +
-                "<h2><a href='//"+np.getSiteUrl()+"/a/"+np.getAnswerID()+"'>"+np.getTitle()+"</a></h2><br />"+
-                "<pre style='border:1px solid black;border-radius:5px'><code>"
-                +np.getBody()+"</code></pre>" +
-                "<p>Posted by <a href='"+np.getSiteUrl()+"/users/"+ np.getAnswerer().getUserId() + "'>"
-                +np.getAnswerer().getUsername()+"</a> ("+ np.getAnswerer().getReputation()+") at "+
-                np.getAnswerCreationDate()+"</p>"+
-                "<p>Caught for</p>";
-        for(String i:report.getCaughtFor()){
-            htmlString+=i+"<br/>";
-        }
-        htmlString+="</body></html>";
-        try {
-
-            FMSUtils.createNewFile(FMSUtils.FMSFilePath() + np.getAnswerID() + ".html", htmlString);
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-        return FMSUtils.FMSUrl()+"/"+np.getAnswerID()+".html";
+        return new FMSService().storeReport(report);
     }
 
     public static long addSentinel(PostReport report, String sitename, String siteurl){
