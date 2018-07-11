@@ -18,4 +18,8 @@ public class AllowAboveNRepValidator implements Validator {
         return post.getAnswerer().getReputation() >= rep;
     }
 
+    @Override
+    public String descriptor() {
+        return "User not above reputation "+rep;
+    }
 }

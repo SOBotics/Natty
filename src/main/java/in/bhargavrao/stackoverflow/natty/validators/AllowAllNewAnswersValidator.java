@@ -12,4 +12,9 @@ public class AllowAllNewAnswersValidator implements Validator {
         return post.getAnswerCreationDate().isAfter(post.getQuestionCreationDate().plusSeconds(2592000));
     }
 
+    @Override
+    public String descriptor() {
+        return "Answer not posted 30 days after the question";
+    }
+
 }

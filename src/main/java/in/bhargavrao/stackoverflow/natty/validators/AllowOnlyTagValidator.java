@@ -20,4 +20,10 @@ public class AllowOnlyTagValidator implements Validator {
         return Arrays.asList(post.getTags()).contains(tag);
     }
 
+
+    @Override
+    public String descriptor() {
+        return "Post not tagged [tag:"+tag+"]";
+    }
+
 }

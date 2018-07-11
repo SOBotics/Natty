@@ -18,4 +18,10 @@ public class AllowOnlyNCharsValidator implements Validator {
         return post.getBody().length()<len;
     }
 
+
+    @Override
+    public String descriptor() {
+        return "Post body length is not below "+len;
+    }
+
 }

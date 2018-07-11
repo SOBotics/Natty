@@ -13,4 +13,9 @@ public class GMTsValidator implements Validator {
                new AllowOnlyTagValidator("r").validate(post);
     }
 
+    @Override
+    public String descriptor() {
+        return "Not a new post on an old question tagged R.";
+    }
+
 }

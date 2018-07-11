@@ -10,4 +10,10 @@ public class AllowAllAnswersValidator implements Validator {
     public boolean validate(Post post) {
         return true;
     }
+
+
+    @Override
+    public String descriptor() {
+        return "Mamma mia";
+    }
 }

@@ -14,4 +14,10 @@ public class RPublicValidator implements Validator {
                new AllowAllNewAnswersValidator().validate(post);
     }
 
+
+    @Override
+    public String descriptor() {
+        return "Not a new answer posted by a high rep user on an old question tagged R";
+    }
+
 }
