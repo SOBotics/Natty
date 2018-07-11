@@ -39,9 +39,7 @@ public class ReplyHandlerService {
             room.delete(repliedTo);
         }
         if (CommandUtils.checkForCommand(message.getContent(),"why")){
-            long repliedTo = event.getParentMessageId();
-            Message repliedToMessage = room.getMessage(repliedTo);
-            String linkToPost = getPostIdFromMessage(repliedToMessage.getPlainContent().trim(), siteurl);
+            String linkToPost = getAnswerIdFromMessage(room, event, siteurl);
 
             try {
                 String returnParams[] = new Check(message, sitename, siteurl).getCheckData(linkToPost, 2);
@@ -54,9 +52,7 @@ public class ReplyHandlerService {
             }
         }
         if (CommandUtils.checkForCommand(message.getContent(),"who")){
-            long repliedTo = event.getParentMessageId();
-            Message repliedToMessage = room.getMessage(repliedTo);
-            String linkToPost = getPostIdFromMessage(repliedToMessage.getPlainContent().trim(), siteurl);
+            String linkToPost = getAnswerIdFromMessage(room, event, siteurl);
 
             StorageService service = new FileStorageService();
             List<String> logs = service.retrieveFeedbackUserLogs(linkToPost, sitename);
@@ -68,6 +64,13 @@ public class ReplyHandlerService {
             }
             room.send(reply);
         }
+    }
+
+
+    private String getAnswerIdFromMessage(Room room, PingMessageEvent event, String siteurl) {
+        long repliedTo = event.getParentMessageId();
+        Message repliedToMessage = room.getMessage(repliedTo);
+        return getPostIdFromMessage(repliedToMessage.getPlainContent().trim(), siteurl);
     }
 
     private void store(Room room, PingMessageEvent event, String type, String sitename, String siteurl){
