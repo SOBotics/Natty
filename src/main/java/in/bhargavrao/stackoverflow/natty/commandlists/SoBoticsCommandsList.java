@@ -54,6 +54,7 @@ public class SoBoticsCommandsList {
             new Send(message, new AllowAllNewAnswersValidator(), 3.5, sitename, siteurl),
             new ShowRequests(message),
             new Status(message, sitename, siteurl),
+            new StopAutoflagging(message),
             new Test(message),
             new Whitelist(message),
             new WishBirthday(message)

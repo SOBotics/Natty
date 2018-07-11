@@ -10,6 +10,7 @@ import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.services.UserService;
 import in.bhargavrao.stackoverflow.natty.utils.AutoCommentUtils;
+import in.bhargavrao.stackoverflow.natty.utils.AutoFlagUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.utils.StatusUtils;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
@@ -50,11 +51,18 @@ public class Runner {
                     }
                 }
 
-                if(validator.validate(np) && report.getNaaValue()>=7.0 && logging && !report.getCaughtFor().contains("Possible Link Only")){
+                if(validator.validate(np) && report.getNaaValue()>=7.0
+                        && logging
+                        && !report.getCaughtFor().contains("Possible Link Only")){
                     // IGNORING LINK ONLY FOR NOW AS THERE ARE A FEW FPs
-                    AutoComment comment = AutoCommentUtils.commentForPostReport(report);
-                    room.send(PostUtils.autoFlag(np, comment, sitename, siteurl) + " on this [post](//"+siteurl+"/a/"+np.getAnswerID()+")");
 
+                    if (AutoFlagUtils.shouldAutoflag) {
+                        AutoComment comment = AutoCommentUtils.commentForPostReport(report);
+                        room.send(PostUtils.autoFlag(np, comment, sitename, siteurl) + " on this [post](//" + siteurl + "/a/" + np.getAnswerID() + ")");
+                    }
+                    else {
+                        room.send("Autoflagging disabled until restart");
+                    }
                 }
             }
         }
