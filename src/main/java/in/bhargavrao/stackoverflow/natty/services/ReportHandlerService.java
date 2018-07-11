@@ -54,9 +54,14 @@ public class ReportHandlerService {
             savedReport.setFeedbackType(feedbackType);
 
             long postId = PostUtils.addSentinel(report, sitename, siteurl);
-
+            String desc;
+            if (postId == -1) {
+                desc = "[FMS](" + PostUtils.addFMS(report) + ")";
+            } else {
+                desc = "[Sentinel](" + SentinelUtils.getSentinelMainUrl(sitename) + "/posts/" + postId + ")";
+            }
             feedbackHandlerService.handleReportFeedback(user, savedReport, postId, feedbackType);
-            return getOutputMessage(np, report, postId);
+            return getOutputMessage(np, report, desc);
         }
         else {
             return "Post is not allowed to be reported in this room.";
@@ -64,14 +69,10 @@ public class ReportHandlerService {
 
     }
 
-    private String getOutputMessage(Post np, PostReport report, long postId) {
-        String description;
+    private String getOutputMessage(Post np, PostReport report, String dash) {
 
-        if (postId == -1) {
-            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
-        } else {
-            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl(sitename) + "/posts/" + postId + ") ]");
-        }
+        String description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | " + dash + " ]");
+
         PostPrinter pp = new PostPrinter(np, description);
         pp.addQuesionLink();
 
