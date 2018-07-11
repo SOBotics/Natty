@@ -30,17 +30,6 @@ public class FeedbackHandlerService {
 
     public void handleFeedback(User user, String type, String answerId) throws FeedbackInvalidatedException, PostNotStoredException {
 
-        String sentinel = service.getSentinelId(answerId, sitename);
-        long postId = -1;
-        if (sentinel!=null) {
-            postId = Long.parseLong(sentinel.split(",")[1]);
-        }
-        if(postId!=-1) {
-            long feedbackId = addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
-        }
-        else {
-            new FMSService().storeFeedback(answerId, user.getName(), type, sitename);
-        }
         FeedbackType previousFeedbackType = service.getFeedback(answerId, sitename);
         Feedback feedback = new Feedback(user.getName(), user.getId(), FeedbackUtils.getFeedbackTypeFromFeedback(type));
 
@@ -48,6 +37,17 @@ public class FeedbackHandlerService {
             String loggedLine = service.retrieveReport(answerId, sitename);
             if (loggedLine==null){
                 throw new PostNotStoredException("https://"+siteurl+"/a/"+answerId);
+            }
+            String sentinel = service.getSentinelId(answerId, sitename);
+            long postId = -1;
+            if (sentinel!=null) {
+                postId = Long.parseLong(sentinel.split(",")[1]);
+            }
+            if(postId!=-1) {
+                long feedbackId = addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
+            }
+            else {
+                new FMSService().storeFeedback(answerId, user.getName(), type, sitename);
             }
             SavedReport report = getSavedReportFromLog(loggedLine);
             service.saveFeedback(feedback, report, sitename);

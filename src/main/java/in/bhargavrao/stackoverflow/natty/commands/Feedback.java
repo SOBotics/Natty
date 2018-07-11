@@ -69,7 +69,11 @@ public class Feedback implements SpecialCommand {
             } catch (PostNotStoredException e) {
                 if (type.equals("tp") || type.equals("t")) {
                     User user = message.getUser();
+                    room.send("Post hasn't been reported earlier, manually reporting it now.");
                     room.send(new ReportHandlerService(sitename, siteurl, validator, naaLimit, user).reportPost(word));
+                }
+                else {
+                    room.send("Post hasn't been reported earlier.");
                 }
             }
         }
