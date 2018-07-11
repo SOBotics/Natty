@@ -87,28 +87,6 @@ public class Report implements SpecialCommand {
         }
     }
 
-    private String getOutputMessage(Post np, PostReport report, long postId) {
-        String description;
-
-        if (postId == -1) {
-            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
-        } else {
-            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl(siteName) + "/posts/" + postId + ") ]");
-        }
-        PostPrinter pp = new PostPrinter(np, description);
-        pp.addQuesionLink();
-
-        Double found = report.getNaaValue();
-        List<String> caughtFilters = report.getCaughtFor();
-
-        for (String filter : caughtFilters) {
-            pp.addMessage(" **" + filter + "**; ");
-        }
-        pp.addMessage(" **" + found + "**;");
-
-        return pp.print();
-    }
-
     @Override
     public String description() {
         return "Reports the mentioned post as a true negative NAA/VLQ";
