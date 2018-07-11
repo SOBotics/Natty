@@ -64,6 +64,12 @@ public class ReplyHandlerService {
             }
             room.send(reply);
         }
+        if (CommandUtils.checkForCommand(message.getContent(),"autoflagged")){
+            String linkToPost = getAnswerIdFromMessage(room, event, siteurl);
+            StorageService service = new FileStorageService();
+            boolean autoflagged = service.checkAutoFlag(Long.parseLong(linkToPost), sitename);
+            room.send("The post was "+(autoflagged?"":"not")+"autoflagged by Natty");
+        }
     }
 
 
