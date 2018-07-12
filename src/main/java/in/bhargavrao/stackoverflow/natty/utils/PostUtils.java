@@ -8,8 +8,6 @@ import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
 import in.bhargavrao.stackoverflow.natty.services.*;
 import org.jetbrains.annotations.NotNull;
-import org.sobotics.chatexchange.chat.Room;
-import org.sobotics.chatexchange.chat.event.MessagePostedEvent;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -179,18 +177,6 @@ public class PostUtils {
         return sentinelPostId;
     }
 
-
-
-    public static void newMessage(Room room, MessagePostedEvent event, boolean b) {
-        String message = event.getMessage().getPlainContent();
-        int cp = Character.codePointAt(message, 0);
-        if(message.trim().startsWith("@bots alive")){
-            room.send("Whadya think?");
-        }
-        else if (cp == 128642 || (cp>=128644 && cp<=128650)){
-            room.send("\uD83D\uDE83");
-        }
-    }
 
 
     public static SavedReport getReport(Post np, PostReport report){

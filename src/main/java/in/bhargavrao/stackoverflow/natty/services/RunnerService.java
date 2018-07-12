@@ -19,8 +19,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static in.bhargavrao.stackoverflow.natty.utils.PostUtils.newMessage;
-
 /**
  * Created by bhargav.h on 28-Dec-16.
  */
@@ -61,7 +59,8 @@ public class RunnerService {
                 PropertyService service  = new PropertyService();
 
                 Room finalChatroom = chatroom;
-                chatroom.addEventListener(EventType.MESSAGE_POSTED, event-> newMessage(finalChatroom, event, false));
+                chatroom.addEventListener(EventType.MESSAGE_POSTED,
+                        new NewMessageHandlerService().getMessagePostedEventConsumer(finalChatroom));
 
                 BlacklistDataService blacklistDataService = new BlacklistDataService(finalChatroom);
                 blacklistDataService.start();
@@ -101,6 +100,8 @@ public class RunnerService {
         }
         executorService = Executors.newSingleThreadScheduledExecutor();
     }
+
+
 
     public void run() {
         handle = executorService.scheduleAtFixedRate(() -> execute(), 0, presentInterval, TimeUnit.SECONDS);
