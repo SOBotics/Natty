@@ -159,6 +159,8 @@ public class PostUtils {
                 reason = "User Mentioned";
             if(reason.startsWith("Piled symbols"))
                 reason = "Piled symbols";
+            if(reason.startsWith("Intelli"))
+                reason = "IntelliBL";
             reasons.add(reason);
         }
 
