@@ -18,9 +18,11 @@ public class NewMessageHandlerService {
         if(message.trim().startsWith("@bots alive")){
             room.send("Whadya think?");
         }
-        else if (cp == 128642 || (cp>=128644 && cp<=128650)){
+        if (cp == 128642 || (cp>=128644 && cp<=128650)){
             room.send("\uD83D\uDE83");
         }
+        if(message.trim().equals("AAAAAAAAAAAAAAAAAAAH!! LET ME OUT!") && event.getUserId()==7481043){
+            room.send("Calm down, nothing will happen.");
+        }
     }
-
 }
