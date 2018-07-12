@@ -24,7 +24,7 @@ public class FeederService {
 
     public void start(){
         Runnable feeder = () -> room.send(message);
-        feederService.scheduleAtFixedRate(feeder, 0, nHrs, TimeUnit.HOURS);
+        feederService.scheduleAtFixedRate(feeder, 1, nHrs, TimeUnit.HOURS);
     }
 
     public void stop(){
