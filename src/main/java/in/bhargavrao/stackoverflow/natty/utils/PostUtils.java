@@ -6,7 +6,10 @@ import com.google.gson.JsonObject;
 import in.bhargavrao.stackoverflow.natty.filters.*;
 import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.model.autocomments.AutoComment;
-import in.bhargavrao.stackoverflow.natty.services.*;
+import in.bhargavrao.stackoverflow.natty.services.ApiService;
+import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
+import in.bhargavrao.stackoverflow.natty.services.PropertyService;
+import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -122,10 +125,6 @@ public class PostUtils {
         filters.add(new UnregisteredUserFilter(np));
 
         return filters;
-    }
-
-    public static String addFMS(PostReport report){
-        return new FMSService().storeReport(report);
     }
 
     public static long addSentinel(PostReport report, String sitename, String siteurl){

@@ -2,10 +2,11 @@ package in.bhargavrao.stackoverflow.natty.printers;
 
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
+import in.bhargavrao.stackoverflow.natty.services.FMSService;
+import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
 import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
-import in.bhargavrao.stackoverflow.natty.utils.PostPrinter;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class TemporaryRoomPostPrinter implements in.bhargavrao.stackoverflow.nat
         long SentinelId = PostUtils.addSentinel(report, "askubuntu", "askubuntu.com");
         String description;
         if(SentinelId==-1){
-            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
+            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + new FMSService().storeReport(report) + ") ]");
         }
         else {
             description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl("askubuntu") + "/posts/" + SentinelId + ") ]");

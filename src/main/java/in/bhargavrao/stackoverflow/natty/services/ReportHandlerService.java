@@ -56,7 +56,7 @@ public class ReportHandlerService {
             long postId = PostUtils.addSentinel(report, sitename, siteurl);
             String desc;
             if (postId == -1) {
-                desc = "[FMS](" + PostUtils.addFMS(report) + ")";
+                desc = "[FMS](" + new FMSService().storeReport(report) + ")";
             } else {
                 desc = "[Sentinel](" + SentinelUtils.getSentinelMainUrl(sitename) + "/posts/" + postId + ")";
             }

@@ -2,6 +2,7 @@ package in.bhargavrao.stackoverflow.natty.printers;
 
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
+import in.bhargavrao.stackoverflow.natty.services.FMSService;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
 import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
@@ -24,7 +25,7 @@ public class SoBoticsPostPrinter implements PostPrinter {
         long SentinelId = PostUtils.addSentinel(report, "stackoverflow", "stackoverflow.com");
         String description;
         if(SentinelId==-1){
-            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + PostUtils.addFMS(report) + ") ]");
+            description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [FMS](" + new FMSService().storeReport(report) + ") ]");
         }
         else {
             description = ("[ [Natty](" + PrintUtils.printStackAppsPost() + ") | [Sentinel](" + SentinelUtils.getSentinelMainUrl("stackoverflow") + "/posts/" + SentinelId + ") ]");
