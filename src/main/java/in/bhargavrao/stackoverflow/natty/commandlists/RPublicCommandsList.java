@@ -1,23 +1,15 @@
 package in.bhargavrao.stackoverflow.natty.commandlists;
 
+import in.bhargavrao.stackoverflow.natty.commands.*;
+import in.bhargavrao.stackoverflow.natty.services.RunnerService;
+import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
+import org.sobotics.chatexchange.chat.Message;
+import org.sobotics.chatexchange.chat.Room;
+import org.sobotics.chatexchange.chat.event.PingMessageEvent;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import fr.tunaki.stackoverflow.chat.Message;
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
-import in.bhargavrao.stackoverflow.natty.commands.Alive;
-import in.bhargavrao.stackoverflow.natty.commands.Check;
-import in.bhargavrao.stackoverflow.natty.commands.Commands;
-import in.bhargavrao.stackoverflow.natty.commands.Help;
-import in.bhargavrao.stackoverflow.natty.commands.Hi;
-import in.bhargavrao.stackoverflow.natty.commands.OptIn;
-import in.bhargavrao.stackoverflow.natty.commands.OptOut;
-import in.bhargavrao.stackoverflow.natty.commands.SpecialCommand;
-import in.bhargavrao.stackoverflow.natty.commands.WishBirthday;
-import in.bhargavrao.stackoverflow.natty.services.RunnerService;
-import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 
 /**
  * Created by bhargav.h on 28-Oct-16.

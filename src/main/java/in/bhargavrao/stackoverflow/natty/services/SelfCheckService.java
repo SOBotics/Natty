@@ -1,11 +1,11 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
+import in.bhargavrao.stackoverflow.natty.utils.StatusUtils;
+
 import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import fr.tunaki.stackoverflow.chat.Room;
-import in.bhargavrao.stackoverflow.natty.utils.StatusUtils;
 
 /**
  * Checks the status of the bot and maybe triggers a reboot

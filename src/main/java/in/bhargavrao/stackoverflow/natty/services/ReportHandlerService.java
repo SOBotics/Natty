@@ -1,6 +1,5 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
-import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.model.FeedbackType;
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
@@ -10,6 +9,7 @@ import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
 import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
+import org.sobotics.chatexchange.chat.User;
 
 import java.io.IOException;
 import java.util.List;

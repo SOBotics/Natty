@@ -1,9 +1,9 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
 import in.bhargavrao.stackoverflow.natty.model.Post;
+import org.sobotics.chatexchange.chat.Room;
+import org.sobotics.chatexchange.chat.User;
 
 import java.util.ArrayList;
 import java.util.List;

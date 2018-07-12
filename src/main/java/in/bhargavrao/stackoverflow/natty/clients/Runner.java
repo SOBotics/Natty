@@ -1,6 +1,5 @@
 package in.bhargavrao.stackoverflow.natty.clients;
 
-import fr.tunaki.stackoverflow.chat.Room;
 import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.model.PostReport;
@@ -14,6 +13,7 @@ import in.bhargavrao.stackoverflow.natty.utils.AutoFlagUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.utils.StatusUtils;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
+import org.sobotics.chatexchange.chat.Room;
 
 import java.time.Instant;
 import java.util.List;

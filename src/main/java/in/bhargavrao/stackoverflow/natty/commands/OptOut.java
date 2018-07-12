@@ -1,14 +1,14 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import fr.tunaki.stackoverflow.chat.Message;
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.model.OptedInUser;
 import in.bhargavrao.stackoverflow.natty.model.SOUser;
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.sobotics.chatexchange.chat.Message;
+import org.sobotics.chatexchange.chat.Room;
+import org.sobotics.chatexchange.chat.User;
 
 /**
  * Created by bhargav.h on 30-Sep-16.

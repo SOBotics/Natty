@@ -1,11 +1,11 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.io.IOException;
-
-import fr.tunaki.stackoverflow.chat.Message;
-import fr.tunaki.stackoverflow.chat.Room;
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
+import org.sobotics.chatexchange.chat.Message;
+import org.sobotics.chatexchange.chat.Room;
+
+import java.io.IOException;
 
 /**
  * Created by bhargav.h on 30-Sep-16.

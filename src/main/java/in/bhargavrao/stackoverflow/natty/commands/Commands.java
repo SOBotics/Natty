@@ -1,11 +1,11 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import java.util.List;
-
-import fr.tunaki.stackoverflow.chat.Message;
-import fr.tunaki.stackoverflow.chat.Room;
 import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.PrintUtils;
+import org.sobotics.chatexchange.chat.Message;
+import org.sobotics.chatexchange.chat.Room;
+
+import java.util.List;
 
 /**
  * Created by bhargav.h on 30-Sep-16.

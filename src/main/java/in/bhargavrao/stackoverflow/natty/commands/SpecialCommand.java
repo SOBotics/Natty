@@ -1,6 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
-import fr.tunaki.stackoverflow.chat.Room;
+import org.sobotics.chatexchange.chat.Room;
 
 /**
  * Created by bhargav.h on 30-Sep-16.

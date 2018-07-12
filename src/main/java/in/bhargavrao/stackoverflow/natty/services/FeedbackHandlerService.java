@@ -1,7 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
 import com.google.gson.JsonObject;
-import fr.tunaki.stackoverflow.chat.User;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
 import in.bhargavrao.stackoverflow.natty.exceptions.PostNotStoredException;
 import in.bhargavrao.stackoverflow.natty.model.Feedback;
@@ -9,8 +8,8 @@ import in.bhargavrao.stackoverflow.natty.model.FeedbackType;
 import in.bhargavrao.stackoverflow.natty.model.Reason;
 import in.bhargavrao.stackoverflow.natty.model.SavedReport;
 import in.bhargavrao.stackoverflow.natty.utils.FeedbackUtils;
-import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import in.bhargavrao.stackoverflow.natty.utils.SentinelUtils;
+import org.sobotics.chatexchange.chat.User;
 
 import java.time.Instant;
 import java.util.ArrayList;

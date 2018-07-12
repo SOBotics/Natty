@@ -1,13 +1,12 @@
 package in.bhargavrao.stackoverflow.natty.commandlists;
 
-import fr.tunaki.stackoverflow.chat.Message;
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.event.PingMessageEvent;
 import in.bhargavrao.stackoverflow.natty.commands.*;
 import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllAnswersValidator;
-import in.bhargavrao.stackoverflow.natty.validators.AllowAllNewAnswersValidator;
+import org.sobotics.chatexchange.chat.Message;
+import org.sobotics.chatexchange.chat.Room;
+import org.sobotics.chatexchange.chat.event.PingMessageEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;

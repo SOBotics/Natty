@@ -1,12 +1,12 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
-import fr.tunaki.stackoverflow.chat.Room;
-import fr.tunaki.stackoverflow.chat.StackExchangeClient;
-import fr.tunaki.stackoverflow.chat.event.EventType;
 import in.bhargavrao.stackoverflow.natty.clients.Runner;
 import in.bhargavrao.stackoverflow.natty.model.Post;
 import in.bhargavrao.stackoverflow.natty.roomdata.BotRoom;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllAnswersValidator;
+import org.sobotics.chatexchange.chat.Room;
+import org.sobotics.chatexchange.chat.StackExchangeClient;
+import org.sobotics.chatexchange.chat.event.EventType;
 
 import java.io.IOException;
 import java.time.Instant;

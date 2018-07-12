@@ -2,7 +2,7 @@ package in.bhargavrao.stackoverflow.natty.services;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import fr.tunaki.stackoverflow.chat.Room;
+import org.sobotics.chatexchange.chat.Room;
 
 import java.io.File;
 import java.io.IOException;

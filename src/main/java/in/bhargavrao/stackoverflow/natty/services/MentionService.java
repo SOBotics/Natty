@@ -2,11 +2,10 @@ package in.bhargavrao.stackoverflow.natty.services;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import fr.tunaki.stackoverflow.chat.Room;
+import org.sobotics.chatexchange.chat.Room;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
