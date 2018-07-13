@@ -68,7 +68,7 @@ public class ReplyHandlerService {
             String linkToPost = getAnswerIdFromMessage(room, event, siteurl);
             StorageService service = new FileStorageService();
             boolean autoflagged = service.checkAutoFlag(Long.parseLong(linkToPost), sitename);
-            room.send("The post was "+(autoflagged?"":"not")+"autoflagged by Natty");
+            room.send("The post was "+(autoflagged?"":"not s")+"autoflagged by Natty");
         }
     }
 

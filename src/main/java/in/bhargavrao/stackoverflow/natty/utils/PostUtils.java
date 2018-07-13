@@ -220,6 +220,9 @@ public class PostUtils {
                     if (e.getAsJsonObject().get("title").getAsString().equals("not an answer")) {
                         JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(), e.getAsJsonObject().get("option_id").getAsInt());
 
+                        StorageService service = new FileStorageService();
+                        service.addAutoFlag(post.getAnswerID(), sitename);
+
                         //If a comment was passed, post it
                         if (comment != null && comment.length() > 0) {
                             JsonObject commentJson = apiService.addComment(comment.getText(), post.getAnswerID());
@@ -227,8 +230,6 @@ public class PostUtils {
                             return "Post Flagged Automatically - Added [comment](//stackoverflow.com/posts/comments/" + commentId + "): " + comment.getIdentifier();
                             //return "Post Flagged Automatically - would add comment: "+comment.getIdentifier();
                         }
-                        StorageService service = new FileStorageService();
-                        service.addAutoFlag(post.getAnswerID(), sitename);
                         return "Post Flagged Automatically";
                     }
                 }
