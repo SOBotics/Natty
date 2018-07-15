@@ -51,7 +51,9 @@ public class FeedbackHandlerService {
             SavedReport report = getSavedReportFromLog(loggedLine);
             service.saveFeedback(feedback, report, sitename);
         }
-        else if (previousFeedbackType.equals(feedback.getFeedbackType())){
+        else if (previousFeedbackType.equals(feedback.getFeedbackType()) ||
+                (previousFeedbackType==FeedbackType.TRUE_NEGATIVE &&
+                        feedback.getFeedbackType()==FeedbackType.TRUE_POSITIVE)){
             String loggedLine = service.retrieveFeedback(answerId, sitename);
             SavedReport report = getSavedReportFromLog(loggedLine.replace(previousFeedbackType.toString()+",",""));
             service.addFeedback(feedback, report, sitename);
