@@ -32,21 +32,27 @@ public class FeedbackHandlerService {
         FeedbackType previousFeedbackType = service.getFeedback(answerId, sitename);
         Feedback feedback = new Feedback(user.getName(), user.getId(), FeedbackUtils.getFeedbackTypeFromFeedback(type));
 
+        // Report to the dashboards
+
+        String sentinel = service.getSentinelId(answerId, sitename);
+        long postId = -1;
+        if (sentinel!=null) {
+            postId = Long.parseLong(sentinel.split(",")[1]);
+        }
+        if(postId!=-1) {
+            long feedbackId = addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
+        }
+        else {
+            new FMSService().storeFeedback(answerId, user.getName(), type, sitename);
+        }
+
+
+        // Store the data
+
         if(previousFeedbackType==null) {
             String loggedLine = service.retrieveReport(answerId, sitename);
             if (loggedLine==null){
                 throw new PostNotStoredException("https://"+siteurl+"/a/"+answerId);
-            }
-            String sentinel = service.getSentinelId(answerId, sitename);
-            long postId = -1;
-            if (sentinel!=null) {
-                postId = Long.parseLong(sentinel.split(",")[1]);
-            }
-            if(postId!=-1) {
-                long feedbackId = addFeedback(postId, user.getId(), user.getName(), type, sitename, siteurl);
-            }
-            else {
-                new FMSService().storeFeedback(answerId, user.getName(), type, sitename);
             }
             SavedReport report = getSavedReportFromLog(loggedLine);
             service.saveFeedback(feedback, report, sitename);
