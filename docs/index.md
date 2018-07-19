@@ -10,7 +10,7 @@ and thus Natty was born.
 - [List of Commands](/commands). 
 - [Interacting with the bot and providing feedback](/interacting).
 - [Etiqutte while dealing with the bot](/etiquette). 
-- [Working of the bot](/working).
+- [Setting up the bot](/setup).
 - [Useful userscripts](/userscripts). 
 - [What is Sentinel](/sentinel).
 - [Autoflagging of bad posts](/autoflagging). 
