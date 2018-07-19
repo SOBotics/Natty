@@ -38,7 +38,9 @@
         ├── properties
         │   └── login.properties
 
+
    if you are tracking for AU as well, then you'll need to create a `aulogs` folder structure:
+
 
         ├── aulogs
         │   ├── fullReports.txt
