@@ -46,7 +46,7 @@ fmsPath=
 fmsUrl=
 feedMsg=" > properties/login.properties
 
-python3 downloadData.py
+python3 setup/downloadData.py
 
 mvn clean
 mvn package

@@ -3,8 +3,8 @@ import requests
 url = "https://logs.sobotics.org/napi/api/list/"
 
 
-endpoints = ["data/blacklistedWords", "data/whitelistedWords"]
-files = ["BlackListedWords.txt", "WhiteListedWords.txt"]
+endpoints = ["blacklistedWords", "whitelistedWords", "salutations"]
+files = ["../data/BlackListedWords.txt", "../data/WhiteListedWords.txt", "../data/Salutations.txt"]
 
 for api, filename in zip(endpoints, files):
     resp = requests.get(url=url+api)
