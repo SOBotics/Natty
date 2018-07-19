@@ -50,5 +50,5 @@ python3 setup/downloadData.py
 python3 setup/requestData.py
 
 mvn clean
-mvn packages
+mvn package
 cp target/natty-v4.jar .

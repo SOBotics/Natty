@@ -4,7 +4,7 @@ url = "https://logs.sobotics.org/napi/api/list/"
 
 
 endpoints = ["blacklistedWords", "whitelistedWords", "salutations"]
-files = ["../data/BlackListedWords.txt", "../data/WhiteListedWords.txt", "../data/Salutations.txt"]
+files = ["data/BlackListedWords.txt", "data/WhiteListedWords.txt", "data/Salutations.txt"]
 
 for api, filename in zip(endpoints, files):
     resp = requests.get(url=url+api)
