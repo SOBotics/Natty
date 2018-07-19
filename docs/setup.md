@@ -22,21 +22,21 @@
  3.  At the same level of the `.jar` file which you created. Create the following structure: 
 
 
-        |--- data
-        |   |--- BlackListedUsers.txt
-        |   |--- BlackListedWords.txt
-        |   |--- CheckUsers.txt
-        |   |--- FeatureRequests.txt
-        |   |--- OptedInUsersList.txt
-        |   |--- Salutations.txt
-        |    --- WhiteListedWords.txt
-        |--- logs
-        |   |--- fullReports.txt
-        |   |--- output.csv
-        |   |--- reports.txt
-        |    --- sentinelReports.txt
-        |--- properties
-        |    --- login.properties
+            |--- data
+            |   |--- BlackListedUsers.txt
+            |   |--- BlackListedWords.txt
+            |   |--- CheckUsers.txt
+            |   |--- FeatureRequests.txt
+            |   |--- OptedInUsersList.txt
+            |   |--- Salutations.txt
+            |    --- WhiteListedWords.txt
+            |--- logs
+            |   |--- fullReports.txt
+            |   |--- output.csv
+            |   |--- reports.txt
+            |    --- sentinelReports.txt
+            |--- properties
+            |    --- login.properties
 
 
    if you are tracking for AU as well, then you'll need to create a `aulogs` folder structure:
