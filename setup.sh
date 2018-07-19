@@ -47,6 +47,8 @@ fmsUrl=
 feedMsg=" > properties/login.properties
 
 python3 setup/downloadData.py
+python3 setup/requestData.py
 
 mvn clean
-mvn package
+mvn packages
+cp target/natty-v4.jar .
