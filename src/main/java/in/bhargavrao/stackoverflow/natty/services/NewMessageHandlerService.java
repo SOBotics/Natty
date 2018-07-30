@@ -19,9 +19,12 @@ public class NewMessageHandlerService {
             room.send("Whadya think?");
         }
         if (cp == 128642 || (cp>=128644 && cp<=128650)){
-            room.send("\uD83D\uDE83");
+            room.send("[\uD83D\uDE83](https://www.youtube.com/watch?v=C5seQxAqZtQ)");
         }
-        if(message.trim().equals("AAAAAAAAAAAAAAAAAAAH!! LET ME OUT!") && event.getUserId()==7481043){
+        if(message.trim().contains("programmers") && event.getUserId()==7481043){
+            room.send("Sigh, he's getting philosophical again. Is there anyone here?");
+        }
+        if(message.trim().contains("Punishments include such things as flashbacks") && event.getUserId()==7481043){
             room.send("Calm down, nothing will happen.");
         }
     }
