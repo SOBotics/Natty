@@ -5,7 +5,6 @@ import in.bhargavrao.stackoverflow.natty.model.*;
 import in.bhargavrao.stackoverflow.natty.utils.FeedbackUtils;
 import in.bhargavrao.stackoverflow.natty.utils.FileUtils;
 import in.bhargavrao.stackoverflow.natty.utils.JsonUtils;
-import in.bhargavrao.stackoverflow.natty.utils.PostUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -307,7 +306,7 @@ public class FileStorageService implements StorageService {
     @Override
     public boolean checkIfReported(String postId, String sitename) {
         try {
-            return FileUtils.checkIfInFile(getPath(sitename)+outputReportLogFileName,sitename);
+            return FileUtils.checkIfInFile(getPath(sitename)+outputReportLogFileName,postId);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
