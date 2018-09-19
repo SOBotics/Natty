@@ -9,13 +9,13 @@ The list of all commands are
     check           - Checks the sanity of a given post
     delete          - Deletes a given comment
     feedback        - Provides feedback on a given post
-    fetch           - Returns a list of posts that need feedback
+    fetch           - Returns a list of posts that need feedback, See the wiki for more details
     halp            - Plop, check it out
     help            - Returns information regarding the chatbot
     hi              - Hi, Test it out
     isblacklisted   - Checks if the given statement is blacklisted
     iswhitelisted   - Checks if the given statement is whitelisted
-    opt-in          - Notifies the user of the requested posts
+    opt-in          - Notifies the user of the requested posts, see the wiki for more details
     opt-out         - Unnotifies the user. 
     quota           - Returns the remaining API Quota
     reboot          - Reboots the bot
@@ -28,6 +28,8 @@ The list of all commands are
     send            - Sends a mass feedback, see the wiki for more details
     showreqs        - Shows the list of requests
     status          - Returns the status of the bot
+    stopflagging    - Stops auto flagging
+    test            - Tests a mock body if it would be caught for any filters
     whitelist       - Adds a given statement to the list of whitelisted words
     wishBD          - Wishes the user a very happy birthday
     commands        - Returns the list of commands associated with this bot
@@ -74,11 +76,13 @@ The `opt-out` command unlists the users only when the arguments are the same as 
 
 The fetch command also takes a few arguments that can be used to get the posts that have not received feedback. The command alone, without any arguments returns a list of answerIds. The other options are 
 
- - `links` : This returns the answerIds of the posts along with the links to those posts. This is useful to send bulk feedback. Adding a number argument, returns the requested amount only. For example, to fetch 10 reports, we can use `@Natty fetch links 10`.
+ - `links` : This returns the answerIds of the posts along with the links to those posts. This is useful to send bulk feedback. 
  - `deleted` : This returns the answerIds of the posts which are deleted. 
  - `amount` : This returns the number of available posts in the feedback queue. 
  - `Sentinel` : This returns the Sentinel links of the posts.
  - `FMS` : This returns the FMS links of the post. 
+
+Adding a number argument, returns the requested amount only. For example, to fetch 10 reports, we can use `@Natty fetch links 10`.
 
 ## `send` command format
 
@@ -88,7 +92,6 @@ The `send` command can be used to send mass feedback. However the feedback must 
 
 The `feedback` command can be used to send feedback to an individual report.  The format of the command is `feedback postlink feedbackType`. 
 The `feedback` command can be used to correct an incorrectly passed feedback, by re-sending the correct feedback. (The feedback can be monitored on [Sentinel](/Natty/sentinel))
-
 
 
 # Easter egg commands 
@@ -101,6 +104,15 @@ Few commands like
  - `wishBD`
  
 are just small commands to keep the room in a lively mood. 
+
+# Reply Commands 
+
+Apart from the usual feedback commands, the following other commands are present:
+
+ - `delete` - Deletes the message replied to. 
+ - `autoflagged` - Informs if a post has been autoflagged. 
+ - `why` - Returns the list of reasons as to why a post has been detected.
+ - `who` - Returns the list of users who have provided feedback.  
 
 ----
 
