@@ -14,8 +14,7 @@ import java.util.stream.Collectors;
 public class ApiService {
 
     private String apiKey;
-    private String autoflagKey;
-    private String autoflagToken;
+    private String apiToken;
     private String userId;
     private String site;
 
@@ -28,83 +27,82 @@ public class ApiService {
 
         this.site = site;
         this.apiKey = service.getApiKey();
-        this.autoflagKey = service.getAutoFlagKey();
-        this.autoflagToken = service.getAutoFlagToken();
+        this.apiToken = service.getApiToken();
         this.userId = service.getUserId();
 
     }
 
     public JsonObject getQuestionDetailsByIds(List<Integer> questionIdList) throws IOException {
-        JsonObject questionJson = getQuestionDetailsByIdsApiCall(questionIdList,site,autoflagKey,autoflagToken);
+        JsonObject questionJson = getQuestionDetailsByIdsApiCall(questionIdList,site, apiKey, apiToken);
         JsonUtils.handleBackoff(questionJson);
         quota = questionJson.get("quota_remaining").getAsInt();
         return questionJson;
     }
 
     public JsonObject getQuestionDetailsById(Integer questionId) throws IOException{
-        JsonObject questionJson = getQuestionDetailsByIdApiCall(questionId,site,autoflagKey,autoflagToken);
+        JsonObject questionJson = getQuestionDetailsByIdApiCall(questionId,site, apiKey, apiToken);
         JsonUtils.handleBackoff(questionJson);
         quota = questionJson.get("quota_remaining").getAsInt();
         return questionJson;
     }
 
     public JsonObject getAnswerDetailsById(Integer answerId) throws IOException{
-        JsonObject answerJson = getAnswerDetailsByIdApiCall(answerId,site,autoflagKey,autoflagToken);
+        JsonObject answerJson = getAnswerDetailsByIdApiCall(answerId,site, apiKey, apiToken);
         JsonUtils.handleBackoff(answerJson);
         quota = answerJson.get("quota_remaining").getAsInt();
         return answerJson;
     }
 
     public JsonObject getAnswerDetailsByIds(List<Integer> answerIdList) throws IOException{
-        JsonObject answerJson = getAnswerDetailsByIdsApiCall(answerIdList,site,autoflagKey,autoflagToken);
+        JsonObject answerJson = getAnswerDetailsByIdsApiCall(answerIdList,site, apiKey, apiToken);
         JsonUtils.handleBackoff(answerJson);
         quota = answerJson.get("quota_remaining").getAsInt();
         return answerJson;
     }
 
     public JsonObject getFirstPageOfAnswers(Instant fromTimestamp) throws IOException{
-        JsonObject answersJson = getFirstPageOfAnswersApiCall(fromTimestamp,site,autoflagKey,autoflagToken);
+        JsonObject answersJson = getFirstPageOfAnswersApiCall(fromTimestamp,site, apiKey, apiToken);
         JsonUtils.handleBackoff(answersJson);
         quota = answersJson.get("quota_remaining").getAsInt();
         return answersJson;
     }
     public JsonObject getAnswerFlagOptions(Integer answerId) throws IOException{
-        JsonObject flagOptionsJson = getAnswerFlagOptionsApiCall(answerId,site,autoflagKey,autoflagToken);
+        JsonObject flagOptionsJson = getAnswerFlagOptionsApiCall(answerId,site, apiKey, apiToken);
         JsonUtils.handleBackoff(flagOptionsJson);
         quota = flagOptionsJson.get("quota_remaining").getAsInt();
         return flagOptionsJson;
     }
 
     public JsonObject flagAnswer(Integer answerId, Integer flagType) throws IOException{
-        JsonObject flaggedPost = flagAnswerApiCall(answerId,flagType,site,autoflagKey,autoflagToken);
+        JsonObject flaggedPost = flagAnswerApiCall(answerId,flagType,site, apiKey, apiToken);
         JsonUtils.handleBackoff(flaggedPost);
         quota = flaggedPost.get("quota_remaining").getAsInt();
         return flaggedPost;
     }
 
     public JsonObject addComment(String comment, Integer postId) throws IOException{
-        JsonObject addedComment = addCommentApiCall(comment,postId,site,autoflagKey,autoflagToken);
+        JsonObject addedComment = addCommentApiCall(comment,postId,site, apiKey, apiToken);
         JsonUtils.handleBackoff(addedComment);
         quota = addedComment.get("quota_remaining").getAsInt();
         return addedComment;
     }
 
     public JsonObject deleteComment(Integer commentId) throws IOException{
-        JsonObject deletedComment  = deleteCommentApiCall(commentId,site,autoflagKey,autoflagToken);
+        JsonObject deletedComment  = deleteCommentApiCall(commentId,site, apiKey, apiToken);
         JsonUtils.handleBackoff(deletedComment);
         quota = deletedComment.get("quota_remaining").getAsInt();
         return deletedComment;
     }
 
     public JsonObject getComments() throws IOException{
-        JsonObject commentList = getCommentsApiCall(Integer.parseInt(userId),site,autoflagKey,autoflagToken);
+        JsonObject commentList = getCommentsApiCall(Integer.parseInt(userId),site, apiKey, apiToken);
         JsonUtils.handleBackoff(commentList);
         quota = commentList.get("quota_remaining").getAsInt();
         return commentList;
     }
 
     public JsonObject getMentions(Instant fromTimestamp) throws IOException{
-        JsonObject mentionsList = getMentionsApiCall(fromTimestamp, Integer.parseInt(userId),site,autoflagKey,autoflagToken);
+        JsonObject mentionsList = getMentionsApiCall(fromTimestamp, Integer.parseInt(userId),site, apiKey, apiToken);
         JsonUtils.handleBackoff(mentionsList);
         quota = mentionsList.get("quota_remaining").getAsInt();
         return mentionsList;

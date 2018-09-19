@@ -45,12 +45,8 @@ public class PropertyService {
         return prop.getProperty("apikey");
     }
 
-    public String getAutoFlagKey(){
-        return prop.getProperty("autoflagkey");
-    }
-
-    public String getAutoFlagToken(){
-        return prop.getProperty("autoflagtoken");
+    public String getApiToken(){
+        return prop.getProperty("apitoken");
     }
 
     public String getLocation(){
