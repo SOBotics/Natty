@@ -389,6 +389,7 @@ public class FileStorageService implements StorageService {
                 FileUtils.removeFromFile(getPath(sitename) + outputCSVLogFileName, oldFeedbackMessage);
                 FileUtils.appendToFile(getPath(sitename) + outputCSVLogFileName, feedbackMessage);
             }
+            FileUtils.removeFromFileStartswith(getPath(sitename)+outputCompleteLogFileName, String.valueOf(report.getAnswerId()));
             FileUtils.removeFromFile(getPath(sitename)+outputReportLogFileName, String.valueOf(report.getAnswerId()));
             FileUtils.appendToFile(getPath(sitename)+outputFeedbackLogFileName, feedbackLog);
             return "Added feedback on "+report.getAnswerId();
