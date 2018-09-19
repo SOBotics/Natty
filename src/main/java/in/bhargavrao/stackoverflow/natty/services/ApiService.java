@@ -35,35 +35,35 @@ public class ApiService {
     }
 
     public JsonObject getQuestionDetailsByIds(List<Integer> questionIdList) throws IOException {
-        JsonObject questionJson = getQuestionDetailsByIdsApiCall(questionIdList,site,apiKey);
+        JsonObject questionJson = getQuestionDetailsByIdsApiCall(questionIdList,site,autoflagKey,autoflagToken);
         JsonUtils.handleBackoff(questionJson);
         quota = questionJson.get("quota_remaining").getAsInt();
         return questionJson;
     }
 
     public JsonObject getQuestionDetailsById(Integer questionId) throws IOException{
-        JsonObject questionJson = getQuestionDetailsByIdApiCall(questionId,site,apiKey);
+        JsonObject questionJson = getQuestionDetailsByIdApiCall(questionId,site,autoflagKey,autoflagToken);
         JsonUtils.handleBackoff(questionJson);
         quota = questionJson.get("quota_remaining").getAsInt();
         return questionJson;
     }
 
     public JsonObject getAnswerDetailsById(Integer answerId) throws IOException{
-        JsonObject answerJson = getAnswerDetailsByIdApiCall(answerId,site,apiKey);
+        JsonObject answerJson = getAnswerDetailsByIdApiCall(answerId,site,autoflagKey,autoflagToken);
         JsonUtils.handleBackoff(answerJson);
         quota = answerJson.get("quota_remaining").getAsInt();
         return answerJson;
     }
 
     public JsonObject getAnswerDetailsByIds(List<Integer> answerIdList) throws IOException{
-        JsonObject answerJson = getAnswerDetailsByIdsApiCall(answerIdList,site,apiKey);
+        JsonObject answerJson = getAnswerDetailsByIdsApiCall(answerIdList,site,autoflagKey,autoflagToken);
         JsonUtils.handleBackoff(answerJson);
         quota = answerJson.get("quota_remaining").getAsInt();
         return answerJson;
     }
 
     public JsonObject getFirstPageOfAnswers(Instant fromTimestamp) throws IOException{
-        JsonObject answersJson = getFirstPageOfAnswersApiCall(fromTimestamp,site,apiKey);
+        JsonObject answersJson = getFirstPageOfAnswersApiCall(fromTimestamp,site,autoflagKey,autoflagToken);
         JsonUtils.handleBackoff(answersJson);
         quota = answersJson.get("quota_remaining").getAsInt();
         return answersJson;
@@ -97,14 +97,14 @@ public class ApiService {
     }
 
     public JsonObject getComments() throws IOException{
-        JsonObject commentList = getCommentsApiCall(Integer.parseInt(userId),site,apiKey);
+        JsonObject commentList = getCommentsApiCall(Integer.parseInt(userId),site,autoflagKey,autoflagToken);
         JsonUtils.handleBackoff(commentList);
         quota = commentList.get("quota_remaining").getAsInt();
         return commentList;
     }
 
     public JsonObject getMentions(Instant fromTimestamp) throws IOException{
-        JsonObject mentionsList = getMentionsApiCall(fromTimestamp, Integer.parseInt(userId),site,apiKey);
+        JsonObject mentionsList = getMentionsApiCall(fromTimestamp, Integer.parseInt(userId),site,autoflagKey,autoflagToken);
         JsonUtils.handleBackoff(mentionsList);
         quota = mentionsList.get("quota_remaining").getAsInt();
         return mentionsList;
@@ -114,31 +114,31 @@ public class ApiService {
         return quota;
     }
 
-    private JsonObject getQuestionDetailsByIdsApiCall(List<Integer> questionIdList, String site, String apiKey) throws IOException {
+    private JsonObject getQuestionDetailsByIdsApiCall(List<Integer> questionIdList, String site, String apiKey, String token) throws IOException {
         String questionIds = questionIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
         String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionIds;
-        return JsonUtils.get(questionIdUrl,"site",site,"pagesize",String.valueOf(questionIdList.size()),"key",apiKey);
+        return JsonUtils.get(questionIdUrl,"site",site,"pagesize",String.valueOf(questionIdList.size()),"key",apiKey,"access_token",token);
     }
 
-    private JsonObject getQuestionDetailsByIdApiCall(Integer questionId, String site, String apiKey) throws IOException{
+    private JsonObject getQuestionDetailsByIdApiCall(Integer questionId, String site, String apiKey, String token) throws IOException{
         String questionIdUrl = "https://api.stackexchange.com/2.2/questions/"+questionId;
-        return JsonUtils.get(questionIdUrl,"site",site,"key",apiKey);
+        return JsonUtils.get(questionIdUrl,"site",site,"key",apiKey,"access_token",token);
     }
 
-    private JsonObject getAnswerDetailsByIdApiCall(Integer answerId, String site, String apiKey) throws IOException{
+    private JsonObject getAnswerDetailsByIdApiCall(Integer answerId, String site, String apiKey, String token) throws IOException{
         String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerId;
-        return JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"key",apiKey,"sort","creation");
+        return JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"key",apiKey,"sort","creation","access_token",token);
     }
 
-    private JsonObject getAnswerDetailsByIdsApiCall(List<Integer> answerIdList, String site, String apiKey) throws IOException{
+    private JsonObject getAnswerDetailsByIdsApiCall(List<Integer> answerIdList, String site, String apiKey, String token) throws IOException{
         String answerIds = answerIdList.stream().map(String::valueOf).collect(Collectors.joining(";"));
         String answerIdUrl = "https://api.stackexchange.com/2.2/answers/"+answerIds;
-        return JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"pagesize",String.valueOf(answerIdList.size()),"key",apiKey,"sort","creation");
+        return JsonUtils.get(answerIdUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","site",site,"pagesize",String.valueOf(answerIdList.size()),"key",apiKey,"sort","creation","access_token",token);
     }
 
-    private JsonObject getFirstPageOfAnswersApiCall(Instant fromTimestamp, String site, String apiKey) throws IOException{
+    private JsonObject getFirstPageOfAnswersApiCall(Instant fromTimestamp, String site, String apiKey, String token) throws IOException{
         String answersUrl = "https://api.stackexchange.com/2.2/answers";
-        return JsonUtils.get(answersUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","fromdate",String.valueOf(fromTimestamp.minusSeconds(1).getEpochSecond()),"site",site,"key",apiKey,"sort","creation");
+        return JsonUtils.get(answersUrl,"order","asc","sort","creation","filter",filter,"page","1","pagesize","100","fromdate",String.valueOf(fromTimestamp.minusSeconds(1).getEpochSecond()),"site",site,"key",apiKey,"sort","creation","access_token",token);
     }
 
     private JsonObject getAnswerFlagOptionsApiCall(Integer answerId, String site, String apiKey, String token) throws IOException{
@@ -161,14 +161,14 @@ public class ApiService {
         return JsonUtils.post(commentsUrl,"site",site,"key",apiKey,"access_token",token);
     }
 
-    private JsonObject getCommentsApiCall(Integer userId, String site, String apiKey) throws IOException{
+    private JsonObject getCommentsApiCall(Integer userId, String site, String apiKey, String token) throws IOException{
         String commentsUrl = "https://api.stackexchange.com/2.2/users/"+userId+"/comments";
-        return JsonUtils.get(commentsUrl,"site",site,"key",apiKey, "filter","!9YdnSOQH3");
+        return JsonUtils.get(commentsUrl,"site",site,"key",apiKey, "filter","!9YdnSOQH3","access_token",token);
     }
 
-    private JsonObject getMentionsApiCall(Instant fromTimestamp, Integer userId, String site, String apiKey) throws IOException{
+    private JsonObject getMentionsApiCall(Instant fromTimestamp, Integer userId, String site, String apiKey, String token) throws IOException{
         String mentionUrl = "https://api.stackexchange.com/2.2/users/"+userId+"/mentioned";
-        return JsonUtils.get(mentionUrl,"site",site,"key",apiKey,"fromdate",String.valueOf(fromTimestamp.minusSeconds(1).getEpochSecond()),"filter","!bZA*iTYWJS8yRg");
+        return JsonUtils.get(mentionUrl,"site",site,"key",apiKey,"fromdate",String.valueOf(fromTimestamp.minusSeconds(1).getEpochSecond()),"filter","!bZA*iTYWJS8yRg","access_token",token);
     }
 
 
