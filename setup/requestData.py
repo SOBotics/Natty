@@ -1,9 +1,9 @@
 import getpass
 
-params = ['apikey', 'autoflagkey', 'autoflagtoken', 'userid', 'username', 'location', 'email', 'password',
+params = ['apikey', 'apitoken', 'userid', 'username', 'location', 'email', 'password',
           'sentinelKey', 'sentinelApiKey', 'fmsPath', 'fmsUrl', 'feedMsg']
 
-sensitive = ['apikey', 'autoflagkey', 'autoflagtoken', 'password', 'sentinelKey', 'sentinelApiKey']
+sensitive = ['apikey', 'apitoken', 'password', 'sentinelKey', 'sentinelApiKey']
 
 config_data = {}
 print("Enter the value for the parameters (Press Enter to leave it empty).")

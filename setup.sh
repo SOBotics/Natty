@@ -33,8 +33,7 @@ touch data/OptedInUsersList.txt
 touch data/WhiteListedWords.txt
 
 echo  "apikey=
-autoflagkey=
-autoflagtoken=
+apitoken=
 userid=
 username=
 location=

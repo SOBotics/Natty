@@ -54,8 +54,7 @@
  7. In `login.properties` add: 
 
         apikey=SE_API_KEY
-        autoflagkey=SE_API_KEY
-        autoflagtoken=SE_AUTH_TOKEN_ASSOCIATED
+        apitoken=SE_AUTH_TOKEN_ASSOCIATED
         userid=USER_ID_OF_THE_BOT
         username=USERNAME_OF_THE_BOT
         location=YOUR_COMPUTER_NAME
