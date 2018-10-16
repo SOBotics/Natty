@@ -27,5 +27,8 @@ public class NewMessageHandlerService {
         if(message.trim().contains("Punishments include such things as flashbacks") && event.getUserId()==7481043){
             room.send("Calm down, nothing will happen.");
         }
+        if(message.trim().contains("wash the dishes") && event.getUserId()==9220325){
+            room.send("I think it is better to wait till @Filnor and @PaulStenne finishes their meals.");
+        }
     }
 }
