@@ -1,6 +1,9 @@
 package in.bhargavrao.stackoverflow.natty.commandlists;
 
-import in.bhargavrao.stackoverflow.natty.commands.*;
+import in.bhargavrao.stackoverflow.natty.commands.Command;
+import in.bhargavrao.stackoverflow.natty.commands.hidden.Hi;
+import in.bhargavrao.stackoverflow.natty.commands.hidden.WishBirthday;
+import in.bhargavrao.stackoverflow.natty.commands.others.*;
 import in.bhargavrao.stackoverflow.natty.services.RunnerService;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
 import org.sobotics.chatexchange.chat.Message;

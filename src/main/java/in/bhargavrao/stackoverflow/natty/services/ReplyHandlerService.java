@@ -1,6 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.services;
 
-import in.bhargavrao.stackoverflow.natty.commands.Check;
+import in.bhargavrao.stackoverflow.natty.commands.others.Check;
 import in.bhargavrao.stackoverflow.natty.exceptions.FeedbackInvalidatedException;
 import in.bhargavrao.stackoverflow.natty.exceptions.PostNotStoredException;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
