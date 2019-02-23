@@ -15,7 +15,7 @@ import org.sobotics.chatexchange.chat.User;
 /**
  * Created by bhargav.h on 29-Nov-16.
  */
-public class Feedback implements Command {
+public class Feedback extends NormalCommand implements Command {
 
     private Message message;
     private Validator validator;
@@ -24,16 +24,12 @@ public class Feedback implements Command {
     private String siteurl;
 
     public Feedback(Message message, Validator validator, Double naaLimit, String sitename, String siteurl) {
+        super(message, "feedback");
         this.message = message;
         this.validator = validator;
         this.naaLimit = naaLimit;
         this.sitename = sitename;
         this.siteurl = siteurl;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"feedback");
     }
 
     @Override
@@ -86,8 +82,4 @@ public class Feedback implements Command {
         return "Provides feedback on a given post";
     }
 
-    @Override
-    public String name() {
-        return "feedback";
-    }
 }

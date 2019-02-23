@@ -10,16 +10,13 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class IsBlacklisted implements Command {
+public class IsBlacklisted extends NormalCommand implements Command {
 
     private Message message;
 
     public IsBlacklisted(Message message) {
+        super(message, "isblacklisted");
         this.message = message;
-    }
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"isblacklisted");
     }
 
     @Override
@@ -34,8 +31,4 @@ public class IsBlacklisted implements Command {
         return "Checks if the given statement is blacklisted";
     }
 
-    @Override
-    public String name() {
-        return "isblacklisted";
-    }
 }

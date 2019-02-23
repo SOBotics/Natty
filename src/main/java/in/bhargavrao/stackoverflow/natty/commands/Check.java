@@ -150,7 +150,7 @@ public class Check implements Command {
     }
 
     @Override
-    public String name() {
+    public String getName() {
         return "check";
     }
 }

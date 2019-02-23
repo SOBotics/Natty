@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 23-Oct-16.
  */
-public class Send implements Command {
+public class Send extends  NormalCommand implements Command {
 
     private Message message;
     private Validator validator;
@@ -27,6 +27,7 @@ public class Send implements Command {
     private String siteurl;
 
     public Send(Message message, Validator validator, Double naaLimit, String sitename, String siteurl) {
+        super(message, "send");
         this.message = message;
         this.validator = validator;
         this.naaLimit = naaLimit;
@@ -90,8 +91,4 @@ public class Send implements Command {
         return "Sends a mass feedback, see the wiki for more details";
     }
 
-    @Override
-    public String name() {
-        return "send";
-    }
 }

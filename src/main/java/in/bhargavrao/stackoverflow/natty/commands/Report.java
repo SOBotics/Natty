@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 28-Oct-16.
  */
-public class Report implements Command {
+public class Report extends NormalCommand implements Command {
 
     private Message message;
     private Validator validator;
@@ -28,17 +28,13 @@ public class Report implements Command {
     private FeedbackHandlerService feedbackHandlerService;
 
     public Report(Message message, Validator validator, Double naaLimit, String siteName, String siteUrl) {
+        super(message, "report");
         this.message = message;
         this.validator = validator;
         this.naaLimit = naaLimit;
         this.siteName = siteName;
         this.siteUrl = siteUrl;
         this.feedbackHandlerService = new FeedbackHandlerService(siteName, siteUrl);
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"report");
     }
 
     @Override
@@ -94,8 +90,4 @@ public class Report implements Command {
         return "Reports the mentioned post as a true negative NAA/VLQ";
     }
 
-    @Override
-    public String name() {
-        return "report";
-    }
 }

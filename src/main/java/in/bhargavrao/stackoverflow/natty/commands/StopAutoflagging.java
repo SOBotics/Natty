@@ -1,24 +1,19 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
 import in.bhargavrao.stackoverflow.natty.utils.AutoFlagUtils;
-import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import org.sobotics.chatexchange.chat.Message;
 import org.sobotics.chatexchange.chat.Room;
 
 /**
  * Created by bhargav.h on 11-Jul-18.
  */
-public class StopAutoflagging implements Command {
+public class StopAutoflagging extends ReservedCommand implements Command {
 
     private Message message;
 
     public StopAutoflagging(Message message) {
+        super(message, "stopflagging");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"stopflagging");
     }
 
     @Override
@@ -32,8 +27,4 @@ public class StopAutoflagging implements Command {
         return "Stops auto flagging";
     }
 
-    @Override
-    public String name() {
-        return "stopflagging";
-    }
 }

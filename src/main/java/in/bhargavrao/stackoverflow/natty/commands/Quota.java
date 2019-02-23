@@ -1,7 +1,6 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
-import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import org.sobotics.chatexchange.chat.Message;
 import org.sobotics.chatexchange.chat.Room;
 
@@ -10,17 +9,13 @@ import java.io.IOException;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Quota implements Command {
+public class Quota extends ReservedCommand implements Command {
 
     private Message message;
 
     public Quota(Message message) {
+        super(message, "isblacklisted");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"quota");
     }
 
     @Override
@@ -40,8 +35,4 @@ public class Quota implements Command {
         return "Returns the remaining API Quota";
     }
 
-    @Override
-    public String name() {
-        return "quota";
-    }
 }

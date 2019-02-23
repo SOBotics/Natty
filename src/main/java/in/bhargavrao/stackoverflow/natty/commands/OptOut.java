@@ -13,17 +13,13 @@ import org.sobotics.chatexchange.chat.User;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class OptOut implements Command {
+public class OptOut extends NormalCommand implements Command {
 
     private Message message;
 
     public OptOut(Message message) {
+        super(message, "isblacklisted");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"opt-out");
     }
 
     @Override
@@ -76,8 +72,4 @@ public class OptOut implements Command {
         return "Unnotifies the user. ";
     }
 
-    @Override
-    public String name() {
-        return "opt-out";
-    }
 }

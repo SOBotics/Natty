@@ -11,18 +11,15 @@ import java.io.IOException;
 /**
  * Created by bhargav.h on 22-Jan-17.
  */
-public class Delete implements Command {
+public class Delete extends ReservedCommand implements Command {
 
     private Message message;
 
     public Delete(Message message) {
+        super(message, "delete");
         this.message = message;
     }
 
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"delete");
-    }
 
     @Override
     public void execute(Room room) {
@@ -44,8 +41,4 @@ public class Delete implements Command {
         return "Deletes a given comment";
     }
 
-    @Override
-    public String name() {
-        return "delete";
-    }
 }

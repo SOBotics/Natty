@@ -10,18 +10,13 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class RemoveWhitelist implements Command {
+public class RemoveWhitelist extends NormalCommand implements Command {
 
     private Message message;
 
     public RemoveWhitelist(Message message) {
+        super(message, "rmwhitelist");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-
-        return CommandUtils.checkForCommand(message.getPlainContent(),"rmwhitelist");
     }
 
     @Override
@@ -36,8 +31,4 @@ public class RemoveWhitelist implements Command {
         return "Removes the given statement from whitelist  ";
     }
 
-    @Override
-    public String name() {
-        return "rmwhitelist";
-    }
 }

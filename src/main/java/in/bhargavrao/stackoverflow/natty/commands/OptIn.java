@@ -13,17 +13,13 @@ import org.sobotics.chatexchange.chat.User;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class OptIn implements Command {
+public class OptIn extends NormalCommand implements Command {
 
     private Message message;
 
     public OptIn(Message message) {
+        super(message, "opt-in");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"opt-in");
     }
 
     @Override
@@ -75,8 +71,4 @@ public class OptIn implements Command {
         return "Notifies the user of the requested posts, see the wiki for more details";
     }
 
-    @Override
-    public String name() {
-        return "opt-in";
-    }
 }

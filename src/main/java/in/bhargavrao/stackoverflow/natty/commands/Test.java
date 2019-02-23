@@ -13,17 +13,13 @@ import java.util.List;
 /**
  * Created by bhargav.h on 27-Aug-17.
  */
-public class Test implements Command {
+public class Test extends NormalCommand implements Command {
 
     private Message message;
 
     public Test(Message message) {
+        super(message, "test");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"test");
     }
 
     @Override
@@ -66,8 +62,4 @@ public class Test implements Command {
         return "Tests a mock body if it would be caught for any filters";
     }
 
-    @Override
-    public String name() {
-        return "test";
-    }
 }

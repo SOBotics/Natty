@@ -1,37 +1,27 @@
 package in.bhargavrao.stackoverflow.natty.commands;
 
 import in.bhargavrao.stackoverflow.natty.services.RunnerService;
-import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import org.sobotics.chatexchange.chat.Message;
 import org.sobotics.chatexchange.chat.Room;
 
 /**
  * Created by bhargav.h on 27-Jan-17.
  */
-public class Reboot implements Command {
+public class Reboot extends ReservedCommand implements Command {
 
     private Message message;
     private RunnerService service;
 
     public Reboot(Message message, RunnerService service) {
+        super(message, "reboot");
         this.message = message;
         this.service = service;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"reboot");
     }
 
     @Override
     public void execute(Room room) {
         room.replyTo(message.getId(),"Rebooting, please standby");
         service.reboot();
-    }
-
-    @Override
-    public String name() {
-        return "reboot";
     }
 
     @Override

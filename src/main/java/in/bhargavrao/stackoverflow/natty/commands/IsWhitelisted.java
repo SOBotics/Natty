@@ -10,16 +10,13 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class IsWhitelisted implements Command {
+public class IsWhitelisted extends NormalCommand implements Command {
 
     private Message message;
 
     public IsWhitelisted(Message message) {
+        super(message, "iswhitelisted");
         this.message = message;
-    }
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"iswhitelisted");
     }
 
     @Override
@@ -34,8 +31,4 @@ public class IsWhitelisted implements Command {
         return "Checks if the given statement is whitelisted";
     }
 
-    @Override
-    public String name() {
-        return "iswhitelisted";
-    }
 }

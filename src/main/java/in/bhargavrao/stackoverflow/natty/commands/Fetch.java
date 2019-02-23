@@ -20,23 +20,19 @@ import java.util.stream.Collectors;
 /**
  * Created by bhargav.h on 20-Oct-16.
  */
-public class Fetch implements Command {
+public class Fetch extends NormalCommand implements Command {
 
     private Message message;
     private String sitename;
     private String siteurl;
 
     public Fetch(Message message, String sitename, String siteurl) {
+        super(message, "fetch");
         this.message = message;
         this.sitename = sitename;
         this.siteurl = siteurl;
     }
 
-    @Override
-    public boolean validate() {
-
-        return CommandUtils.checkForCommand(message.getPlainContent(),"fetch");
-    }
 
     @Override
     public String description() {
@@ -211,8 +207,4 @@ public class Fetch implements Command {
 
     }
 
-    @Override
-    public String name() {
-        return "fetch";
-    }
 }

@@ -10,17 +10,14 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class AddSalute implements Command {
+public class AddSalute extends NormalCommand implements Command {
 
     private Message message;
 
     public AddSalute(Message message) {
-        this.message = message;
-    }
 
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"addsalute");
+        super(message, "addsalute");
+        this.message = message;
     }
 
     @Override
@@ -35,8 +32,4 @@ public class AddSalute implements Command {
         return "Adds a given statement to the list of salutations";
     }
 
-    @Override
-    public String name() {
-        return "addsalute";
-    }
 }

@@ -11,18 +11,13 @@ import java.util.Arrays;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class RemoveRequest implements Command {
+public class RemoveRequest extends ReservedCommand implements Command {
 
     private Message message;
 
     public RemoveRequest(Message message) {
+        super(message, "rmreq");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-
-        return CommandUtils.checkForCommand(message.getPlainContent(),"rmreq");
     }
 
     @Override
@@ -38,8 +33,4 @@ public class RemoveRequest implements Command {
         return "Removes the request from the list of requests";
     }
 
-    @Override
-    public String name() {
-        return "rmreq";
-    }
 }

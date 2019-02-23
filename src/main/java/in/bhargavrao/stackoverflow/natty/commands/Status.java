@@ -2,7 +2,6 @@ package in.bhargavrao.stackoverflow.natty.commands;
 
 import in.bhargavrao.stackoverflow.natty.services.FileStorageService;
 import in.bhargavrao.stackoverflow.natty.services.StorageService;
-import in.bhargavrao.stackoverflow.natty.utils.CommandUtils;
 import in.bhargavrao.stackoverflow.natty.utils.StatusUtils;
 import org.sobotics.chatexchange.chat.Message;
 import org.sobotics.chatexchange.chat.Room;
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 16-Oct-16.
  */
-public class Status implements Command {
+public class Status extends NormalCommand implements Command {
 
     private Message message;
     private String sitename;
@@ -21,14 +20,10 @@ public class Status implements Command {
 
 
     public Status(Message message, String sitename, String siteurl) {
+        super(message, "status");
         this.message = message;
         this.sitename = sitename;
         this.siteurl = siteurl;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"status");
     }
 
     @Override
@@ -49,8 +44,6 @@ public class Status implements Command {
             statusMessage += "All the reports have been tended to. ";
         }
 
-
-
         room.send(statusMessage);
     }
 
@@ -59,8 +52,4 @@ public class Status implements Command {
         return "Returns the status of the bot";
     }
 
-    @Override
-    public String name() {
-        return "status";
-    }
 }

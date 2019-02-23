@@ -9,17 +9,13 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Remind implements Command {
+public class Remind extends ReservedCommand implements Command {
 
     private Message message;
 
     public Remind(Message message) {
+        super(message, "remind");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"remind");
     }
 
     @Override
@@ -36,8 +32,4 @@ public class Remind implements Command {
         return "Adds a reminder to the list of requests";
     }
 
-    @Override
-    public String name() {
-        return "remind";
-    }
 }

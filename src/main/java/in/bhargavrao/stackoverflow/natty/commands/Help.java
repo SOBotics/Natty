@@ -33,7 +33,7 @@ public class Help implements Command {
     }
 
     @Override
-    public String name() {
+    public String getName() {
         return "help";
     }
 }

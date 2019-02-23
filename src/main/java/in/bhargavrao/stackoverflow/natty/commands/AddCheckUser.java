@@ -10,17 +10,13 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class AddCheckUser implements Command {
+public class AddCheckUser extends HiddenCommand implements Command {
 
     private Message message;
 
     public AddCheckUser(Message message) {
+        super(message, "addcheckuser");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"addcheckuser");
     }
 
     @Override
@@ -36,15 +32,5 @@ public class AddCheckUser implements Command {
         else{
             room.replyTo(message.getId(), "Must be SOUser ID");
         }
-    }
-
-    @Override
-    public String description() {
-        return "Adds a new user to the special users list";
-    }
-
-    @Override
-    public String name() {
-        return "addcheckuser";
     }
 }

@@ -10,17 +10,13 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Whitelist implements Command {
+public class Whitelist extends NormalCommand implements Command {
 
     private Message message;
 
     public Whitelist(Message message) {
+        super(message, "whitelist");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"whitelist");
     }
 
     @Override
@@ -35,8 +31,4 @@ public class Whitelist implements Command {
         return "Adds a given statement to the list of whitelisted words";
     }
 
-    @Override
-    public String name() {
-        return "whitelist";
-    }
 }

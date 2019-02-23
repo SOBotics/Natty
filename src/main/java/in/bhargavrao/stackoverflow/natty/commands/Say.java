@@ -7,22 +7,24 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Say implements Command {
+public class Say extends NormalCommand implements Command {
 
     private Message message;
 
     public Say(Message message) {
+        super(message, "say");
         this.message = message;
     }
 
     @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"say");
-    }
-
-    @Override
     public void execute(Room room) {
-        room.send(CommandUtils.extractData(message.getPlainContent()));
+        if (message.getUser().isRoomOwner() || message.getUser().isModerator()) {
+            room.send(CommandUtils.extractData(message.getPlainContent()));
+        }
+        else {
+            room.send("@" + message.getUser().getName().replace(" ", "") + " wants to say - " +
+            CommandUtils.extractData(message.getPlainContent()));
+        }
     }
 
     @Override
@@ -30,8 +32,4 @@ public class Say implements Command {
         return "Echoes the user input";
     }
 
-    @Override
-    public String name() {
-        return "say";
-    }
 }
