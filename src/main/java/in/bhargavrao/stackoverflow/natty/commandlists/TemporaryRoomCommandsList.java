@@ -29,6 +29,7 @@ public class TemporaryRoomCommandsList {
             new OptIn(message),
             new OptOut(message),
             new Send(message, new AllowAllAnswersValidator(), 3.0, sitename, siteurl),
+            new Reboot(message, service),
             new Report(message, new AllowAllAnswersValidator(), 3.0, sitename, siteurl)
         ));
         commands.add(new Commands(message,commands));
