@@ -6,7 +6,7 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 27-Oct-16.
  */
-public class Halp extends HiddenCommand implements Command {
+public class Halp extends HiddenCommand {
 
     private Message message;
 

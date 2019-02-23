@@ -7,7 +7,7 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 11-Jul-18.
  */
-public class StopAutoflagging extends ReservedCommand implements Command {
+public class StopAutoflagging extends ReservedCommand {
 
     private Message message;
 

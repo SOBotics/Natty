@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by bhargav.h on 22-Jan-17.
  */
-public class Delete extends ReservedCommand implements Command {
+public class Delete extends ReservedCommand {
 
     private Message message;
 

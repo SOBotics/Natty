@@ -20,13 +20,14 @@ import java.util.List;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Check implements Command {
+public class Check extends NormalCommand {
 
     private Message message;
     private String sitename;
     private String siteurl;
 
     public Check(Message message, String sitename, String siteurl) {
+        super(message, "check");
         this.message = message;
         this.sitename = sitename;
         this.siteurl = siteurl;

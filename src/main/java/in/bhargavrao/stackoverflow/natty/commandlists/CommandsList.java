@@ -20,7 +20,7 @@ public abstract class CommandsList {
     public void executeCommand(Room room, List<Command> commands){
         try {
             for (Command command : commands) {
-                if (command.validate()) {
+                if (command.validate() && command.authenticate()) {
                     command.execute(room);
                 }
             }

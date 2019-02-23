@@ -10,17 +10,13 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Blacklist implements Command {
+public class Blacklist extends NormalCommand {
 
     private Message message;
 
     public Blacklist(Message message) {
+        super(message, "blacklist");
         this.message = message;
-    }
-
-    @Override
-    public boolean validate() {
-        return CommandUtils.checkForCommand(message.getPlainContent(),"blacklist");
     }
 
     @Override
@@ -35,8 +31,4 @@ public class Blacklist implements Command {
         return "Adds a given statement to the list of blacklisted words";
     }
 
-    @Override
-    public String getName() {
-        return "blacklist";
-    }
 }

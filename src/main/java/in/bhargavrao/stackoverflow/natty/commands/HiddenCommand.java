@@ -2,8 +2,7 @@ package in.bhargavrao.stackoverflow.natty.commands;
 
 import org.sobotics.chatexchange.chat.Message;
 
-public class HiddenCommand extends NormalCommand{
-
+public abstract class HiddenCommand extends Command {
 
     public HiddenCommand(Message message, String commandName) {
         super(message, commandName);

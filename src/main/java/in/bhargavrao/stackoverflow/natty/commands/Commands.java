@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Commands extends NormalCommand implements Command {
+public class Commands extends NormalCommand {
 
     private Message message;
     private List<Command> commands;
@@ -25,10 +25,12 @@ public class Commands extends NormalCommand implements Command {
     public void execute(Room room) {
         room.replyTo(message.getId(),PrintUtils.printCommandHeader());
         StringBuilder printstr = new StringBuilder();
+        boolean isAuthorized = message.getUser().isModerator() || message.getUser().isRoomOwner();
         for (Command command: commands){
+            boolean authorizedCommand = command instanceof ReservedCommand;
             String cmdName = command.getName();
             String cmdDesc = command.description();
-            if (cmdDesc.length() > 0) {
+            if (cmdDesc.length() > 0 && (isAuthorized ||  !authorizedCommand)) {
                 printstr.append("    ").append(padRight(cmdName, 15)).append(" - ").append(cmdDesc).append("\n");
             }
         }

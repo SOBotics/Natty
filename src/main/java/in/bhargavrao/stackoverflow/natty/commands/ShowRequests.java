@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class ShowRequests extends ReservedCommand implements Command {
+public class ShowRequests extends ReservedCommand {
 
     private Message message;
 

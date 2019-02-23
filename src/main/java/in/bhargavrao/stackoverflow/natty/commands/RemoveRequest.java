@@ -11,7 +11,7 @@ import java.util.Arrays;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class RemoveRequest extends ReservedCommand implements Command {
+public class RemoveRequest extends ReservedCommand {
 
     private Message message;
 

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 27-Aug-17.
  */
-public class Test extends NormalCommand implements Command {
+public class Test extends NormalCommand {
 
     private Message message;
 

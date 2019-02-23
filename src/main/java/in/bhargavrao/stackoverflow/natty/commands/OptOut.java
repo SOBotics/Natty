@@ -13,12 +13,12 @@ import org.sobotics.chatexchange.chat.User;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class OptOut extends NormalCommand implements Command {
+public class OptOut extends NormalCommand {
 
     private Message message;
 
     public OptOut(Message message) {
-        super(message, "isblacklisted");
+        super(message, "opt-out");
         this.message = message;
     }
 

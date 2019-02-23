@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 28-Oct-16.
  */
-public class Report extends NormalCommand implements Command {
+public class Report extends NormalCommand {
 
     private Message message;
     private Validator validator;

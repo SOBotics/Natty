@@ -7,7 +7,7 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 27-Jan-17.
  */
-public class Reboot extends ReservedCommand implements Command {
+public class Reboot extends ReservedCommand {
 
     private Message message;
     private RunnerService service;

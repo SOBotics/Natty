@@ -10,7 +10,7 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class IsWhitelisted extends NormalCommand implements Command {
+public class IsWhitelisted extends NormalCommand {
 
     private Message message;
 

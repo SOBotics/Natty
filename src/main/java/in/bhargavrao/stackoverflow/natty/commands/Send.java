@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 23-Oct-16.
  */
-public class Send extends  NormalCommand implements Command {
+public class Send extends  NormalCommand {
 
     private Message message;
     private Validator validator;

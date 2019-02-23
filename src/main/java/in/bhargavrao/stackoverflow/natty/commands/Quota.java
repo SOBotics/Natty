@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Quota extends ReservedCommand implements Command {
+public class Quota extends ReservedCommand {
 
     private Message message;
 

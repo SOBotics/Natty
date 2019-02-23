@@ -10,7 +10,7 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class AddSalute extends NormalCommand implements Command {
+public class AddSalute extends NormalCommand {
 
     private Message message;
 

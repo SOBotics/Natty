@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 16-Oct-16.
  */
-public class Status extends NormalCommand implements Command {
+public class Status extends NormalCommand {
 
     private Message message;
     private String sitename;

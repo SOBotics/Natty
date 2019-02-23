@@ -6,16 +6,16 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Hi implements Command {
+public class Hi extends HiddenCommand {
 
     private Message message;
     private long userId;
 
     public Hi(Message message, long userId) {
+        super(message, "hi");
         this.message = message;
         this.userId = userId;
     }
-
 
     @Override
     public boolean validate() {
@@ -33,13 +33,4 @@ public class Hi implements Command {
 
     }
 
-    @Override
-    public String description() {
-        return "Hi, Test it out";
-    }
-
-    @Override
-    public String getName() {
-        return "hi";
-    }
 }

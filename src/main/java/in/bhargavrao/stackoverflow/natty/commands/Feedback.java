@@ -15,7 +15,7 @@ import org.sobotics.chatexchange.chat.User;
 /**
  * Created by bhargav.h on 29-Nov-16.
  */
-public class Feedback extends NormalCommand implements Command {
+public class Feedback extends NormalCommand {
 
     private Message message;
     private Validator validator;
