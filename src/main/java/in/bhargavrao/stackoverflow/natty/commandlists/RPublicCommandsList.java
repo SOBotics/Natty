@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 28-Oct-16.
  */
-public class RPublicCommandsList {
+public class RPublicCommandsList extends CommandsList{
     public void mention(Room room, PingMessageEvent event, RunnerService service, String sitename, String siteurl, boolean isReply){
 
         if(CheckUtils.checkIfUserIsBlacklisted(event.getUserId()))
@@ -33,11 +33,9 @@ public class RPublicCommandsList {
         commands.add(new Commands(message,commands));
 
 
-        for(Command command: commands){
-            if(command.validate()){
-                command.execute(room);
-            }
-        }
-        System.out.println(event.getMessage().getContent());
+        LOGGER.debug("Looking for the command to execute");
+        executeCommand(room, commands);
+        LOGGER.info(event.getMessage().getPlainContent());
+
     }
 }
