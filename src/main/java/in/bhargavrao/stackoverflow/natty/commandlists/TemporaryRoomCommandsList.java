@@ -20,17 +20,18 @@ public class TemporaryRoomCommandsList extends CommandsList {
         if(CheckUtils.checkIfUserIsBlacklisted(event.getUserId()))
             return;
         Message message = event.getMessage();
+        AllowAllAnswersValidator validator = new AllowAllAnswersValidator();
         List<Command> commands = new ArrayList<>(Arrays.asList(
             new Alive(message),
             new Help(message),
             new Check(message, sitename, siteurl),
-            new Feedback(message, new AllowAllAnswersValidator(), 3.0,  sitename, siteurl),
+            new Feedback(message, validator, 3.0,  sitename, siteurl),
             new Fetch(message, sitename, siteurl),
             new OptIn(message),
             new OptOut(message),
-            new Send(message, new AllowAllAnswersValidator(), 3.0, sitename, siteurl),
+            new Send(message, validator, 3.0, sitename, siteurl),
             new Reboot(message, service),
-            new Report(message, new AllowAllAnswersValidator(), 3.0, sitename, siteurl)
+            new Report(message, validator, 3.0, sitename, siteurl)
         ));
         commands.add(new Commands(message,commands));
 

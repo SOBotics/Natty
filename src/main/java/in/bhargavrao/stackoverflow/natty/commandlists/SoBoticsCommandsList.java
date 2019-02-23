@@ -26,6 +26,7 @@ public class SoBoticsCommandsList extends CommandsList {
 
         Message message = event.getMessage();
 
+        AllowAllNewAnswersValidator validator = new AllowAllNewAnswersValidator();
         List<Command> commands = new ArrayList<>(Arrays.asList(
             new AddCheckUser(message),
             new AddSalute(message),
@@ -33,7 +34,7 @@ public class SoBoticsCommandsList extends CommandsList {
             new Blacklist(message),
             new Check(message, sitename, siteurl),
             new Delete(message),
-            new Feedback(message, new AllowAllNewAnswersValidator(), 3.5, sitename, siteurl),
+            new Feedback(message, validator, 3.5, sitename, siteurl),
             new Fetch(message, sitename, siteurl),
             new Halp(message),
             new Help(message),
@@ -48,9 +49,9 @@ public class SoBoticsCommandsList extends CommandsList {
             new RemoveBlackList(message),
             new RemoveRequest(message),
             new RemoveWhitelist(message),
-            new Report(message, new AllowAllNewAnswersValidator(), 3.5, sitename, siteurl),
+            new Report(message, validator, 3.5, sitename, siteurl),
             new Say(message),
-            new Send(message, new AllowAllNewAnswersValidator(), 3.5, sitename, siteurl),
+            new Send(message, validator, 3.5, sitename, siteurl),
             new ShowRequests(message),
             new Status(message, sitename, siteurl),
             new StopAutoflagging(message),
