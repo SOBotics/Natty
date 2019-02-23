@@ -6,7 +6,7 @@
 
     <groupId>in.bhargavrao</groupId>
     <artifactId>natty</artifactId>
-    <version>v4</version>
+    <version>v4.1</version>
 
     <dependencies>
         <dependency>
