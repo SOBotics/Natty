@@ -33,8 +33,9 @@ public class ReplyHandlerService {
                 CommandUtils.checkForCommand(message.getContent(),"f")){
             store(room, event, "fp", sitename, siteurl);
         }
-        if (CommandUtils.checkForCommand(message.getContent(),"delete") ||
-                CommandUtils.checkForCommand(message.getContent(),"remove")){
+        if ((CommandUtils.checkForCommand(message.getContent(),"delete") ||
+                CommandUtils.checkForCommand(message.getContent(),"remove")) &&
+                (message.getUser().isRoomOwner() || message.getUser().isModerator())){
             long repliedTo = event.getParentMessageId();
             room.delete(repliedTo);
         }
