@@ -8,7 +8,7 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 27-Jan-17.
  */
-public class Reboot implements SpecialCommand {
+public class Reboot implements Command {
 
     private Message message;
     private RunnerService service;

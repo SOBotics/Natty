@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class ShowRequests implements SpecialCommand {
+public class ShowRequests implements Command {
 
     private Message message;
 

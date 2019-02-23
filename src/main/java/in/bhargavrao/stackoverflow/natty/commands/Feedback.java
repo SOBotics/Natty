@@ -15,7 +15,7 @@ import org.sobotics.chatexchange.chat.User;
 /**
  * Created by bhargav.h on 29-Nov-16.
  */
-public class Feedback implements SpecialCommand {
+public class Feedback implements Command {
 
     private Message message;
     private Validator validator;

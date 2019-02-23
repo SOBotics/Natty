@@ -27,7 +27,7 @@ public class SoBoticsCommandsList {
             return;
 
         Message message = event.getMessage();
-        List<SpecialCommand> commands = new ArrayList<>(Arrays.asList(
+        List<Command> commands = new ArrayList<>(Arrays.asList(
             new AddCheckUser(message),
             new AddSalute(message),
             new Alive(message),
@@ -63,7 +63,7 @@ public class SoBoticsCommandsList {
         commands.add(new Commands(message,commands));
         LOGGER.debug("Looking for the command to execute");
 
-        for(SpecialCommand command: commands){
+        for(Command command: commands){
             if(command.validate()){
                 command.execute(room);
             }

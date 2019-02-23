@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Created by bhargav.h on 20-Oct-16.
  */
-public class Fetch implements SpecialCommand {
+public class Fetch implements Command {
 
     private Message message;
     private String sitename;

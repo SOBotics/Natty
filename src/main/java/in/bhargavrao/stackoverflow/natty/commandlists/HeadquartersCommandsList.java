@@ -21,14 +21,14 @@ public class HeadquartersCommandsList {
             return;
 
         Message message = event.getMessage();
-        List<SpecialCommand> commands = new ArrayList<>(Arrays.asList(
+        List<Command> commands = new ArrayList<>(Arrays.asList(
             new Alive(message),
             new Help(message),
             new OptIn(message),
             new OptOut(message)
         ));
         commands.add(new Commands(message,commands));
-        for(SpecialCommand command: commands){
+        for(Command command: commands){
             if(command.validate()){
                 command.execute(room);
             }

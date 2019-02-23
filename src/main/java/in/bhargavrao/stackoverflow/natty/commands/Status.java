@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 16-Oct-16.
  */
-public class Status implements SpecialCommand {
+public class Status implements Command {
 
     private Message message;
     private String sitename;

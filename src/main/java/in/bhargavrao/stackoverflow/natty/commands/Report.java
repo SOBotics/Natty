@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by bhargav.h on 28-Oct-16.
  */
-public class Report implements SpecialCommand {
+public class Report implements Command {
 
     private Message message;
     private Validator validator;

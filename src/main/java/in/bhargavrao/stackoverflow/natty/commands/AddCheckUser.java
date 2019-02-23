@@ -10,7 +10,7 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class AddCheckUser implements SpecialCommand {
+public class AddCheckUser implements Command {
 
     private Message message;
 

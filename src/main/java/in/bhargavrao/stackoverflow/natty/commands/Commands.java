@@ -10,12 +10,12 @@ import java.util.List;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Commands implements SpecialCommand {
+public class Commands implements Command {
 
     private Message message;
-    private List<SpecialCommand> commands;
+    private List<Command> commands;
 
-    public Commands(Message message, List<SpecialCommand> commands) {
+    public Commands(Message message, List<Command> commands) {
         this.message = message;
         this.commands = commands;
     }
@@ -29,7 +29,7 @@ public class Commands implements SpecialCommand {
     public void execute(Room room) {
         room.replyTo(message.getId(),PrintUtils.printCommandHeader());
         String printstr = "";
-        for (SpecialCommand command: commands){
+        for (Command command: commands){
             printstr+="    "+padRight(command.name(),15)+" - "+command.description()+"\n";
         }
 

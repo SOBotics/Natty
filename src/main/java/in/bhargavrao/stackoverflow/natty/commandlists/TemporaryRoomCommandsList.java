@@ -20,7 +20,7 @@ public class TemporaryRoomCommandsList {
         if(CheckUtils.checkIfUserIsBlacklisted(event.getUserId()))
             return;
         Message message = event.getMessage();
-        List<SpecialCommand> commands = new ArrayList<>(Arrays.asList(
+        List<Command> commands = new ArrayList<>(Arrays.asList(
             new Alive(message),
             new Help(message),
             new Check(message, sitename, siteurl),
@@ -33,7 +33,7 @@ public class TemporaryRoomCommandsList {
             new Report(message, new AllowAllAnswersValidator(), 3.0, sitename, siteurl)
         ));
         commands.add(new Commands(message,commands));
-        for(SpecialCommand command: commands){
+        for(Command command: commands){
             if(command.validate()){
                 command.execute(room);
             }

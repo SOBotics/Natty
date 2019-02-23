@@ -7,7 +7,7 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 27-Oct-16.
  */
-public class Halp implements SpecialCommand {
+public class Halp implements Command {
 
     private Message message;
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by bhargav.h on 22-Jan-17.
  */
-public class Delete implements SpecialCommand {
+public class Delete implements Command {
 
     private Message message;
 

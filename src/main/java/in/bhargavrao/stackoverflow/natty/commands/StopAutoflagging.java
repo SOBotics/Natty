@@ -8,7 +8,7 @@ import org.sobotics.chatexchange.chat.Room;
 /**
  * Created by bhargav.h on 11-Jul-18.
  */
-public class StopAutoflagging implements SpecialCommand {
+public class StopAutoflagging implements Command {
 
     private Message message;
 

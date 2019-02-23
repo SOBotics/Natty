@@ -13,7 +13,7 @@ import org.sobotics.chatexchange.chat.User;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class OptIn implements SpecialCommand {
+public class OptIn implements Command {
 
     private Message message;
 

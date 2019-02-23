@@ -11,7 +11,7 @@ import java.util.Arrays;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class RemoveRequest implements SpecialCommand {
+public class RemoveRequest implements Command {
 
     private Message message;
 

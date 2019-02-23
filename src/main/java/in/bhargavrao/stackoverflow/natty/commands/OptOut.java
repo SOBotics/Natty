@@ -13,7 +13,7 @@ import org.sobotics.chatexchange.chat.User;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class OptOut implements SpecialCommand {
+public class OptOut implements Command {
 
     private Message message;
 

@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by bhargav.h on 30-Sep-16.
  */
-public class Quota implements SpecialCommand {
+public class Quota implements Command {
 
     private Message message;
 
