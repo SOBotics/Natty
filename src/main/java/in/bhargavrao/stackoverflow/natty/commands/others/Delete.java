@@ -1,4 +1,4 @@
-package in.bhargavrao.stackoverflow.natty.commands.reserved;
+package in.bhargavrao.stackoverflow.natty.commands.others;
 
 import in.bhargavrao.stackoverflow.natty.services.ApiService;
 import in.bhargavrao.stackoverflow.natty.utils.CheckUtils;
@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by bhargav.h on 22-Jan-17.
  */
-public class Delete extends ReservedCommand {
+public class Delete extends NormalCommand {
 
     private Message message;
 
