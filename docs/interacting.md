@@ -36,7 +36,3 @@ To which the bot replies with a set of links. The feedback needs to be sent in o
 2. If you need to skip a report, Send unclear or u. Note that those reports would be skipped and hence at the start of the next `send` batch, you need to again skip those. 
 3. If you are unsure whether a report has been skipped or not, please use the `fetch` command again. It is always better to be sure than sorry. 
 
-
-----
-
-<sub>Back to [Home](/Natty)</sub>

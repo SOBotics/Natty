@@ -4,7 +4,3 @@
 
 ## I'm not sure of a post, How do I flag that and what feedback should I give?
 
-
-----
-
-<sub>Back to [Home](/Natty)</sub>

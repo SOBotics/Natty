@@ -114,6 +114,3 @@ Apart from the usual feedback commands, the following other commands are present
  - `why` - Returns the list of reasons as to why a post has been detected.
  - `who` - Returns the list of users who have provided feedback.  
 
-----
-
-<sub>Back to [Home](/Natty)</sub>

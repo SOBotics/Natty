@@ -92,7 +92,3 @@ Setting up FMS is simple:
 
 
   [1]: https://github.com/SOBotics/NAPI
-
-----
-
-<sub>Back to [Home](/Natty)</sub>

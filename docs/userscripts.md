@@ -23,6 +23,3 @@ Adds a link to the corresponding sentinel page on each answer.
 
 Useful to add canned comments on posts. 
 
-----
-
-<sub>Back to [Home](/Natty)</sub>
