@@ -91,7 +91,7 @@ The `send` command can be used to send mass feedback. However the feedback must 
 ## `feedback` command format
 
 The `feedback` command can be used to send feedback to an individual report.  The format of the command is `feedback postlink feedbackType`. 
-The `feedback` command can be used to correct an incorrectly passed feedback, by re-sending the correct feedback. (The feedback can be monitored on [Sentinel](/Natty/sentinel))
+The `feedback` command can be used to correct an incorrectly passed feedback, by re-sending the correct feedback. (The feedback can be monitored on Sentinel)
 
 
 # Easter egg commands 
@@ -114,6 +114,3 @@ Apart from the usual feedback commands, the following other commands are present
  - `why` - Returns the list of reasons as to why a post has been detected.
  - `who` - Returns the list of users who have provided feedback.  
 
-----
-
-<sub>Back to [Home](/Natty)</sub>
