@@ -56,7 +56,7 @@ public class Runner {
                         && !report.getCaughtFor().contains("Possible Link Only")){
                     // IGNORING LINK ONLY FOR NOW AS THERE ARE A FEW FPs
 
-                    if (AutoFlagUtils.shouldAutoflag) {
+                    if (AutoFlagUtils.shouldAutoflag && AutoFlagUtils.autoFlagSites.contains(sitename)) {
                         AutoComment comment = AutoCommentUtils.commentForPostReport(report);
                         room.send(PostUtils.autoFlag(np, comment, sitename, siteurl) + " on this [post](//" + siteurl + "/a/" + np.getAnswerID() + ")");
                     }

@@ -212,7 +212,7 @@ public class PostUtils {
         ApiService apiService = new ApiService(sitename);
         PropertyService propertyService = new PropertyService();
 
-        if(sitename.equals("stackoverflow") && propertyService.getLocation().equals("server")) {
+        if(propertyService.getLocation().equals("server")) {
             try {
                 JsonObject flagOptions = apiService.getAnswerFlagOptions(post.getAnswerID());
                 JsonArray options = flagOptions.getAsJsonArray("items");
@@ -228,7 +228,6 @@ public class PostUtils {
                             JsonObject commentJson = apiService.addComment(comment.getText(), post.getAnswerID());
                             Integer commentId = commentJson.get("items").getAsJsonArray().get(0).getAsJsonObject().get("comment_id").getAsInt();
                             return "Post Flagged Automatically - Added [comment](//stackoverflow.com/posts/comments/" + commentId + "): " + comment.getIdentifier();
-                            //return "Post Flagged Automatically - would add comment: "+comment.getIdentifier();
                         }
                         return "Post Flagged Automatically";
                     }
@@ -238,7 +237,6 @@ public class PostUtils {
                 return "Some Error Occurred";
             }
         }
-        return "Some Error Occurred";
+        return "Post not flagged. Not on Server";
     }
-
 }
