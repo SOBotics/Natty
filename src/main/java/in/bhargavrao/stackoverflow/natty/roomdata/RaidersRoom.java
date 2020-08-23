@@ -5,6 +5,7 @@ import in.bhargavrao.stackoverflow.natty.printers.PostPrinter;
 import in.bhargavrao.stackoverflow.natty.printers.RaidersRoomPostPrinter;
 import in.bhargavrao.stackoverflow.natty.services.ReplyHandlerService;
 import in.bhargavrao.stackoverflow.natty.services.RunnerService;
+import in.bhargavrao.stackoverflow.natty.utils.enums.Site;
 import in.bhargavrao.stackoverflow.natty.validators.AllowAllAnswersValidator;
 import in.bhargavrao.stackoverflow.natty.validators.Validator;
 import org.sobotics.chatexchange.chat.ChatHost;
@@ -12,6 +13,8 @@ import org.sobotics.chatexchange.chat.Room;
 import org.sobotics.chatexchange.chat.event.MessageReplyEvent;
 import org.sobotics.chatexchange.chat.event.UserMentionedEvent;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -56,6 +59,11 @@ public class RaidersRoom implements BotRoom{
     @Override
     public ChatHost getHost() {
         return ChatHost.STACK_EXCHANGE;
+    }
+
+    @Override
+    public List<Site> getSiteList() {
+        return Arrays.asList(Site.ASK_UBUNTU);
     }
 
     @Override
