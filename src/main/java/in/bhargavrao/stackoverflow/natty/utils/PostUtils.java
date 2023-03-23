@@ -217,7 +217,7 @@ public class PostUtils {
                 JsonObject flagOptions = apiService.getAnswerFlagOptions(post.getAnswerID());
                 JsonArray options = flagOptions.getAsJsonArray("items");
                 for (JsonElement e : options) {
-                    if (e.getAsJsonObject().get("title").getAsString().equals("not an answer")) {
+                    if (e.getAsJsonObject().get("title").getAsString().equals("Not an answer")) {
                         JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(), e.getAsJsonObject().get("option_id").getAsInt());
 
                         StorageService service = new FileStorageService();
@@ -232,6 +232,7 @@ public class PostUtils {
                         return "Post Flagged Automatically";
                     }
                 }
+                return "Flagging as not an answer is not possible";
             } catch (IOException e) {
                 e.printStackTrace();
                 return "Some Error Occurred";
