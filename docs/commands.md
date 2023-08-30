@@ -86,12 +86,14 @@ Adding a number argument, returns the requested amount only. For example, to fet
 
 ## `send` command format
 
-The `send` command can be used to send mass feedback. However the feedback must be in the order of what is present in the feedback queue. The argument `reverse` can be used to send the feedback in the bottoms-up manner.
+The `send` command can be used to send mass feedback. However the feedback must be in the order of what is present in the feedback queue. The argument `reverse` can be used to send the feedback in the bottoms-up manner. See [interacting.html](interacting.html) for details.
  
 ## `feedback` command format
 
 The `feedback` command can be used to send feedback to an individual report.  The format of the command is `feedback postlink feedbackType`. 
-The `feedback` command can be used to correct an incorrectly passed feedback, by re-sending the correct feedback. (The feedback can be monitored on [Sentinel](/sentinel))
+The `feedback` command can be used to correct an incorrectly passed feedback, by re-sending the correct feedback.
+See [interacting.html](interacting.html) for details.
+(The feedback can be monitored on [Sentinel](/sentinel))
 
 
 # Easter egg commands 
