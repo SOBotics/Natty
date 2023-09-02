@@ -217,7 +217,7 @@ public class PostUtils {
                 JsonObject flagOptions = apiService.getAnswerFlagOptions(post.getAnswerID());
                 JsonArray options = flagOptions.getAsJsonArray("items");
                 for (JsonElement e : options) {
-                    if (e.getAsJsonObject().get("title").getAsString().equals("Not an answer")) {
+                    if (e.getAsJsonObject().get("title").getAsString().equalsIgnoreCase("not an answer")) {
                         JsonObject flaggedPost = apiService.flagAnswer(post.getAnswerID(), e.getAsJsonObject().get("option_id").getAsInt());
 
                         StorageService service = new FileStorageService();
