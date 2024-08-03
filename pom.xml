@@ -15,11 +15,11 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.sobotics</groupId>
+            <groupId>com.github.SOBotics</groupId>
             <artifactId>chatexchange</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <dependency>
+            <version>605ffcb</version>
+        </dependency>	
+	<dependency>
             <groupId>com.optimaize.languagedetector</groupId>
             <artifactId>language-detector</artifactId>
             <version>0.5</version>
@@ -51,14 +51,10 @@
         </dependency>
     </dependencies>
     <repositories>
-        <repository>
-            <id>Tunaki-mvn-repo</id>
-            <url>https://raw.github.com/Tunaki/chatexchange/mvn-repo/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
     </repositories>
     <build>
         <plugins>
