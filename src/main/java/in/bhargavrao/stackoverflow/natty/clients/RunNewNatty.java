@@ -32,7 +32,6 @@ public class RunNewNatty {
         else  {
             rooms.add(new SOBoticsChatRoom());
             rooms.add(new HeadquartersChatRoom());
-            rooms.add(new RCollectiveChatRoom());
             rooms.add(new GMTsChatRoom());
             rooms.add(new RaidersRoom());
             rooms.add(new SeboticsRoom());
