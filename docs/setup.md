@@ -60,6 +60,7 @@
         location=YOUR_COMPUTER_NAME
         email=EMAIL_ID
         password=PASSWORD
+        sentinelURL=URL_OF_SENTINEL
         sentinelKey=REGISTERED_KEY_FOR_SENTINEL
         sentinelApiKey=REGISTERED_KEY_TO_USE_SENTINEL_APIS
         fmsPath=PATH_TO_THE_END_DIRECTORY_OF_FMS
