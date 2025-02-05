@@ -39,6 +39,7 @@ username=
 location=
 email=
 password=
+sentinelUrl=
 sentinelKey=
 sentinelApiKey=
 fmsPath=
