@@ -43,8 +43,10 @@ public class BlacklistDataService {
         String apiKey = propertyService.getSentinelApiKey();
         if (apiKey.length() == 0)
         	return;
+
+	String sentinelUrl = propertyService.getSentinelUrl();
         
-        String urlString = "https://sentinel.erwaysoftware.com/api/blacklist_stats?key="+apiKey;
+        String urlString = sentinelUrl+"/api/blacklist_stats?key="+apiKey;
         URL url = new URL(urlString);
         HttpURLConnection con = (HttpURLConnection) url.openConnection(); 
         con.setRequestMethod("GET");
