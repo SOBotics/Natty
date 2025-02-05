@@ -53,6 +53,10 @@ public class PropertyService {
         return prop.getProperty("location");
     }
 
+    public String getSentinelUrl(){
+        return prop.getProperty("sentinelUrl");
+    }
+
     public String getSentinelKey(){
         return prop.getProperty("sentinelKey");
     }

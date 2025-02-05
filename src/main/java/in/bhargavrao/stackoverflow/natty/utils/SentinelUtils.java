@@ -33,7 +33,8 @@ public class SentinelUtils {
         return getSentinelMainUrl(sitename)+"/feedbacks/new";
     }
     public static String getSentinelMainUrl(String sitename) {
-        return "https://sentinel.erwaysoftware.com";
+        PropertyService propertyService = new PropertyService();
+        return  propertyService.getSentinelUrl();
     }
 
     public static String getSentinelAuth(String sitename) {
