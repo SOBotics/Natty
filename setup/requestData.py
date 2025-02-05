@@ -1,7 +1,7 @@
 import getpass
 
 params = ['apikey', 'apitoken', 'userid', 'username', 'location', 'email', 'password',
-          'sentinelKey', 'sentinelApiKey', 'fmsPath', 'fmsUrl', 'feedMsg']
+          'sentinelUrl', 'sentinelKey', 'sentinelApiKey', 'fmsPath', 'fmsUrl', 'feedMsg']
 
 sensitive = ['apikey', 'apitoken', 'password', 'sentinelKey', 'sentinelApiKey']
 
