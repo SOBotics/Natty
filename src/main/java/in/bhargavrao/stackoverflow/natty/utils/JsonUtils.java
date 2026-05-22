@@ -10,6 +10,9 @@ import java.io.IOException;
 import org.jsoup.parser.Parser;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by bhargav.h on 10-Sep-16.
  * AKA, TunaLib - All code is courtesy of Lord Tunaki
