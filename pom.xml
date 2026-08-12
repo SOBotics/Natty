@@ -6,7 +6,7 @@
 
     <groupId>in.bhargavrao</groupId>
     <artifactId>natty</artifactId>
-    <version>v4.2.2</version>
+    <version>v4.2.3</version>
 
     <dependencies>
         <dependency>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.github.SOBotics</groupId>
             <artifactId>chatexchange</artifactId>
-            <version>605ffcb</version>
+            <version>128170f</version>
         </dependency>	
 	<dependency>
             <groupId>com.optimaize.languagedetector</groupId>
